@@ -60,10 +60,11 @@ export default defineConfig({
     open: true,
     hmr: true,
     proxy: {
-      "/api": "http://89.117.37.128",
-    },
-    cors: {
-      origin: "http://89.117.37.128",
+      "/api": {
+        target: "http://89.117.37.128",
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api/, ''),
+      },
     },
   },
   // Add these for better performance
