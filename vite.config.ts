@@ -60,8 +60,11 @@ export default defineConfig({
     open: true,
     hmr: true,
     proxy: {
-      '/api': 'http://89.117.37.128',
-    }
+      "/api": "http://89.117.37.128",
+    },
+    cors: {
+      origin: "http://89.117.37.128",
+    },
   },
   // Add these for better performance
   optimizeDeps: {
