@@ -2,7 +2,7 @@ import axios from "axios"
 import type { RegistrationData, User } from "../types/auth"
 import { appSaveToLocalStorage, appGetFromLocalStorage, appRemoveFromLocalStorage, StorageKeys } from "../../../core/storage/storage"
 
-const isDev = process.env.NODE_ENV === 'development'
+//const isDev = process.env.NODE_ENV === 'development'
 const API_URL = "/api/auth"
 
 // Create axios instance with improved error handling
