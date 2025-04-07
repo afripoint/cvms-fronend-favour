@@ -1,7 +1,7 @@
 export const contactMethods = [
     {
       title: "Send a message via mail",
-      detail: "hello@natureforce.com",
+      detail: "cvmsproject@afripointgroup.com",
       iconType: "mail",
     },
     {
