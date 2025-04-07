@@ -4,9 +4,7 @@ import type React from "react"
 import { useSelector, useDispatch } from "react-redux"
 import { useNavigate } from "react-router-dom"
 import type { RootState } from "../../../core/store"
-// import { resetPasswordTokenCheck } from "../../../redux/slices/authSlice"
-// import { setStep, setToken } from "../../../redux/slices/passwordResetSlice"
-// import { PasswordResetStep } from "../../../types/auth"
+
 import type { AppDispatch } from "../../../core/store"
 import { resetPasswordTokenCheck } from "../redux/slices/authSlice"
 import { setStep, setToken } from "../redux/slices/passwordResetSlice"
@@ -37,7 +35,7 @@ const EmailSent: React.FC = () => {
     <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
       <div className="w-full max-w-md bg-white rounded-lg shadow-lg p-8 text-center">
         <div className="flex justify-center mb-6">
-          <img src="src/assets/icons/email-state.svg" alt="" className="w-20 h-15" />
+          <img src="/icons/email-state.svg" alt="" className="w-20 h-15" />
         </div>
 
         <h2 className="text-xl font-semibold mb-2">Email Sent!</h2>

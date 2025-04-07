@@ -172,7 +172,7 @@ const SignUpForm: React.FC = () => {
         <div className="bg-white rounded-lg shadow-lg p-6">
           <div className="flex justify-center mb-3">
             <div className="h-12 w-12 flex items-center justify-center">
-              <img src="src/assets/images/logo.png" alt="Logo" className="h-8" />
+              <img src="/images/logo.png" alt="Logo" className="h-8" />
             </div>
           </div>
 

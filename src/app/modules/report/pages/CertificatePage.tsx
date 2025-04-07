@@ -265,7 +265,7 @@ return (
               reports.map((report) => (
                 <div key={report.id} className="bg-white border rounded-lg p-4 sm:p-6 md:p-8 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 hover:bg-gray-50">
                   <div className='flex space-x-2 items-center'>
-                    <img src="src/assets/images/fileVINSearch.svg" alt="" width={40} className="sm:w-[50px]" />
+                    <img src="/images/fileVINSearch.svg" alt="" width={40} className="sm:w-[50px]" />
                     <div>
                       <h3 className="font-medium text-base sm:text-lg">{report.title}</h3>
                       <p className="text-xs sm:text-sm text-gray-600">VIN: {report.vin}</p>
@@ -324,7 +324,7 @@ return (
                 >
                   <div className='flex space-x-2 items-center'>
                     <img 
-                      src="src/assets/images/fileVINSearch.svg" 
+                      src="/images/fileVINSearch.svg" 
                       alt="VIN Search Certificate" 
                       width={40}
                       className="sm:w-[50px]"

@@ -80,7 +80,7 @@ const VinSearchSection: React.FC<VinSearchSectionProps> = ({
       <div
         className="absolute inset-0 bg-cover bg-center"
         style={{
-          backgroundImage: "url('src/assets/images/herosection.svg')",
+          backgroundImage: "url('/images/herosection.svg')",
         }}
       ></div>
       <div className="relative z-10 max-w-4xl mx-auto">
@@ -261,7 +261,7 @@ const VinSearchSection: React.FC<VinSearchSectionProps> = ({
       {/* Chat bubble icon */}
       <div className="absolute bottom-4 right-4">
         <button className="bg-green-400 rounded-full p-3">
-          <img src="src/assets/icons/Chaticon.svg" alt="Chat" width={25} height={25} />
+          <img src="/icons/Chaticon.svg" alt="Chat" width={25} height={25} />
         </button>
       </div>
     </div>

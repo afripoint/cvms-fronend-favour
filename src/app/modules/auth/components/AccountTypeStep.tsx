@@ -4,10 +4,7 @@ import type React from "react"
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { useDispatch, useSelector } from "react-redux"
-// import StepIndicator from "./StepIndicator"
-// import { setRole } from "../../../redux/slices/authSlice"
-// import { setCurrentStep } from "../../../redux/slices/uiSlice"
-// import ServiceRequestModal from "./ServiceRequestModal"
+
 import type { AppDispatch, RootState } from "../../../core/store"
 import { setRole } from "../redux/slices/authSlice"
 import { setCurrentStep } from "../redux/slices/uiSlice"
@@ -52,7 +49,7 @@ const AccountType: React.FC = () => {
         <div className="bg-white rounded-lg shadow-lg p-8">
           <div className="flex justify-center mb-6">
             <div className="h-16 w-16 flex items-center justify-center">
-              <img src="src/assets/images/logo.png" alt="Logo" className="h-10" />
+              <img src="/images/logo.png" alt="Logo" className="h-10" />
             </div>
           </div>
 

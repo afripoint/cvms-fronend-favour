@@ -4,9 +4,7 @@ import type React from "react"
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { useDispatch } from "react-redux"
-// import { forgotPassword } from "../../../redux/slices/authSlice"
-// import { setEmail, setStep } from "../../../redux/slices/passwordResetSlice"
-// import { PasswordResetStep } from "../../../types/auth"
+
 import type { AppDispatch } from "../../../core/store"
 import { forgotPassword } from "../redux/slices/authSlice"
 import { setEmail, setStep } from "../redux/slices/passwordResetSlice"
@@ -55,7 +53,7 @@ const ForgotPassword: React.FC = () => {
       <div className="w-full max-w-md bg-white rounded-lg shadow-lg p-8">
         <div className="flex justify-center mb-6">
           <div className="h-16 w-16 flex items-center justify-center">
-            <img src="src/assets/images/logo.png" alt="Logo" className="h-10" />
+            <img src="/images/logo.png" alt="Logo" className="h-10" />
           </div>
         </div>
 

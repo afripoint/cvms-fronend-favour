@@ -28,7 +28,7 @@ export const generateCertificate = async (data: CertificateData) => {
   
   // Add logo watermark first (before other content)
   try {
-    const logoUrl = 'src/assets/images/logo.png';
+    const logoUrl = '/images/logo.png';
     const watermarkWidth = 150;
     const watermarkHeight = 120;
     const centerX = (200 - watermarkWidth) / 2;
@@ -48,7 +48,7 @@ export const generateCertificate = async (data: CertificateData) => {
   
   // Add main logo and title
   try {
-    const logoUrl = 'src/assets/images/logo.png';
+    const logoUrl = '/images/logo.png';
     const logoWidth = 15;
     const logoHeight = 16;
     const logoX = 60;

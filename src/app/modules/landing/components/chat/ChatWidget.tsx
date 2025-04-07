@@ -1,6 +1,8 @@
 import { useState } from "react";
 import type React from "react";
 
+
+
 type TabType = "chat" | "call" | "faqs" | "articles";
 
 const ChatWidget: React.FC = () => {
@@ -26,14 +28,14 @@ const ChatWidget: React.FC = () => {
                 </svg>
               </button>
               <div className="bg-white rounded-full p-2 mr-2">
-                <img src="/src/assets/icons/building.svg" alt="Company" width={20} height={20} />
+                <img src="/icons/company.png" alt="Company" width={20} height={20} />
               </div>
               <span className="text-white text-lg">Chat with us now</span>
             </div>
             
             {/* Chat content */}
             <div className="flex-grow p-4 flex flex-col items-center justify-center">
-              <img src="/src/assets/images/agent.svg" alt="Support Agent" className="w-40 mb-4" />
+              <img src="/icons/agent.png" alt="Support Agent" className="w-40 mb-4" />
               <p className="text-gray-500 text-center mb-2">We're online!</p>
               <p className="text-gray-400 text-center">We are here to help you</p>
             </div>
@@ -56,7 +58,7 @@ const ChatWidget: React.FC = () => {
                 </svg>
               </button>
               <div className="bg-white rounded-full p-2 mr-2">
-                <img src="/src/assets/icons/building.svg" alt="Company" width={20} height={20} />
+              <img src="/icons/company.png" alt="Company" width={20} height={20} />
               </div>
               <span className="text-white text-lg">Call us now</span>
             </div>
@@ -246,7 +248,7 @@ const ChatWidget: React.FC = () => {
           onClick={toggleWidget} 
           className="bg-green-400 hover:bg-green-500 rounded-full p-3 shadow-lg"
         >
-          <img src="/src/assets/icons/Chaticon.svg" alt="Chat" width={25} height={25} />
+          <img src="/icons/Chaticon.svg" alt="Chat" width={25} height={25} />
         </button>
       ) : (
         <div className="bg-white rounded-lg shadow-xl overflow-hidden" style={{width: "320px"}}>

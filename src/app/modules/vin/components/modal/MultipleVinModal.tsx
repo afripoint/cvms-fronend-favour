@@ -212,7 +212,7 @@ const MultipleVinModal: React.FC<MultipleVinModalProps> = ({ isOpen, onClose, on
           onDrop={handleDrop}
         >
           <div className="flex flex-col items-center">
-            <img src="src/assets/icons/upload.svg" alt="" width={70} height={30} />
+            <img src="/icons/upload.svg" alt="" width={70} height={30} />
 
             <p className="text-[#555555] mb-4 text-lg">
               {selectedFile ? "File selected" : "Click to upload excel or drag excel file here"}
@@ -233,7 +233,7 @@ const MultipleVinModal: React.FC<MultipleVinModalProps> = ({ isOpen, onClose, on
               <label className="cursor-pointer">
                 <input type="file" className="hidden" accept=".xlsx" onChange={handleFileChange} />
                 <span className="flex items-center justify-center">
-                  <img src="src/assets/icons/file.svg" alt="" width={15} height={5} />
+                  <img src="/icons/file.svg" alt="" width={15} height={5} />
                 </span>
               </label>
             </div>

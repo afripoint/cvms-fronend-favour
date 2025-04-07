@@ -50,7 +50,7 @@ const ChatWidget: React.FC = () => {
           onClick={toggleWidget} 
           className="bg-green-400 hover:bg-green-500 rounded-full p-3 shadow-lg"
         >
-          <img src="/src/assets/icons/Chaticon.svg" alt="Chat" width={25} height={25} />
+          <img src="/icons/Chaticon.svg" alt="Chat" width={25} height={25} />
         </button>
       ) : (
         <div className="bg-white rounded-lg shadow-xl overflow-hidden w-80">

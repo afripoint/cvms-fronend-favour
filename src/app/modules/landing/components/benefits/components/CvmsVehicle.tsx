@@ -13,7 +13,7 @@ const CvmsVehicle: React.FC = () => {
           <div key={step.id} className="flex">
             <div className="mr-4">
               <div className="h-8 w-8 bg-green-100 rounded-full flex items-center justify-center">
-                <img src={`src/assets/icons/${step.icon}.svg`} alt="" className="w-5 h-5" />
+                <img src={`/icons/${step.icon}.svg`} alt="" className="w-5 h-5" />
               </div>
             </div>
             <div>
@@ -25,7 +25,7 @@ const CvmsVehicle: React.FC = () => {
 
         {/* Vehicle Image - moved much further to the right */}
         <div className="absolute right-0 bottom-0 transform translate-y-1/2 translate-x-20">
-          <img src="src/assets/images/vehicle.svg" alt="Vehicle" className="w-48 h-auto" />
+          <img src='/images/vehicle.svg' alt="Vehicle" className="w-48 h-auto" />
         </div>
       </div>
     </div>

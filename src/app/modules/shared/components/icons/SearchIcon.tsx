@@ -1,20 +1,19 @@
 import React from 'react';
-import searchIcon from '../../../../../assets/icons/searchIcon.svg';
+
+
 
 interface IconProps {
   color: string;
 }
 
 const SearchIcon: React.FC<IconProps> = () => (
-
-
-    <div className="w-8 h-8 rounded-full flex items-center justify-center">
-      <img 
-      src={searchIcon} 
+  <div className="w-8 h-8 rounded-full flex items-center justify-center">
+    <img 
+      src="/icons/searchIcon.svg" 
       alt="Time icon" 
       className="w-10 h-10"
     />
-    </div>
-  );
+  </div>
+);
 
-  export default SearchIcon;
+export default SearchIcon;

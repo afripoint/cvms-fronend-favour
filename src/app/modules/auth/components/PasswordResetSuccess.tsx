@@ -22,7 +22,7 @@ const PasswordResetSuccess: React.FC = () => {
       <div className="w-full max-w-md bg-white rounded-lg shadow-lg p-8 text-center">
         <div className="flex justify-center mb-6">
           <div className="h-16 w-16 rounded-full bg-green-100 flex items-center justify-center">
-            <img src="src/assets/icons/seal-check.svg" alt="" className="h-8 w-8" />
+            <img src="/icons/seal-check.svg" alt="" className="h-8 w-8" />
           </div>
         </div>
 

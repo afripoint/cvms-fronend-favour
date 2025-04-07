@@ -5,8 +5,7 @@ import { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 import { ProfileSectionProps } from "../../landing/types"
 import { useAuth } from "../hooks"
-// import type { ProfileSectionProps } from "../../../types"
-// import { useAuth } from "../../../hooks/useAuth"
+
 
 const ProfileSection: React.FC<ProfileSectionProps> = ({ firstName, lastName, email }) => {
   const [isOpen, setIsOpen] = useState(false)

@@ -6,6 +6,7 @@ import { Link } from "react-router-dom"
 import { navigationItems } from "../../../constants/navigation"
 import { useAuth } from "../../../hooks/useAuth"
 import CartIcon from "./CartIcon"
+
 import ProfileSection from "../../../../auth/components/ProfileSection"
 
 export const Header: React.FC = () => {
@@ -48,8 +49,8 @@ export const Header: React.FC = () => {
       <div className="flex justify-between items-center px-6 sm:px-6 md:px-8 lg:px-8 max-w-7xl mx-auto">
         <div className="flex items-center">
           <img 
-            src="src/assets/images/CustomsImg.svg" 
-            alt="CVMS Logo" 
+            src="/images/CustomsImg.svg" 
+            alt="Custom Image" 
             className={`object-contain aspect-square ${isScrolled ? 'w-12' : 'w-14 sm:w-16'} transition-all duration-300`} 
           />
           <h1 className={`ml-2 text-base sm:text-lg md:text-xl font-medium text-black leading-tight ${isScrolled ? 'max-w-40 sm:max-w-56' : 'max-w-48 sm:max-w-64'} transition-all duration-300`}>

@@ -34,7 +34,7 @@ const ReportCard: FC<ReportCardProps> = ({ report }) => {
   return (
     <div className="bg-white p-10 rounded-lg shadow-sm flex justify-between items-center">
       <div className="flex items-center">
-        <img src="src/assets/images/fileVINSearch.svg" alt="" width={70} />
+        <img src="/images/fileVINSearch.svg" alt="" width={70} />
         <div className="ml-4">
           <h3 className="font-medium">{report.title}</h3>
           <p className="text-sm text-gray-600">VIN: {report.vin}</p>

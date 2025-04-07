@@ -4,8 +4,8 @@ const FooterLogo: React.FC = () => {
   return (
     <div className="w-full font-semibold text-black">
       <img 
-        src="src/assets/images/CustomsImg.svg" 
-        alt="CVMS Logo" 
+        src="/images/CustomsImg.svg"
+        alt="Custom Image" 
         className="object-contain w-16 sm:w-20 aspect-square" 
       />
       <h1 className="text-lg sm:text-xl mt-2">CVMS</h1>

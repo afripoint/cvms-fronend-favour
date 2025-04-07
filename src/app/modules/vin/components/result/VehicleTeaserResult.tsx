@@ -29,7 +29,7 @@ const VehicleTeaserResult: React.FC<VehicleTeaserResultProps> = ({
       <div className="w-full py-12 md:py-20 lg:py-28 px-4 text-center text-white relative">
         <div
           className="absolute inset-0 bg-cover bg-center"
-          style={{ backgroundImage: "url('src/assets/images/herosection.svg')" }}
+          style={{ backgroundImage: "url('/images/herosection.svg')" }}
         ></div>
         <div className="relative z-10">
           <h2 className="text-xl md:text-2xl font-medium mb-2">Records found for VIN:</h2>

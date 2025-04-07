@@ -13,7 +13,7 @@ export const ACCOUNT_TYPES = [
     description:
       "For individuals who want to track shipments, view consignment status updates, and search for accredited agents.",
     value: "individual account",
-    icon: "src/assets/icons/company.png",
+    icon: "/icons/company.png",
   },
   {
     id: "agent",
@@ -21,7 +21,7 @@ export const ACCOUNT_TYPES = [
     description:
       "For licensed agents or companies authorized by customs to manage clearance processes, review certifications, and perform local TIN verification.",
     value: "agent account/freight forwarders",
-    icon: "src/assets/icons/agent.png",
+    icon: "/icons/agent.png",
   },
   {
     id: "company",
@@ -29,7 +29,7 @@ export const ACCOUNT_TYPES = [
     description:
       "For businesses involved in import/export activities that want to verify status, track consignments, search for accredited agents, and access all other account features.",
     value: "company account",
-    icon: "src/assets/icons/individual.png",
+    icon: "/icons/individual.png",
   },
 ]
 
@@ -65,7 +65,7 @@ export const COUNTRY_CODES: CountryCode[] = [
     name: "Nigeria",
     code: "NG",
     dialCode: "+234",
-    flag: "/flags/ng.svg",
+    flag: "/flag.svg",
   },
   {
     name: "United States",

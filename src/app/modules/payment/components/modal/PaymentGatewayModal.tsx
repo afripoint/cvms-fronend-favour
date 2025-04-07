@@ -221,7 +221,7 @@ const PaymentGatewayModal: React.FC<PaymentGatewayModalProps> = ({
           <h2 className="text-xl text-[#34C759] font-bold mb-4 text-left">Confirm Payment</h2>
           <p className="text-left text-[#000000] mb-4">Select your preferred payment option</p>
 
-          <div className="flex mb-6">
+          <div className="flex mb-6 justify-around">
             <div
               className={`flex items-center p-3 cursor-pointer border rounded-lg mr-4 ${
                 selectedMethod === "remita" ? "border-green-500 bg-green-50" : "border-gray-200"
@@ -236,7 +236,7 @@ const PaymentGatewayModal: React.FC<PaymentGatewayModalProps> = ({
                 disabled={!remitaLoaded}
                 className="mr-3 h-5 w-5 text-green-600"
               />
-              <img src="src/assets/icons/remita.svg" alt="Remita" className="h-8 w-16" />
+              <img src="/icons/remita.svg" alt="Remita" className="h-8 w-16" />
               {!remitaLoaded && (
                 <span className="text-xs text-red-500 absolute -bottom-5 left-0">Loading service...</span>
               )}
@@ -255,7 +255,7 @@ const PaymentGatewayModal: React.FC<PaymentGatewayModalProps> = ({
                 onChange={() => setSelectedMethod("paystack")}
                 className="mr-3 h-5 w-5 text-green-600"
               />
-              <img src="src/assets/icons/Paystack.svg" alt="Paystack" className="h-8 w-16" />
+              <img src="/icons/Paystack.svg" alt="Paystack" className="h-8 w-30" />
             </div>
           </div>
 

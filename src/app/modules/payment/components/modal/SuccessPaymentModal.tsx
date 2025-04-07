@@ -124,7 +124,7 @@ export default function SuccessPaymentModal({
             <Check className="h-5 w-5 text-green-500" />
           </div>
           <div className="bg-green-100 p-2 rounded-md">
-            <img src="src/assets/icons/badge.svg" alt="Receipt" className="h-10 w-10" />
+            <img src="/icons/badge.svg" alt="Receipt" className="h-10 w-10" />
           </div>
 
           <h2 className="text-base font-medium mt-3">Payment Successful!</h2>

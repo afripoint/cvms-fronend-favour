@@ -4,15 +4,12 @@ import type React from "react"
 import { useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { useNavigate } from "react-router-dom"
-// import { setNewPassword } from "../../../redux/slices/authSlice"
-// import { setStep } from "../../../redux/slices/passwordResetSlice"
-// import { PasswordResetStep } from "../../../types/auth"
 import type { AppDispatch, RootState } from "../../../core/store"
 import { usePasswordValidation } from "../hooks/usePasswordValidation"
 import { setNewPassword } from "../redux/slices/authSlice"
 import { setStep } from "../redux/slices/passwordResetSlice"
 import { PasswordResetStep } from "../types/auth"
-// import { usePasswordValidation } from "../../../hooks/usePasswordValidation"
+
 
 const ResetPassword: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>()
@@ -65,7 +62,7 @@ const ResetPassword: React.FC = () => {
       <div className="w-full max-w-md bg-white rounded-lg shadow-lg p-8">
         <div className="flex justify-center mb-6">
           <div className="h-16 w-16 flex items-center justify-center">
-            <img src="src/assets/images/logo.png" alt="Logo" className="h-10" />
+            <img src="/images/logo.png" alt="Logo" className="h-10" />
           </div>
         </div>
 
