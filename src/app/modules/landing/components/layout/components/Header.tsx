@@ -82,7 +82,7 @@ export const Header: React.FC = () => {
                   Login <span className="ml-1">→</span>
                 </Link>
                 <Link 
-                  to="/signup" 
+                  to="/account-type" 
                   className={`bg-[#34C759] rounded-sm hover:bg-green-200 px-3 lg:px-4 ${isScrolled ? 'py-1 text-sm' : 'py-2 text-base'} transition-all duration-300 whitespace-nowrap text-white`}
                 >
                   Sign up

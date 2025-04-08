@@ -11,7 +11,7 @@ interface Country {
 
 // Sample countries data
 const countries: Country[] = [
-  { name: 'Nigeria', code: 'NG', dialCode: '+234', flag: 'src/assets/icons/flag.svg' },
+  { name: 'Nigeria', code: 'NG', dialCode: '+234', flag: '/icons/flag.svg' },
   { name: 'United States', code: 'US', dialCode: '+1', flag: '/flags/us.svg' },
   { name: 'United Kingdom', code: 'GB', dialCode: '+44', flag: '/flags/gb.svg' },
   { name: 'Canada', code: 'CA', dialCode: '+1', flag: '/flags/ca.svg' },
@@ -104,7 +104,7 @@ const CountryCodeSelector: React.FC<CountryCodeSelectorProps> = ({ value, onChan
               <button
                 key={country.code}
                 type="button"
-                className="w-full text-left px-3 py-2 text-sm hover:bg-gray-100 flex items-center"
+                className="w-full text-left px-3 py-2 text-sm hover:bg-gray-100 flex"
                 onClick={() => handleCountrySelect(country)}
               >
                 <img src={country.flag} alt={country.name} className="h-3 w-5 mr-2" />

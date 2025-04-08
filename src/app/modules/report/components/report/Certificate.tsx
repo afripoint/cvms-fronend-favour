@@ -232,7 +232,7 @@ const VerifyCertificatePage = () => {
         
         // Fetch certificate details from backend
         // Note: This might need adjustment based on your actual API
-        const response = await fetch('https://cvms-backend-conversion.onrender.com/vin/search-history/', {
+        const response = await fetch('https://afridev.com.ng/vin/search-history/', {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',

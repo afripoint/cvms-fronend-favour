@@ -223,7 +223,7 @@ const SignUpForm: React.FC = () => {
                       name="phone_number"
                       value={formData.phone_number}
                       onChange={handleChange}
-                      className="flex-1 px-3 py-1.5 border border-l-0 rounded-r-md text-sm"
+                      className="flex-1 py-1.5 border text-left border-l-0 rounded-r-md text-sm"
                       placeholder={`${selectedCountry.dialCode.slice(1)} 000-0000`}
                     />
                   </div>

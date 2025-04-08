@@ -10,7 +10,7 @@ import { setCurrentStep } from "../redux/slices/uiSlice"
 const OTPVerificationPage: React.FC = () => {
   const navigate = useNavigate()
   const dispatch = useDispatch<AppDispatch>()
-  const { isLoading, error, isAuthenticated } = useSelector((state: RootState) => state.auth)
+  const { isLoading, isAuthenticated } = useSelector((state: RootState) => state.auth)
 
   const [otp, setOtp] = useState(["", "", "", "", "", ""])
   const [email, setEmail] = useState("")
@@ -155,7 +155,7 @@ const OTPVerificationPage: React.FC = () => {
         localStorage.removeItem("userPhoneNumber")
 
         // Redirect to dashboard
-        navigate("/dashboard")
+        navigate("/login")
       }
     } catch (err) {
       console.error("OTP verification failed:", err)
@@ -204,7 +204,7 @@ const OTPVerificationPage: React.FC = () => {
             ))}
           </div>
 
-          {error && <div className="text-red-500 text-center text-sm mb-4">{error}</div>}
+          {/* {error && <div className="text-red-500 text-center text-sm mb-4">{error}</div>} */}
 
           <button
             type="button"

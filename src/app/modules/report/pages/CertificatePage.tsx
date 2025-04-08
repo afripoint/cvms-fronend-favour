@@ -93,7 +93,7 @@ const Certificate = () => {
       }
       
       // Fetch search history data
-      const response = await fetch('https://cvms-backend-conversion.onrender.com/vin/search-history/', {
+      const response = await fetch('https://afridev.com.ng/vin/search-history/', {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -140,7 +140,7 @@ const Certificate = () => {
       const accesstoken = localStorage.getItem("access_token");
       
       // Fetch search history data
-      const response = await fetch('https://cvms-backend-conversion.onrender.com/vin/search-history/', {
+      const response = await fetch('https://afridev.com.ng/vin/search-history/', {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
