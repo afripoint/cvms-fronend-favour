@@ -49,9 +49,9 @@ const CvmsBenefits: React.FC = () => {
             </CardHeader>
             <CardContent className="bg-[#F2F2F7] p-6">
               <p className="text-sm">
-                "To be the leading platform for effortless and accurate
+              To provide a secure and efficient platform for customs and vehicle verification, 
                 <br />
-                vehicle customs duty verification"
+                enabling transparency, compliance, and ease of access for all stakeholders.
               </p>
             </CardContent>
           </Card>
@@ -63,9 +63,9 @@ const CvmsBenefits: React.FC = () => {
             </CardHeader>
             <CardContent className="bg-[#000000] text-white p-6">
               <p className="text-sm">
-                "To be the leading platform for effortless and
+              To be the trusted digital infrastructure for customs and verification 
                 <br />
-                accurate vehicle customs duty verification"
+                services nationwide.
               </p>
             </CardContent>
           </Card>

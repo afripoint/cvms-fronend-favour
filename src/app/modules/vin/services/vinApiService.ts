@@ -2,7 +2,7 @@ import axios from "axios"
 import * as XLSX from "xlsx"
 import type { ApiResponse } from "../types"
 
-const API_BASE_URL = "http://89.117.37.128/vin"
+const API_BASE_URL = "https://cvms-backend-conversion.onrender.com/vin"
 
 // Create an axios instance with default headers
 const apiClient = axios.create({

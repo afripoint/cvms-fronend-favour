@@ -141,18 +141,11 @@ const MultipleVinModal: React.FC<MultipleVinModalProps> = ({ isOpen, onClose, on
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-60">
             <div className="bg-white rounded-lg p-8 max-w-md w-full shadow-xl">
               <div className="flex flex-col items-center">
-                <svg className="h-12 w-12 text-yellow-500 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M12 15v2m0 0v2m0-2h2m-2 0H9m3-4V3m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                  />
-                </svg>
+                <img src="/images/logo.png" alt="" width={50} height={25}/>
                 <h3 className="text-xl font-medium text-gray-900 mb-2">Login Required</h3>
                 <p className="text-gray-600 text-center mb-6">
-                  You need to be logged in to upload and search VIN numbers. Please login or create an account to
-                  continue.
+                You need to be logged in to search for vehicle details using a VIN.
+                Please log in or create an account to proceed.
                 </p>
                 <div className="flex gap-4">
                   <button

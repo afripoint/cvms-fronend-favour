@@ -59,13 +59,8 @@ export default defineConfig({
   server: {
     open: true,
     hmr: true,
-    proxy: {
-      "/api": {
-        target: "http://89.117.37.128",
-        changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api/, ''),
-      },
-    },
+    
+    
   },
   // Add these for better performance
   optimizeDeps: {

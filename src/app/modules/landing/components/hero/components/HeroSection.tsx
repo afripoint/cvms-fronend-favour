@@ -10,7 +10,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({ backgroundImage = "/images/he
         rel="stylesheet"
       />
       <section
-        className="flex justify-center items-center px-0 py-48 w-full bg-center bg-no-repeat bg-cover min-h-[648px] max-md:px-0 max-md:py-36 max-sm:px-0 max-sm:py-24"
+        className="flex justify-center items-center px-0 py-40 w-full bg-center bg-no-repeat bg-cover min-h-[300px] max-md:px-0 max-md:py-36 max-sm:px-0 max-sm:py-24 mb-16"
         style={{ backgroundImage: `url(${backgroundImage})` }}
       >
         <HeroContent />
