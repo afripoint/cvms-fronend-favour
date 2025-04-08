@@ -69,7 +69,7 @@ const OTPVerificationPage: React.FC = () => {
 
   useEffect(() => {
     if (isAuthenticated) {
-      navigate("/dashboard")
+      navigate("/login")
     }
   }, [isAuthenticated, navigate])
 
