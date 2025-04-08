@@ -5,6 +5,7 @@ import { store } from './app/core/store';
 import { CartPage } from './app/modules/cart';
 import PaymentMethodPage from './app/pages/payment/PaymentMethodPage';
 import Certificate from './app/modules/report/pages/CertificatePage';
+import VerifyCertificatePage from './app/modules/report/components/report/Certificate';
 
 
 
@@ -45,6 +46,7 @@ const App: React.FC = () => {
             <Route path="/cart" element={<CartPage/>} />
             <Route path="/payment-method" element={<PaymentMethodPage />} />
             <Route path="/certificate" element={<Certificate/>} />
+            <Route path="/verify-certificate" element={<VerifyCertificatePage />} />
 
            
             
