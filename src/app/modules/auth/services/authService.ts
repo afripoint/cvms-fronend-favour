@@ -137,49 +137,98 @@ const authService = {
     }
   },
 
+  // verifyOtp: async (email: string, otp: string, phone_number?: string): Promise<any> => {
+  //   try {
+  //     console.log("Sending OTP verification data:", { email, otp, phone_number })
+
+  //     // Build payload, only including phone_number if it exists
+  //     const payload: any = { email, otp }
+  //     if (phone_number) {
+  //       payload.phone_number = phone_number
+  //       // Store phone number for future use
+  //       appSaveToLocalStorage("userPhoneNumber", phone_number)
+  //     }
+
+  //     const response = await authAxios.post("/verify-otp/", payload)
+
+  //     console.log("OTP verification response:", response.data)
+
+  //     // Validate response structure
+  //     if (!response.data) {
+  //       throw new Error("Empty response received from server")
+  //     }
+
+  //     // Save the token to localStorage if it's in the response
+  //     if (response.data.token) {
+  //       appSaveToLocalStorage("authToken", response.data.token)
+
+  //       // Set the token in authorization header for future requests
+  //       authAxios.defaults.headers.common["Authorization"] = `Bearer ${response.data.token}`
+  //       console.log("Auth token saved to localStorage and added to request headers")
+
+  //       // Store token in predefined storage key
+  //       appSaveToLocalStorage(StorageKeys.TOKEN_DATA, {
+  //         access_token: response.data.token,
+  //         refresh_token: response.data.refresh_token || "",
+  //       })
+  //     } else {
+  //       console.warn("No auth token received in OTP verification response")
+  //     }
+
+  //     // Store user data if available
+  //     if (response.data.user) {
+  //       appSaveToLocalStorage(StorageKeys.USER_DATA, response.data.user)
+  //     }
+
+  //     return response.data
+  //   } catch (error: any) {
+  //     console.error("OTP verification error:", error.response?.data || error.message)
+  //     throw error
+  //   }
+  // },
+
+
   verifyOtp: async (email: string, otp: string, phone_number?: string): Promise<any> => {
     try {
       console.log("Sending OTP verification data:", { email, otp, phone_number })
-
-      // Build payload, only including phone_number if it exists
+  
       const payload: any = { email, otp }
       if (phone_number) {
         payload.phone_number = phone_number
-        // Store phone number for future use
         appSaveToLocalStorage("userPhoneNumber", phone_number)
       }
-
+  
+      // Enhanced logging for debugging
+      console.log("Sending verification payload:", payload)
       const response = await authAxios.post("/verify-otp/", payload)
-
-      console.log("OTP verification response:", response.data)
-
-      // Validate response structure
+      console.log("Full OTP verification response:", response)
+  
       if (!response.data) {
         throw new Error("Empty response received from server")
       }
-
-      // Save the token to localStorage if it's in the response
+  
       if (response.data.token) {
         appSaveToLocalStorage("authToken", response.data.token)
-
-        // Set the token in authorization header for future requests
         authAxios.defaults.headers.common["Authorization"] = `Bearer ${response.data.token}`
-        console.log("Auth token saved to localStorage and added to request headers")
-
+        
         // Store token in predefined storage key
         appSaveToLocalStorage(StorageKeys.TOKEN_DATA, {
           access_token: response.data.token,
           refresh_token: response.data.refresh_token || "",
         })
+  
+        // Make sure account is activated by checking user status
+        if (response.data.user && response.data.user.is_active === false) {
+          console.warn("User account is still inactive after OTP verification")
+        }
       } else {
         console.warn("No auth token received in OTP verification response")
       }
-
-      // Store user data if available
+  
       if (response.data.user) {
         appSaveToLocalStorage(StorageKeys.USER_DATA, response.data.user)
       }
-
+  
       return response.data
     } catch (error: any) {
       console.error("OTP verification error:", error.response?.data || error.message)

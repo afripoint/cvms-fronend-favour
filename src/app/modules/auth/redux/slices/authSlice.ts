@@ -236,11 +236,21 @@ const authSlice = createSlice({
         state.isAuthenticated = true
         state.user = action.payload.user || {}
       })
+      // .addCase(verifyOtp.rejected, (state, action) => {
+      //   state.isLoading = false
+      //   state.error = action.payload as string
+      // })
       .addCase(verifyOtp.rejected, (state, action) => {
         state.isLoading = false
-        state.error = action.payload as string
+        
+        // Check for specific inactive user error
+        const errorMessage = action.payload as string;
+        if (errorMessage && errorMessage.includes("Inactive user")) {
+          state.error = "Your account is not activated. Please try verifying your OTP again or contact support.";
+        } else {
+          state.error = errorMessage;
+        }
       })
-
     // Resend OTP
     builder
       .addCase(resendOtp.pending, (state) => {

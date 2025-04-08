@@ -128,15 +128,90 @@ const OTPVerificationPage: React.FC = () => {
     }
   }
 
+  // const handleVerify = async () => {
+  //   const otpValue = otp.join("")
+
+  //   // More thorough validation
+  //   if (otpValue.length !== 6 || otp.some((digit) => digit === "")) {
+  //     console.error("Incomplete OTP entered")
+  //     return // Don't submit if OTP is incomplete
+  //   }
+
+  //   try {
+  //     const resultAction = await dispatch(
+  //       verifyOtp({
+  //         email,
+  //         otp: otpValue,
+  //         phone_number: phoneNumber,
+  //       }),
+  //     )
+
+  //     // Check if the action was fulfilled
+  //     if (verifyOtp.fulfilled.match(resultAction)) {
+  //       // The API call was successful and account should be activated
+
+  //       // Clear data from localStorage
+  //       localStorage.removeItem("otpDeliveryMethod")
+  //       localStorage.removeItem("userPhoneNumber")
+
+  //       // Redirect to dashboard
+  //       navigate("/login")
+  //     }
+  //   } catch (err) {
+  //     console.error("OTP verification failed:", err)
+  //   }
+  // }
+
+  // const handleVerify = async () => {
+  //   const otpValue = otp.join("")
+  
+  //   if (otpValue.length !== 6 || otp.some((digit) => digit === "")) {
+  //     console.error("Incomplete OTP entered")
+  //     return
+  //   }
+  
+  //   try {
+  //     const resultAction = await dispatch(
+  //       verifyOtp({
+  //         email,
+  //         otp: otpValue,
+  //         phone_number: phoneNumber,
+  //       }),
+  //     )
+  
+  //     if (verifyOtp.fulfilled.match(resultAction)) {
+  //       // Check if the user is actually activated
+  //       const userData = resultAction.payload.user
+        
+  //       if (userData && userData.is_active) {
+  //         // Clear localStorage items
+  //         localStorage.removeItem("otpDeliveryMethod")
+  //         localStorage.removeItem("userPhoneNumber")
+          
+  //         // If authentication was successful and user is active
+  //         // Navigate directly to dashboard instead of login
+  //         navigate("/login")
+  //       } else {
+  //         console.error("Account activation failed - user still inactive")
+  //         // Handle the case where user is still inactive
+  //         // You might want to show an error or provide guidance
+  //       }
+  //     }
+  //   } catch (err) {
+  //     console.error("OTP verification failed:", err)
+  //   }
+  // }
+
+
   const handleVerify = async () => {
     const otpValue = otp.join("")
-
+  
     // More thorough validation
     if (otpValue.length !== 6 || otp.some((digit) => digit === "")) {
       console.error("Incomplete OTP entered")
       return // Don't submit if OTP is incomplete
     }
-
+  
     try {
       const resultAction = await dispatch(
         verifyOtp({
@@ -145,20 +220,31 @@ const OTPVerificationPage: React.FC = () => {
           phone_number: phoneNumber,
         }),
       )
-
+  
       // Check if the action was fulfilled
       if (verifyOtp.fulfilled.match(resultAction)) {
-        // The API call was successful and account should be activated
-
+        // The API call was successful
+        
+        // Check if user is active from the response
+        const userData = resultAction.payload.user
+        
         // Clear data from localStorage
         localStorage.removeItem("otpDeliveryMethod")
         localStorage.removeItem("userPhoneNumber")
-
-        // Redirect to dashboard
-        navigate("/login")
+  
+        if (userData && userData.is_active) {
+          // If user is active, redirect to login
+          console.log("Account successfully activated, redirecting to login")
+          navigate("/login")
+        } else {
+          // Handle case where API call succeeded but user might still be inactive
+          console.error("Verification completed but user account may still be inactive")
+          // You might want to show an error message to the user here
+        }
       }
     } catch (err) {
       console.error("OTP verification failed:", err)
+      // Show error to user
     }
   }
 
