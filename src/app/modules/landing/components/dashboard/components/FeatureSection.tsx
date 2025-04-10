@@ -3,7 +3,7 @@ import { features } from "../../../constants/dashboard"
 
 const FeatureSection: React.FC = () => {
   return (
-    <div className="rounded-lg mt-8 mb-10">
+    <div className="rounded-lg mt-4 mb-6">
       <div className="bg-[#FAFAFA] py-12 px-12">
         <h2 className="text-2xl font-bold text-center mb-4 text-[#000000]">
           Why Choose <span className="text-[#34C759]">CVMS</span>

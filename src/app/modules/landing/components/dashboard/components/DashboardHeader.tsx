@@ -9,7 +9,7 @@ const DashboardHeader: React.FC = () => {
   return (
     <div className="max-w-3xl mx-auto shadow-lg">
       <div className="bg-gray-100 p-6 rounded-b-md">
-        <div className="mb-6">
+        <div className="mb-3">
           <h3 className="text-sm font-medium mb-3">Quick Actions</h3>
           <div className="grid grid-cols-4 gap-4">
             <QuickActionCard icon={<CircleIcon color="#FF6B6B" />} title="VIN Verification History" />
