@@ -40,7 +40,7 @@ const ProfileSection: React.FC<ProfileSectionProps> = ({ firstName, lastName, em
 
   const handleSignOut = () => {
     signOut()
-    navigate("/login")
+    navigate("/")
   }
 
   return (

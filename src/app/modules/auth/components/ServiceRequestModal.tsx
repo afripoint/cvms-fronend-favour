@@ -232,8 +232,12 @@ const ServiceRequestModal: React.FC<ServiceRequestModalProps> = ({ onClose, onPr
                   </div>
                 )}
 
+               
                 {/* Service description tooltip */}
-                {hoveredService && SERVICE_DESCRIPTIONS[hoveredService] && (
+                {hoveredService && 
+                  SERVICE_DESCRIPTIONS[hoveredService] && 
+                  isDropdownOpen && 
+                  !selectedServices.includes(hoveredService) && (
                   <div className="absolute right-0 top-0 translate-x-full ml-2 z-10 w-64 bg-white p-4 rounded-md shadow-lg border">
                     <h5 className="font-medium mb-2">{hoveredService}</h5>
                     <p className="text-sm text-gray-600">{SERVICE_DESCRIPTIONS[hoveredService]}</p>

@@ -109,7 +109,7 @@ export default function SuccessPaymentModal({
   const totalItemsPrice = items.reduce((total, item) => total + item.price * item.quantity, 0)
 
   return isOpen ? (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4 pb-2">
+    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4 pb-2 mt-16">
       <Card className="bg-white w-full max-w-md relative">
         <button
           onClick={handleCloseModal}

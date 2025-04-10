@@ -24,19 +24,22 @@ export interface AuthState {
   is_accredify: boolean | null
   otpResent: boolean
   selectedServices: string[]
+  successMessage: string | null;
 }
 
 export interface StepIndicatorProps {
   currentStep?: number
 }
 
+
 export interface OTPDeliveryModalProps {
-  isOpen: boolean
-  onClose: () => void
-  onSubmit: (deliveryMethod: "email" | "sms") => void
-  email: string
-  phone: string
-  hasPhone: boolean
+  isOpen: boolean;
+  onClose: () => void;
+  onSubmit: (deliveryMethod: "email" | "sms") => void;
+  email: string;
+  phone: string;
+  hasPhone: boolean;
+  errorMessage?: string | null; // Add this line
 }
 
 export interface ServiceRequestModalProps {
@@ -128,4 +131,5 @@ export interface PasswordResetState {
   isLoading: boolean
   error: string | null
 }
+
 

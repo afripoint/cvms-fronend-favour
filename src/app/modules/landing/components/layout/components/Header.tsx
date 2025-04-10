@@ -236,7 +236,7 @@ export const Header: React.FC = () => {
                 onClick={() => {
                   signOut();
                   setIsMobileMenuOpen(false);
-                  window.location.href = "/login";
+                  window.location.href = "/";
                 }}
                 className="mt-2 block w-full bg-red-500 text-white rounded-sm text-center py-2 text-base"
               >

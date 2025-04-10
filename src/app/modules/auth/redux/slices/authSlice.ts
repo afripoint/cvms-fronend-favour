@@ -11,12 +11,95 @@ const initialState: AuthState = {
   is_accredify: null,
   otpResent: false,
   selectedServices: [],
+  successMessage: null,
 }
 
+
+// This could be in a utils file or in your authSlice.ts
+// export const extractErrorMessage = (error: any): string => {
+//   console.log("Extracting error message from:", error)
+  
+//   // Handle array of error messages from API
+//   if (error && error.data && error.data.error && Array.isArray(error.data.error)) {
+//     return error.data.error[0]
+//   }
+  
+//   // Handle single error message
+//   if (error && error.data && error.data.error) {
+//     return error.data.error
+//   }
+  
+//   // Handle detail error format
+//   if (error && error.data && error.data.detail) {
+//     return error.data.detail
+//   }
+  
+//   // Handle message format
+//   if (error && error.data && error.data.message) {
+//     return error.data.message
+//   }
+  
+//   // Check if error itself is a string
+//   if (typeof error === 'string') {
+//     return error
+//   }
+  
+//   // Check if error has a message property
+//   if (error && error.message) {
+//     return error.message
+//   }
+  
+//   // Default error message
+//   return "An unexpected error occurred"
+// };
+
+export const extractErrorMessage = (error: any): string => {
+  console.log("Extracting error message from:", error)
+  
+  // Handle non_field_errors array from API (most common format for auth errors)
+  if (error?.data?.non_field_errors && Array.isArray(error.data.non_field_errors)) {
+    return error.data.non_field_errors[0]
+  }
+  
+  // Handle array of error messages from API
+  if (error?.data?.error && Array.isArray(error.data.error)) {
+    return error.data.error[0]
+  }
+  
+  // Handle single error message
+  if (error?.data?.error) {
+    return error.data.error
+  }
+  
+  // Handle detail error format
+  if (error?.data?.detail) {
+    return error.data.detail
+  }
+  
+  // Handle message format
+  if (error?.data?.message) {
+    return error.data.message
+  }
+  
+  // Check if error itself is a string
+  if (typeof error === 'string') {
+    return error
+  }
+  
+  // Check if error has a message property
+  if (error?.message) {
+    return error.message
+  }
+  
+  // Default error message
+  return "An unexpected error occurred"
+}
 // Async thunks for authentication actions
 export const registerUser = createAsyncThunk(
   "auth/register",
   async (userData: RegistrationData, { rejectWithValue, getState }) => {
+
+
     try {
       const state = getState() as { auth: AuthState }
 
@@ -39,9 +122,10 @@ export const registerUser = createAsyncThunk(
       }
 
       const response = await authService.register(completeUserData)
+      localStorage.setItem("otpSentTime", Date.now().toString())
       return response
     } catch (error: any) {
-      return rejectWithValue(error.response?.data?.detail || error.message || "Registration failed")
+      return rejectWithValue(extractErrorMessage(error))
     }
   },
 )
@@ -53,7 +137,7 @@ export const verifyOtp = createAsyncThunk(
       const response = await authService.verifyOtp(email, otp, phone_number)
       return response
     } catch (error: any) {
-      return rejectWithValue(error.response?.data?.detail || "OTP verification failed")
+      return rejectWithValue(extractErrorMessage(error))
     }
   },
 )
@@ -65,7 +149,7 @@ export const resendOtp = createAsyncThunk(
       const response = await authService.resendOtp(email, deliveryMethod)
       return response
     } catch (error: any) {
-      return rejectWithValue(error.response?.data?.detail || "Failed to resend OTP")
+      return rejectWithValue(extractErrorMessage(error))
     }
   },
 )
@@ -77,7 +161,7 @@ export const loginUser = createAsyncThunk(
       const response = await authService.login(email, password)
       return response
     } catch (error: any) {
-      return rejectWithValue(error.response?.data?.detail || "Login failed")
+      return rejectWithValue(extractErrorMessage(error))
     }
   },
 )
@@ -87,7 +171,7 @@ export const forgotPassword = createAsyncThunk("auth/forgotPassword", async (ema
     const response = await authService.forgotPassword(email)
     return response
   } catch (error: any) {
-    return rejectWithValue(error.response?.data?.detail || "Failed to send password reset email")
+    return rejectWithValue(extractErrorMessage(error))
   }
 })
 
@@ -98,7 +182,7 @@ export const resetPasswordTokenCheck = createAsyncThunk(
       const response = await authService.resetPasswordTokenCheck(token)
       return response
     } catch (error: any) {
-      return rejectWithValue(error.response?.data?.detail || "Invalid or expired token")
+      return rejectWithValue(extractErrorMessage(error))
     }
   },
 )
@@ -110,7 +194,7 @@ export const setNewPassword = createAsyncThunk(
       const response = await authService.setNewPassword(token, newPassword)
       return response
     } catch (error: any) {
-      return rejectWithValue(error.response?.data?.detail || "Failed to reset password")
+      return rejectWithValue(extractErrorMessage(error))
     }
   },
 )
@@ -119,7 +203,7 @@ export const fetchCurrentUser = createAsyncThunk("auth/getCurrentUser", async (_
   try {
     return await authService.getCurrentUser()
   } catch (error: any) {
-    return rejectWithValue(error.response?.data?.detail || "Failed to fetch user data")
+    return rejectWithValue(extractErrorMessage(error))
   }
 })
 
@@ -235,11 +319,8 @@ const authSlice = createSlice({
         state.isLoading = false
         state.isAuthenticated = true
         state.user = action.payload.user || {}
+        state.successMessage = action.payload.message || "Account verified successfully"
       })
-      // .addCase(verifyOtp.rejected, (state, action) => {
-      //   state.isLoading = false
-      //   state.error = action.payload as string
-      // })
       .addCase(verifyOtp.rejected, (state, action) => {
         state.isLoading = false
         
@@ -293,4 +374,3 @@ const authSlice = createSlice({
 
 export const { clearError, setRole, setIs_Accredify, setSelectedServices, resetOtpResent } = authSlice.actions
 export default authSlice.reducer
-

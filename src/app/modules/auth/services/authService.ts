@@ -42,31 +42,33 @@ authAxios.interceptors.response.use(
     return response
   },
   (error) => {
-    console.error("Response error details:", error.response || error.message)
-    return Promise.reject(error)
+    console.error("Response error details:", error.response)
+    return Promise.reject(error.response)
   },
+
 )
 
 const authService = {
-  // Register new user with improved error handling
+  
+
   register: async (userData: RegistrationData): Promise<any> => {
     try {
       console.log("Sending registration data:", userData)
       const response = await authAxios.post("/register/", userData)
       console.log("Registration successful:", response.data)
-
+  
       // Store user data for later use
       if (response.data.user) {
         appSaveToLocalStorage(StorageKeys.USER_DATA, response.data.user)
       }
-
+  
       return response.data
     } catch (error: any) {
       console.error("Registration error:", error)
-      // Provide more detailed error information
-      const errorMessage =
-        error.response?.data?.detail || error.response?.data?.message || error.message || "Registration failed"
-      throw new Error(errorMessage)
+      
+      // Don't wrap the error in a new Error object, just throw the response as is
+      // so it can be properly processed by extractErrorMessage
+      throw error
     }
   },
 
@@ -137,56 +139,6 @@ const authService = {
     }
   },
 
-  // verifyOtp: async (email: string, otp: string, phone_number?: string): Promise<any> => {
-  //   try {
-  //     console.log("Sending OTP verification data:", { email, otp, phone_number })
-
-  //     // Build payload, only including phone_number if it exists
-  //     const payload: any = { email, otp }
-  //     if (phone_number) {
-  //       payload.phone_number = phone_number
-  //       // Store phone number for future use
-  //       appSaveToLocalStorage("userPhoneNumber", phone_number)
-  //     }
-
-  //     const response = await authAxios.post("/verify-otp/", payload)
-
-  //     console.log("OTP verification response:", response.data)
-
-  //     // Validate response structure
-  //     if (!response.data) {
-  //       throw new Error("Empty response received from server")
-  //     }
-
-  //     // Save the token to localStorage if it's in the response
-  //     if (response.data.token) {
-  //       appSaveToLocalStorage("authToken", response.data.token)
-
-  //       // Set the token in authorization header for future requests
-  //       authAxios.defaults.headers.common["Authorization"] = `Bearer ${response.data.token}`
-  //       console.log("Auth token saved to localStorage and added to request headers")
-
-  //       // Store token in predefined storage key
-  //       appSaveToLocalStorage(StorageKeys.TOKEN_DATA, {
-  //         access_token: response.data.token,
-  //         refresh_token: response.data.refresh_token || "",
-  //       })
-  //     } else {
-  //       console.warn("No auth token received in OTP verification response")
-  //     }
-
-  //     // Store user data if available
-  //     if (response.data.user) {
-  //       appSaveToLocalStorage(StorageKeys.USER_DATA, response.data.user)
-  //     }
-
-  //     return response.data
-  //   } catch (error: any) {
-  //     console.error("OTP verification error:", error.response?.data || error.message)
-  //     throw error
-  //   }
-  // },
-
 
   verifyOtp: async (email: string, otp: string, phone_number?: string): Promise<any> => {
     try {
@@ -236,26 +188,53 @@ const authService = {
     }
   },
 
+
+
+  // resendOtp: async (email: string, deliveryMethod: "email" | "sms"): Promise<any> => {
+  //   try {
+  //     console.log("Resending OTP via", deliveryMethod, "to:", email)
+  
+  //     // Get phone number from localStorage if available
+  //     const phoneNumber = appGetFromLocalStorage<string>("userPhoneNumber") || ""
+  
+  //     // Build the payload according to the backend requirements
+  //     const payload = {
+  //       email: email,
+  //       // Always include phone_number as required by the API
+  //       // If not available, provide a placeholder to satisfy the API requirement
+  //       phone_number: phoneNumber || "not_provided", // Use a placeholder if no phone number
+  //       message_choice: deliveryMethod,
+  //     }
+  
+  //     console.log("Sending resend OTP payload:", payload)
+  //     const response = await authAxios.put("/resend-otp/", payload)
+  
+  //     console.log("OTP resent successfully")
+  //     return response.data
+  //   } catch (error: any) {
+  //     console.error("OTP resend error:", error.response?.data || error.message)
+  //     throw error
+  //   }
+  // },
+  
   resendOtp: async (email: string, deliveryMethod: "email" | "sms"): Promise<any> => {
     try {
       console.log("Resending OTP via", deliveryMethod, "to:", email)
-
+  
       // Get phone number from localStorage if available
       const phoneNumber = appGetFromLocalStorage<string>("userPhoneNumber") || ""
-
-      // Map the delivery method to message_choice
-      const messageChoice = deliveryMethod // Both are 'email' or 'sms'
-
+  
       // Build the payload according to the backend requirements
+      // The API requires the phone_number field to not be blank
       const payload = {
         email: email,
-        phone_number: phoneNumber,
-        message_choice: messageChoice,
+        phone_number: phoneNumber || "not_provided", // Providing a placeholder value if no phone number
+        message_choice: deliveryMethod,
       }
-
+  
       console.log("Sending resend OTP payload:", payload)
       const response = await authAxios.put("/resend-otp/", payload)
-
+  
       console.log("OTP resent successfully")
       return response.data
     } catch (error: any) {

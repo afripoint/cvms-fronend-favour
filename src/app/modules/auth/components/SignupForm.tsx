@@ -1,30 +1,30 @@
-"use client"
+"use client";
 
-import type React from "react"
-import { useState } from "react"
-import { useNavigate } from "react-router-dom"
-import { useDispatch, useSelector } from "react-redux"
-// import { registerUser } from "../../../redux/slices/authSlice"
-// import { setCurrentStep } from "../../../redux/slices/uiSlice"
-import type { AppDispatch, RootState } from "../../../core/store"
-import StepIndicator from "./StepIndicator"
-import CountryCodeSelector from "../../shared/components/ui/CountryCode"
-import OTPDeliveryModal from "./OTPDeliveryModal"
-import { RegistrationData, SignUpFormData } from "../types/auth"
-import { COUNTRY_CODES } from "../constants/auth"
-import { useFormValidation } from "../hooks/useFormValidation"
-import { registerUser } from "../redux/slices/authSlice"
-import { setCurrentStep } from "../redux/slices/uiSlice"
-// import type { SignUpFormData, RegistrationData } from "../../../types/auth"
-// import { useFormValidation } from "../../../hooks/useFormValidation"
-// import { COUNTRY_CODES } from "../../../constants/auth"
+import type React from "react";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import type { AppDispatch, RootState } from "../../../core/store";
+import StepIndicator from "./StepIndicator";
+import CountryCodeSelector from "../../shared/components/ui/CountryCode";
+import OTPDeliveryModal from "./OTPDeliveryModal";
+import { RegistrationData, SignUpFormData } from "../types/auth";
+import { COUNTRY_CODES } from "../constants/auth";
+import { useFormValidation } from "../hooks/useFormValidation";
+import { registerUser } from "../redux/slices/authSlice";
+import { setCurrentStep } from "../redux/slices/uiSlice";
 
 const SignUpForm: React.FC = () => {
-  const { role, is_accredify, selectedServices } = useSelector((state: RootState) => state.auth)
-  const { currentStep } = useSelector((state: RootState) => state.ui)
+  const { role, is_accredify, selectedServices } = useSelector(
+    (state: RootState) => state.auth
+  );
+  const [registrationError, setRegistrationError] = useState<string | null>(
+    null
+  );
+  const { currentStep } = useSelector((state: RootState) => state.ui);
 
-  const navigate = useNavigate()
-  const dispatch = useDispatch<AppDispatch>()
+  const navigate = useNavigate();
+  const dispatch = useDispatch<AppDispatch>();
 
   const [formData, setFormData] = useState<SignUpFormData>({
     first_Name: "",
@@ -43,12 +43,12 @@ const SignUpForm: React.FC = () => {
     password: "",
     confirm_Password: "",
     message_choice: "email",
-  })
+  });
 
-  const [showPassword, setShowPassword] = useState(false)
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
-  const [showOTPModal, setShowOTPModal] = useState(false)
-  const [selectedCountry, setSelectedCountry] = useState(COUNTRY_CODES[0])
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [showOTPModal, setShowOTPModal] = useState(false);
+  const [selectedCountry, setSelectedCountry] = useState(COUNTRY_CODES[0]);
 
   const shouldShowField = (fieldName: string) => {
     if (
@@ -59,59 +59,68 @@ const SignUpForm: React.FC = () => {
       fieldName === "password" ||
       fieldName === "confirmPassword"
     ) {
-      return true
+      return true;
     }
 
     if (fieldName === "address") {
-      return true
+      return true;
     }
 
     if (fieldName === "state" || fieldName === "lga") {
-      return is_accredify === true
+      return is_accredify === true;
     }
 
     if (fieldName === "agencyName") {
-      return role === "agent account/freight forwarders" // Only show for agent role
+      return role === "agent account/freight forwarders"; // Only show for agent role
     }
 
     if (fieldName === "companyName" || fieldName === "businessName") {
-      return role === "company account" // Only show for company role
+      return role === "company account"; // Only show for company role
     }
 
     if (fieldName === "declarantCode" || fieldName === "businessRegNo") {
-      return role === "agent account/freight forwarders" || role === "company account" // Show for both agent and company
+      return (
+        role === "agent account/freight forwarders" ||
+        role === "company account"
+      ); // Show for both agent and company
     }
 
-    return false
-  }
+    return false;
+  };
 
-  const { isFormValid, passwordError, emailError } = useFormValidation(formData, shouldShowField)
+  const { isFormValid, passwordError, emailError } = useFormValidation(
+    formData,
+    shouldShowField
+  );
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target
-    setFormData((prev) => ({ ...prev, [name]: value }))
-  }
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
 
   const handleNextClick = (e: React.FormEvent) => {
-    e.preventDefault()
+    e.preventDefault();
     if (isFormValid) {
-      setShowOTPModal(true)
+      setShowOTPModal(true);
     }
-  }
+  };
 
   const handleSubmit = async (message_choice: "email" | "sms") => {
     if (message_choice === "sms" && !formData.phone_number) {
-      alert("Please provide a phone number for OTP delivery.")
-      return
+      alert("Please provide a phone number for OTP delivery.");
+      return;
     }
 
-    // Format phone number to remove any extra spaces
+    setRegistrationError(null);
+
     const formattedPhoneNumber = formData.phone_number
-      ? `${selectedCountry.dialCode}${formData.phone_number.trim().replace(/^\s*0+/, "")}`
-      : undefined
+      ? `${selectedCountry.dialCode}${formData.phone_number
+          .trim()
+          .replace(/^\s*0+/, "")}`
+      : undefined;
 
     // Ensure role is a string (not null)
-    const userRole = role || "individual account"
+    const userRole = role || "individual account";
 
     const registrationData: RegistrationData = {
       first_name: formData.first_Name,
@@ -132,37 +141,41 @@ const SignUpForm: React.FC = () => {
       is_accredify: is_accredify,
       accredify_services: is_accredify ? selectedServices : undefined,
       message_choice: message_choice,
-    }
+    };
 
     try {
-      const resultAction = await dispatch(registerUser(registrationData))
+      const resultAction = await dispatch(registerUser(registrationData));
       if (registerUser.fulfilled.match(resultAction)) {
         // Store the email and phone number in localStorage
-        localStorage.setItem("userEmail", formData.email)
+        localStorage.setItem("userEmail", formData.email);
 
         // Only store phone number if it exists
         if (formattedPhoneNumber) {
-          localStorage.setItem("userPhoneNumber", formattedPhoneNumber)
+          localStorage.setItem("userPhoneNumber", formattedPhoneNumber);
         }
 
         // Store the OTP delivery method
-        localStorage.setItem("otpDeliveryMethod", message_choice)
+        localStorage.setItem("otpDeliveryMethod", message_choice);
 
-        setShowOTPModal(false)
-        dispatch(setCurrentStep(3)) // Update the current step in UI state
-        navigate("/verify-otp")
+        setShowOTPModal(false);
+        dispatch(setCurrentStep(3)); // Update the current step in UI state
+        navigate("/verify-otp");
       } else if (registerUser.rejected.match(resultAction)) {
-        console.error("Registration failed:", resultAction.error)
+        console.error("Registration failed:", resultAction);
+
+        // The payload should now be a properly formatted string message
+        setRegistrationError(resultAction.payload as string);
       }
     } catch (err) {
-      console.error("Registration failed:", err)
+      console.error("Unexpected error during registration:", err);
+      setRegistrationError("An unexpected error occurred. Please try again.");
     }
-  }
+  };
 
   const handleGoBack = () => {
-    dispatch(setCurrentStep(1)) // Update the current step in UI state
-    navigate("/account-type")
-  }
+    dispatch(setCurrentStep(1)); // Update the current step in UI state
+    navigate("/account-type");
+  };
 
   return (
     <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
@@ -185,7 +198,9 @@ const SignUpForm: React.FC = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-4">
               {shouldShowField("firstName") && (
                 <div>
-                  <label className="block text-xs font-medium text-gray-700 mb-1">First Name*</label>
+                  <label className="block text-xs font-medium text-gray-700 mb-1">
+                    First Name*
+                  </label>
                   <input
                     type="text"
                     name="first_Name"
@@ -200,7 +215,9 @@ const SignUpForm: React.FC = () => {
 
               {shouldShowField("lastName") && (
                 <div>
-                  <label className="block text-xs font-medium text-gray-700 mb-1">Last Name*</label>
+                  <label className="block text-xs font-medium text-gray-700 mb-1">
+                    Last Name*
+                  </label>
                   <input
                     type="text"
                     name="last_Name"
@@ -214,17 +231,21 @@ const SignUpForm: React.FC = () => {
               )}
 
               {shouldShowField("phone") && (
-                <div>
-                  <label className="block text-xs font-medium text-gray-700 mb-1">Phone Number (Optional)</label>
+                <div className="">
+                  <label className="block text-xs font-medium text-gray-700 mb-1">
+                    Phone Number
+                  </label>
                   <div className="flex">
-                    <CountryCodeSelector value={selectedCountry} onChange={setSelectedCountry} />
+                    <CountryCodeSelector onChange={setSelectedCountry} />
                     <input
                       type="tel"
                       name="phone_number"
                       value={formData.phone_number}
                       onChange={handleChange}
-                      className="flex-1 py-1.5 border text-left border-l-0 rounded-r-md text-sm"
-                      placeholder={`${selectedCountry.dialCode.slice(1)} 000-0000`}
+                      className="flex-1 py-1.5 border text-left border-l-0 rounded-r-md text-sm w-2"
+                      placeholder={`${selectedCountry.dialCode.slice(
+                        1
+                      )} 000-0000`}
                     />
                   </div>
                 </div>
@@ -232,23 +253,31 @@ const SignUpForm: React.FC = () => {
 
               {shouldShowField("email") && (
                 <div>
-                  <label className="block text-xs font-medium text-gray-700 mb-1">Email Address*</label>
+                  <label className="block text-xs font-medium text-gray-700 mb-1">
+                    Email Address*
+                  </label>
                   <input
                     type="email"
                     name="email"
                     value={formData.email}
                     onChange={handleChange}
-                    className="w-full px-3 py-1.5 border rounded-md text-sm"
+                    className={`w-full px-3 py-1.5 border rounded-md text-sm ${
+                      emailError ? "border-red-500" : ""
+                    }`}
                     placeholder="hello@example.com"
                     required
                   />
-                  {emailError && <p className="mt-1 text-xs text-red-500">{emailError}</p>}
+                  {emailError && (
+                    <p className="mt-1 text-xs text-red-500">{emailError}</p>
+                  )}
                 </div>
               )}
 
               {shouldShowField("agencyName") && (
                 <div className="md:col-span-2">
-                  <label className="block text-xs font-medium text-gray-700 mb-1">Agency Name*</label>
+                  <label className="block text-xs font-medium text-gray-700 mb-1">
+                    Agency Name*
+                  </label>
                   <input
                     type="text"
                     name="agency_Name"
@@ -263,7 +292,9 @@ const SignUpForm: React.FC = () => {
 
               {shouldShowField("companyName") && (
                 <div className="md:col-span-2">
-                  <label className="block text-xs font-medium text-gray-700 mb-1">Company Name*</label>
+                  <label className="block text-xs font-medium text-gray-700 mb-1">
+                    Company Name*
+                  </label>
                   <input
                     type="text"
                     name="company_Name"
@@ -278,7 +309,9 @@ const SignUpForm: React.FC = () => {
 
               {shouldShowField("businessName") && (
                 <div className="md:col-span-2">
-                  <label className="block text-xs font-medium text-gray-700 mb-1">Business Name*</label>
+                  <label className="block text-xs font-medium text-gray-700 mb-1">
+                    Business Name*
+                  </label>
                   <input
                     type="text"
                     name="business_Name"
@@ -293,7 +326,9 @@ const SignUpForm: React.FC = () => {
 
               {shouldShowField("declarantCode") && (
                 <div>
-                  <label className="block text-xs font-medium text-gray-700 mb-1">Declarant Code*</label>
+                  <label className="block text-xs font-medium text-gray-700 mb-1">
+                    Declarant Code*
+                  </label>
                   <input
                     type="text"
                     name="declarant_Code"
@@ -308,7 +343,9 @@ const SignUpForm: React.FC = () => {
 
               {shouldShowField("businessRegNo") && (
                 <div>
-                  <label className="block text-xs font-medium text-gray-700 mb-1">Business Registration Number*</label>
+                  <label className="block text-xs font-medium text-gray-700 mb-1">
+                    Business Registration Number*
+                  </label>
                   <input
                     type="text"
                     name="cac"
@@ -323,7 +360,9 @@ const SignUpForm: React.FC = () => {
 
               {shouldShowField("address") && (
                 <div className="md:col-span-2">
-                  <label className="block text-xs font-medium text-gray-700 mb-1">Address*</label>
+                  <label className="block text-xs font-medium text-gray-700 mb-1">
+                    Address*
+                  </label>
                   <input
                     type="text"
                     name="address"
@@ -331,7 +370,9 @@ const SignUpForm: React.FC = () => {
                     onChange={handleChange}
                     className="w-full px-3 py-1.5 border rounded-md text-sm"
                     placeholder={
-                      role === "individual account" ? "Enter your home address" : "Enter your office address"
+                      role === "individual account"
+                        ? "Enter your home address"
+                        : "Enter your office address"
                     }
                     required
                   />
@@ -340,7 +381,9 @@ const SignUpForm: React.FC = () => {
 
               {shouldShowField("state") && (
                 <div>
-                  <label className="block text-xs font-medium text-gray-700 mb-1">State*</label>
+                  <label className="block text-xs font-medium text-gray-700 mb-1">
+                    State*
+                  </label>
                   <input
                     type="text"
                     name="state"
@@ -355,7 +398,9 @@ const SignUpForm: React.FC = () => {
 
               {shouldShowField("lga") && (
                 <div>
-                  <label className="block text-xs font-medium text-gray-700 mb-1">L.G.A*</label>
+                  <label className="block text-xs font-medium text-gray-700 mb-1">
+                    L.G.A*
+                  </label>
                   <input
                     type="text"
                     name="local_govt"
@@ -370,7 +415,9 @@ const SignUpForm: React.FC = () => {
 
               {shouldShowField("password") && (
                 <div>
-                  <label className="block text-xs font-medium text-gray-700 mb-1">Password*</label>
+                  <label className="block text-xs font-medium text-gray-700 mb-1">
+                    Password*
+                  </label>
                   <div className="relative">
                     <input
                       type={showPassword ? "text" : "password"}
@@ -387,7 +434,12 @@ const SignUpForm: React.FC = () => {
                       onClick={() => setShowPassword(!showPassword)}
                     >
                       {showPassword ? (
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg
+                          className="w-4 h-4"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
                           <path
                             strokeLinecap="round"
                             strokeLinejoin="round"
@@ -402,7 +454,12 @@ const SignUpForm: React.FC = () => {
                           />
                         </svg>
                       ) : (
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg
+                          className="w-4 h-4"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
                           <path
                             strokeLinecap="round"
                             strokeLinejoin="round"
@@ -414,7 +471,12 @@ const SignUpForm: React.FC = () => {
                     </button>
                   </div>
                   <div className="mt-0.5 flex items-center">
-                    <svg className="w-3 h-3 text-gray-400 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg
+                      className="w-3 h-3 text-gray-400 mr-1"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
                       <path
                         strokeLinecap="round"
                         strokeLinejoin="round"
@@ -422,15 +484,21 @@ const SignUpForm: React.FC = () => {
                         d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
                       />
                     </svg>
-                    <span className="text-xs text-gray-500">Must contain 1 uppercase, 1 number, min. 8 characters</span>
+                    <span className="text-xs text-gray-500">
+                      Must contain 1 uppercase, 1 number, min. 8 characters
+                    </span>
                   </div>
-                  {passwordError && <p className="mt-1 text-xs text-red-500">{passwordError}</p>}
+                  {passwordError && (
+                    <p className="mt-1 text-xs text-red-500">{passwordError}</p>
+                  )}
                 </div>
               )}
 
               {shouldShowField("confirmPassword") && (
                 <div>
-                  <label className="block text-xs font-medium text-gray-700 mb-1">Confirm Password*</label>
+                  <label className="block text-xs font-medium text-gray-700 mb-1">
+                    Confirm Password*
+                  </label>
                   <div className="relative">
                     <input
                       type={showConfirmPassword ? "text" : "password"}
@@ -444,10 +512,17 @@ const SignUpForm: React.FC = () => {
                     <button
                       type="button"
                       className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-400"
-                      onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                      onClick={() =>
+                        setShowConfirmPassword(!showConfirmPassword)
+                      }
                     >
                       {showConfirmPassword ? (
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg
+                          className="w-4 h-4"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
                           <path
                             strokeLinecap="round"
                             strokeLinejoin="round"
@@ -462,7 +537,12 @@ const SignUpForm: React.FC = () => {
                           />
                         </svg>
                       ) : (
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg
+                          className="w-4 h-4"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
                           <path
                             strokeLinecap="round"
                             strokeLinejoin="round"
@@ -487,7 +567,11 @@ const SignUpForm: React.FC = () => {
               </button>
               <button
                 type="submit"
-                className={`flex-1 py-1.5 px-4 ${isFormValid ? "bg-green-500 hover:bg-green-600 text-black" : "bg-gray-300 text-white cursor-not-allowed"} rounded-md transition text-sm`}
+                className={`flex-1 py-1.5 px-4 ${
+                  isFormValid
+                    ? "bg-green-500 hover:bg-green-600 text-black"
+                    : "bg-gray-300 text-white cursor-not-allowed"
+                } rounded-md transition text-sm`}
                 disabled={!isFormValid}
               >
                 Next
@@ -504,18 +588,21 @@ const SignUpForm: React.FC = () => {
         </div>
       </div>
 
-      {/* OTP Delivery Method Modal */}
       <OTPDeliveryModal
         isOpen={showOTPModal}
         onClose={() => setShowOTPModal(false)}
         onSubmit={handleSubmit}
         email={formData.email}
-        phone={formData.phone_number ? `${selectedCountry.dialCode} ${formData.phone_number}` : ""}
+        phone={
+          formData.phone_number
+            ? `${selectedCountry.dialCode} ${formData.phone_number}`
+            : ""
+        }
         hasPhone={!!formData.phone_number}
+        errorMessage={registrationError} // Pass the error message
       />
     </div>
-  )
-}
+  );
+};
 
-export default SignUpForm
-
+export default SignUpForm;

@@ -25,12 +25,18 @@ const countries: Country[] = [
   { name: 'Germany', code: 'DE', dialCode: '+49', flag: '/flags/de.svg' },
 ];
 
+// Get Nigeria as the default country
+export const DEFAULT_COUNTRY = countries.find(country => country.code === 'NG') || countries[0];
+
 interface CountryCodeSelectorProps {
-  value: Country;
+  value?: Country;
   onChange: (country: Country) => void;
 }
 
-const CountryCodeSelector: React.FC<CountryCodeSelectorProps> = ({ value, onChange }) => {
+const CountryCodeSelector: React.FC<CountryCodeSelectorProps> = ({ 
+  value = DEFAULT_COUNTRY, // Set Nigeria as default if no value is provided
+  onChange 
+}) => {
   const [isOpen, setIsOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -62,6 +68,13 @@ const CountryCodeSelector: React.FC<CountryCodeSelectorProps> = ({ value, onChan
       searchRef.current.focus();
     }
   }, [isOpen]);
+
+  // Set default country on mount if value is not provided
+  useEffect(() => {
+    if (!value) {
+      onChange(DEFAULT_COUNTRY);
+    }
+  }, [value, onChange]);
 
   const handleCountrySelect = (country: Country) => {
     onChange(country);
