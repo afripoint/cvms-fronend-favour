@@ -5,31 +5,31 @@ const initialState: ReportState = {
   reports: [
     {
       id: 1,
-      title: 'Vehicle Report',
-      vin: '456QKLUK/DSPBHD',
+      title: '',
+      vin: '',
       action: 'download',
       downloadUrl: '/api/reports/1/download',
       vehicleDetails: {
-        brand: 'Mack Truck',
-        model: 'USA + USED MACK TRUCK',
-        vehicle_year: '2012',
-        color: 'Black',
-        chassis_number: '456QKLUK/DSPBHD'
+        brand: '',
+        model: '',
+        vehicle_year: '',
+        color: '',
+        chassis_number: ''
       }
     },
     {
       id: 2,
-      title: 'VIN Search',
-      vin: '1M2090323UDE0B1B7G1',
+      title: '',
+      vin: '',
       action: 'download',
       downloadUrl: '/api/reports/2/download',
       isCertificate: true,
       vehicleDetails: {
-        brand: 'Mack Truck',
-        model: 'USA + USED MACK TRUCK',
-        vehicle_year: '2012',
-        color: 'Black',
-        chassis_number: '1M2090323UDE0B1B7G1'
+        brand: '',
+        model: '',
+        vehicle_year: '',
+        color: '',
+        chassis_number: ''
       }
     }
   ],

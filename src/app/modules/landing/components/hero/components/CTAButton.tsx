@@ -3,15 +3,22 @@
 import type React from "react"
 import { useNavigate } from "react-router-dom"
 import type { CTAButtonProps } from "../../../types/hero"
+import { useAuth } from "../../../hooks/useAuth" // Updated import path to match your project structure
 
 const CTAButton: React.FC<CTAButtonProps> = ({ text = "Get Started", onClick }) => {
   const navigate = useNavigate()
+  const { isLoggedIn } = useAuth() // Get authentication status directly
 
   const handleClick = () => {
     if (onClick) {
       onClick()
     } else {
-      navigate("/account-type")
+      // Redirect based on authentication status
+      if (isLoggedIn) {
+        navigate("/vin")
+      } else {
+        navigate("/account-type")
+      }
     }
   }
 
@@ -27,4 +34,3 @@ const CTAButton: React.FC<CTAButtonProps> = ({ text = "Get Started", onClick }) 
 }
 
 export default CTAButton
-

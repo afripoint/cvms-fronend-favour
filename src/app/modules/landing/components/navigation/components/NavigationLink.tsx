@@ -13,7 +13,7 @@ export const NavigationLinks: React.FC = () => {
           key={item.label}
           to={item.href}
           onClick={(e) => handleScroll(e, item.href)}
-          className="text-base leading-6 text-black hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 rounded-md"
+          className="text-base leading-6 text-black "
         >
           {item.label}
         </Link>

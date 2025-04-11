@@ -193,10 +193,10 @@ const PaymentMethodPage: React.FC = () => {
         {/* Payment Method Title */}
         <h1 className="text-lg sm:text-xl font-bold mb-4 sm:mb-6 ml-4 sm:ml-8 md:ml-16 lg:ml-24">Payment Method</h1>
 
-        <div className="flex flex-col lg:flex-row justify-center items-start gap-6 px-4">
+        <div className="flex flex-col lg:flex-row justify-center items-start gap-56 lg:gap-40 px-4">
           {/* Payment Method Column */}
           <Card className="w-full lg:max-w-lg">
-            <CardContent className="space-y-6 sm:space-y-8 p-4 border-2">
+            <CardContent className="space-y-3 sm:space-y-4 p-4 border-2">
               <div
                 className={`cursor-pointer rounded-lg flex items-center transition-all duration-200 ${
                   selectedMethod === "oneTime" ? "" : "border-gray-200"
@@ -286,7 +286,7 @@ const PaymentMethodPage: React.FC = () => {
         </div>
 
         {/* Your Items Section with Dropdown */}
-        <div className="mt-6 flex justify-center lg:justify-end px-4 lg:mr-24">
+        <div className=" flex justify-center lg:justify-end px-4 lg:mr-14">
           <div className="w-full lg:w-[400px] border rounded-lg bg-gray-50">
             <div
               className="p-3 flex items-center justify-between cursor-pointer"

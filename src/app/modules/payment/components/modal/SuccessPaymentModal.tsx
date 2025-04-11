@@ -90,12 +90,346 @@ export default function SuccessPaymentModal({
     )
   }
 
-  const handlePrintReceipt = () => {
-    // Print functionality would go here
-    console.log("Printing receipt for transaction:", transactionId)
-    window.print()
-  }
+  // const handlePrintReceipt = () => {
+  //   // Create a new window for printing
+  //   const printWindow = window.open('', '_blank', 'width=800,height=600');
+    
+  //   // Check if window was successfully created
+  //   if (!printWindow) {
+  //     console.error("Failed to open print window. Popup might be blocked.");
+  //     alert("Failed to open print window. Please allow popups for this site.");
+  //     return;
+  //   }
+    
+  //   // Generate receipt HTML content
+  //   const receiptContent = `
+  //     <!DOCTYPE html>
+  //     <html>
+  //     <head>
+  //       <title>Payment Receipt - ${transactionId}</title>
+  //       <style>
+  //         body {
+  //           font-family: Arial, sans-serif;
+  //           padding: 20px;
+  //           max-width: 400px;
+  //           margin: 0 auto;
+  //         }
+  //         .receipt-header {
+  //           text-align: center;
+  //           border-bottom: 1px solid #eee;
+  //           padding-bottom: 10px;
+  //           margin-bottom: 15px;
+  //         }
+  //         .logo {
+  //           max-width: 80px;
+  //           margin-bottom: 8px;
+  //         }
+  //         .receipt-title {
+  //           font-size: 18px;
+  //           font-weight: bold;
+  //           margin: 5px 0;
+  //         }
+  //         .transaction-id {
+  //           font-size: 12px;
+  //           color: #666;
+  //           margin-bottom: 15px;
+  //         }
+  //         .amount {
+  //           font-size: 24px;
+  //           font-weight: bold;
+  //           margin: 15px 0;
+  //         }
+  //         .detail-label {
+  //           font-size: 12px;
+  //           color: #666;
+  //           text-transform: uppercase;
+  //           margin-top: 15px;
+  //           margin-bottom: 5px;
+  //         }
+  //         .detail-row {
+  //           display: flex;
+  //           justify-content: space-between;
+  //           margin-bottom: 8px;
+  //           font-size: 14px;
+  //         }
+  //         .detail-value {
+  //           font-weight: 500;
+  //         }
+  //         .items-section {
+  //           margin: 15px 0;
+  //           border-bottom: 1px solid #eee;
+  //           padding-bottom: 15px;
+  //         }
+  //         .footer {
+  //           text-align: center;
+  //           font-size: 12px;
+  //           color: #666;
+  //           margin-top: 20px;
+  //           border-top: 1px solid #eee;
+  //           padding-top: 15px;
+  //         }
+  //         @media print {
+  //           body {
+  //             print-color-adjust: exact;
+  //             -webkit-print-color-adjust: exact;
+  //           }
+  //         }
+  //       </style>
+  //     </head>
+  //     <body>
+  //       <div class="receipt-header">
+  //         <img src="/images/logo.png" alt="Customs Verification" class="logo" />
+  //         <div class="receipt-title">Customs Verification Management System</div>
+  //         <div class="transaction-id">Receipt #${transactionId}</div>
+  //       </div>
+        
+  //       <div class="detail-label">Status</div>
+  //       <div class="amount">Payment Successful!</div>
+        
+  //       <div class="detail-label">Amount</div>
+  //       <div class="amount">₦${amount.toLocaleString("en-NG", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
+        
+  //       <div class="items-section">
+  //         <div class="detail-label">Items</div>
+  //         ${items.map(item => `
+  //           <div class="detail-row">
+  //             <span>${item.name} (${item.quantity})</span>
+  //             <span class="detail-value">₦${(item.price * item.quantity).toLocaleString("en-NG")}.00</span>
+  //           </div>
+  //         `).join('')}
+          
+  //         <div class="detail-row" style="margin-top: 10px;">
+  //           <span><strong>Total Items</strong></span>
+  //           <span class="detail-value"><strong>₦${totalItemsPrice.toLocaleString("en-NG")}.00</strong></span>
+  //         </div>
+  //       </div>
+        
+  //       <div class="detail-label">Transaction Details</div>
+  //       <div class="detail-row">
+  //         <span>Amount Paid</span>
+  //         <span class="detail-value">₦${amount.toLocaleString("en-NG")}.00</span>
+  //       </div>
+  //       <div class="detail-row">
+  //         <span>Payment Method</span>
+  //         <span class="detail-value">${paymentMethod}</span>
+  //       </div>
+  //       <div class="detail-row">
+  //         <span>Transaction ID</span>
+  //         <span class="detail-value">#${transactionId}</span>
+  //       </div>
+  //       <div class="detail-row">
+  //         <span>Transaction Date</span>
+  //         <span class="detail-value">${transactionDate}</span>
+  //       </div>
+        
+  //       <div class="footer">
+  //         Thank you for your payment.<br>
+  //         For any questions, please contact support.
+  //       </div>
+        
+  //       <script>
+  //         // Auto print and close
+  //         window.onload = function() {
+  //           window.print();
+  //           // Uncomment the line below if you want the window to close after printing
+  //           // window.setTimeout(function() { window.close(); }, 500);
+  //         }
+  //       </script>
+  //     </body>
+  //     </html>
+  //   `;
+    
+  //   // Write content to the new window
+  //   printWindow.document.write(receiptContent);
+  //   printWindow.document.close();
+    
+  //   console.log("Printing receipt for transaction:", transactionId);
+  // };
 
+
+  const handlePrintReceipt = () => {
+    // Create a new window for printing
+    const printWindow = window.open('', '_blank', 'width=800,height=600');
+    
+    // Check if window was successfully created
+    if (!printWindow) {
+      console.error("Failed to open print window. Popup might be blocked.");
+      alert("Failed to open print window. Please allow popups for this site.");
+      return;
+    }
+    
+    // Generate receipt HTML content
+    const receiptContent = `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <title>custom payment reciept</title>
+        <style>
+          body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            max-width: 400px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+          }
+          /* Watermark styles */
+          .watermark {
+            position: fixed;
+            top: -6;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            pointer-events: none;
+          }
+          .watermark img {
+            opacity: 0.04;
+            width: 120%;  /* Increased from 80% */
+            max-width: 600px;  /* Increased from 350px */
+    
+          }
+          .receipt-header {
+            text-align: center;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+           
+          }
+          .logo {
+            max-width: 80px;
+          }
+          .receipt-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin: 5px 0;
+            margin-bottom: 80px;
+          }
+          .transaction-id {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 15px;
+          }
+          .amount {
+          display-flex: between;
+            font-size: 24px;
+            font-weight: bold;
+            margin: 15px 0;
+          }
+          .detail-label {
+            font-size: 12px;
+            color: #666;
+            text-transform: uppercase;
+            margin-top: 15px;
+            margin-bottom: 5px;
+            
+          }
+          .detail-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 14px;
+          }
+          .detail-value {
+            font-weight: 500;
+          }
+          .items-section {
+            margin: 15px 0;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 15px;
+          }
+          .footer {
+            text-align: center;
+            font-size: 12px;
+            color: #666;
+            margin-top: 20px;
+            border-top: 1px solid #eee;
+            padding-top: 15px;
+          }
+          @media print {
+            body {
+              print-color-adjust: exact;
+              -webkit-print-color-adjust: exact;
+            }
+            .watermark {
+              -webkit-print-color-adjust: exact;
+              print-color-adjust: exact;
+            }
+          }
+        </style>
+      </head>
+      <body>
+        <!-- Watermark -->
+        <div class="watermark">
+          <img src="/images/logo.png" alt="Official Watermark" />
+        </div>
+        
+        <div class="receipt-header">
+          <img src="/images/logo.png" alt="Customs Verification" class="logo" />
+          <div class="receipt-title">Customs Verification Management System</div>
+          
+        </div>
+        
+        <div class="detail-label">Status</div>
+        <div class="amount">Payment Successful!</div>
+        
+        
+        
+        <div class="items-section">
+          <div class="detail-label">Items</div>
+          ${items.map(item => `
+            <div class="detail-row">
+              <span>${item.name} (${item.quantity})</span>
+              <span class="detail-value">₦${(item.price * item.quantity).toLocaleString("en-NG")}.00</span>
+            </div>
+          `).join('')}
+          
+          <div class="detail-row" style="margin-top: 10px;">
+            <span><strong>Total Items</strong></span>
+            <span class="detail-value"><strong>₦${totalItemsPrice.toLocaleString("en-NG")}.00</strong></span>
+          </div>
+        </div>
+        
+        <div class="detail-label">Transaction Details</div>
+        <div class="detail-row">
+          <span>Amount Paid</span>
+          <span class="detail-value">₦${amount.toLocaleString("en-NG")}.00</span>
+        </div>
+        <div class="detail-row">
+          <span>Payment Method</span>
+          <span class="detail-value">${paymentMethod}</span>
+        </div>
+        <div class="detail-row">
+          <span>Transaction ID</span>
+          <span class="detail-value">#${transactionId}</span>
+        </div>
+        <div class="detail-row">
+          <span>Transaction Date</span>
+          <span class="detail-value">${transactionDate}</span>
+        </div>
+        
+        
+        
+        <script>
+          // Auto print and close
+          window.onload = function() {
+            window.print();
+            // Uncomment the line below if you want the window to close after printing
+            // window.setTimeout(function() { window.close(); }, 500);
+          }
+        </script>
+      </body>
+      </html>
+    `;
+    
+    // Write content to the new window
+    printWindow.document.write(receiptContent);
+    printWindow.document.close();
+    
+    console.log("Printing receipt for transaction:", transactionId);
+  };
   const handleCloseModal = () => {
     // This will trigger the onClose function in the parent component
     // which will clear the cart

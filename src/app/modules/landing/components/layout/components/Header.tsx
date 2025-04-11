@@ -1,7 +1,8 @@
 "use client"
 import type React from "react"
 import { useState, useEffect } from "react"
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
+import { toast, ToastContainer } from "react-toastify" // Import ToastContainer
 
 import { navigationItems } from "../../../constants/navigation"
 import { useAuth } from "../../../hooks/useAuth"
@@ -13,6 +14,7 @@ export const Header: React.FC = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [isScrolled, setIsScrolled] = useState(false)
   const { isLoggedIn, userData, signOut } = useAuth()
+  const navigate = useNavigate()
   
   // Handle scroll effect for header
   useEffect(() => {
@@ -44,8 +46,19 @@ export const Header: React.FC = () => {
     }
   }, [isMobileMenuOpen])
 
+  // Handle sign out in the mobile view
+  const handleSignOut = () => {
+    signOut()
+    setIsMobileMenuOpen(false)
+    toast.success("You have been successfully signed out!")
+    navigate("/")
+  }
+
   return (
     <header className={`box-border w-full bg-white shadow fixed top-0 left-0 z-10 ${isScrolled ? 'py-1' : 'py-1'}`}>
+      {/* Toast container for notifications */}
+      <ToastContainer position="top-right" autoClose={3000} />
+      
       <div className="flex justify-between items-center px-6 sm:px-6 md:px-8 lg:px-8 max-w-7xl mx-auto">
         <div className="flex items-center">
           <img 
@@ -66,7 +79,7 @@ export const Header: React.FC = () => {
               <Link
                 key={item.label}
                 to={item.href}
-                className={`text-sm lg:text-base text-black hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 rounded-md ${isScrolled ? 'py-1' : 'py-2'} transition-all duration-300`}
+                className={`text-sm lg:text-base text-black hover:bg-[#F2F2F7] focus:ring-gray-500 rounded-md ${isScrolled ? 'py-1' : 'py-2'} transition-all duration-300`}
               >
                 {item.label}
               </Link>
@@ -116,7 +129,7 @@ export const Header: React.FC = () => {
                   Login <span className="ml-1">→</span>
                 </Link>
                 <Link 
-                  to="/signup" 
+                  to="/account-type" 
                   className={`bg-[#34C759] rounded-sm hover:bg-green-200 px-3 ${isScrolled ? 'py-1 text-sm' : 'py-2 text-base'} transition-all duration-300 whitespace-nowrap text-white`}
                 >
                   Sign up
@@ -152,10 +165,20 @@ export const Header: React.FC = () => {
             <CartIcon />
             
             {/* Show user initials only when logged in */}
-            {isLoggedIn && (
+            {isLoggedIn ? (
               <div className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center text-sm font-medium">
                 <ProfileSection firstName={userData.first_name} lastName={userData.last_name} email={userData.email} />
                 </div>
+            ) : (
+              <>
+                {/* Show Login button on mobile when not enough space */}
+                <Link 
+                  to="/login" 
+                  className={`bg-[#F2F2F7] rounded-sm hover:bg-gray-100 px-3 ${isScrolled ? 'py-1 text-sm' : 'py-1 text-sm'} transition-all duration-300 whitespace-nowrap`}
+                >
+                  Login
+                </Link>
+              </>
             )}
             
             {/* Hamburger menu icon for mobile */}
@@ -200,9 +223,9 @@ export const Header: React.FC = () => {
             </Link>
           ))}
 
-          {/* Conditional rendering for mobile menu - hide login/signup buttons on tablet since they're already visible */}
-          {!isLoggedIn && (
-            <div className="md:hidden flex flex-col gap-2 py-3">
+          {/* Conditional rendering for mobile menu - show login/signup buttons when not logged in */}
+          {!isLoggedIn ? (
+            <div className="flex flex-col gap-2 py-3">
               <Link 
                 to="/login" 
                 onClick={() => setIsMobileMenuOpen(false)}
@@ -211,17 +234,15 @@ export const Header: React.FC = () => {
                 Login <span className="ml-1">→</span>
               </Link>
               <Link 
-                to="/signup" 
+                to="/account-type" 
                 onClick={() => setIsMobileMenuOpen(false)}
                 className="block w-full bg-[#34C759] text-white rounded-sm text-center py-2 text-base"
               >
                 Sign up
               </Link>
             </div>
-          )}
-
-          {/* User profile and sign out for mobile and tablet */}
-          {isLoggedIn && (
+          ) : (
+            /* User profile and sign out for mobile and tablet */
             <div className="py-3 border-t border-gray-100">
               <div className="py-2 flex items-center">
                 <div className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center text-sm font-medium mr-2">
@@ -233,11 +254,7 @@ export const Header: React.FC = () => {
                 </div>
               </div>
               <button
-                onClick={() => {
-                  signOut();
-                  setIsMobileMenuOpen(false);
-                  window.location.href = "/";
-                }}
+                onClick={handleSignOut}
                 className="mt-2 block w-full bg-red-500 text-white rounded-sm text-center py-2 text-base"
               >
                 Sign out

@@ -30,6 +30,7 @@ export const useAuth = () => {
       }
     } else {
       setIsLoggedIn(false)
+      setUserData({})
     }
   }
 
@@ -41,6 +42,7 @@ export const useAuth = () => {
     localStorage.removeItem("user")
     localStorage.removeItem("csrf_token")
 
+    // Update state
     setIsLoggedIn(false)
     setUserData({})
   }
@@ -52,4 +54,3 @@ export const useAuth = () => {
     checkLoginStatus,
   }
 }
-

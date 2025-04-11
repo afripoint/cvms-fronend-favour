@@ -5,7 +5,7 @@ import { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 import { ProfileSectionProps } from "../../landing/types"
 import { useAuth } from "../hooks"
-
+import { toast } from "react-toastify" // Assuming you're using react-toastify for notifications
 
 const ProfileSection: React.FC<ProfileSectionProps> = ({ firstName, lastName, email }) => {
   const [isOpen, setIsOpen] = useState(false)
@@ -40,6 +40,9 @@ const ProfileSection: React.FC<ProfileSectionProps> = ({ firstName, lastName, em
 
   const handleSignOut = () => {
     signOut()
+    // Show success message
+    toast.success("You have been successfully signed out!")
+    // Redirect to landing page
     navigate("/")
   }
 
