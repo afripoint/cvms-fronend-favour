@@ -69,7 +69,7 @@ const VehicleTeaserResult: React.FC<VehicleTeaserResultProps> = ({
             />
           </div>
           <div className="flex flex-col md:flex-row md:items-center md:space-x-2">
-            <label className="text-green-500 md:w-24 md:text-right md:pr-2 mb-1 md:mb-0">Brand:</label>
+            <label className="text-green-500 md:w-24 md:text-right md:pr-2 mb-1 md:mb-0">Make:</label>
             <input
               type="text"
               value={vehicle.brand}
@@ -95,7 +95,7 @@ const VehicleTeaserResult: React.FC<VehicleTeaserResultProps> = ({
               className="flex-1 border border-gray-300 rounded px-3 py-2 text-sm md:text-base"
             />
           </div>
-          <div className="flex flex-col md:flex-row md:items-center md:space-x-2">
+          {/* <div className="flex flex-col md:flex-row md:items-center md:space-x-2">
             <label className="text-green-500 md:w-24 md:text-right md:pr-2 mb-1 md:mb-0">VReg:</label>
             <input
               type="text"
@@ -103,7 +103,7 @@ const VehicleTeaserResult: React.FC<VehicleTeaserResultProps> = ({
               readOnly
               className="flex-1 border border-gray-300 rounded px-3 py-2 text-sm md:text-base"
             />
-          </div>
+          </div> */}
           <div className="flex flex-col md:flex-row md:items-center md:space-x-2">
             <label className="text-green-500 md:w-24 md:text-right md:pr-2 mb-1 md:mb-0">VIN:</label>
             <input
@@ -113,7 +113,7 @@ const VehicleTeaserResult: React.FC<VehicleTeaserResultProps> = ({
               className="flex-1 border border-gray-300 rounded px-3 py-2 text-sm md:text-base"
             />
           </div>
-          <div className="flex flex-col md:flex-row md:items-center md:space-x-2">
+          {/* <div className="flex flex-col md:flex-row md:items-center md:space-x-2">
             <label className="text-green-500 md:w-24 md:text-right md:pr-2 mb-1 md:mb-0">Payment Status:</label>
             <input
               type="text"
@@ -121,7 +121,7 @@ const VehicleTeaserResult: React.FC<VehicleTeaserResultProps> = ({
               readOnly
               className="flex-1 border border-gray-300 rounded px-3 py-2 text-sm md:text-base"
             />
-          </div>
+          </div> */}
           <div className="flex flex-col md:flex-row md:items-center md:space-x-2">
             <label className="text-green-500 md:w-24 md:text-right md:pr-2 mb-1 md:mb-0">Vehicle Type:</label>
             <input
