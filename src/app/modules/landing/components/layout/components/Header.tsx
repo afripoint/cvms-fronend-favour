@@ -291,7 +291,7 @@
 "use client"
 import type React from "react"
 import { useState, useEffect } from "react"
-import { Link, useNavigate, useLocation } from "react-router-dom"
+import { Link,  useLocation } from "react-router-dom"
 import { toast, ToastContainer } from "react-toastify" // Import ToastContainer
 
 import { navigationItems } from "../../../constants/navigation"
@@ -304,7 +304,7 @@ export const Header: React.FC = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [isScrolled, setIsScrolled] = useState(false)
   const { isLoggedIn, userData, signOut, checkLoginStatus } = useAuth()
-  const navigate = useNavigate()
+  // const navigate = useNavigate()
   const location = useLocation()
   
   // Handle scroll effect for header
