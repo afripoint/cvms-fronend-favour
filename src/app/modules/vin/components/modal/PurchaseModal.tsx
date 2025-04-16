@@ -26,7 +26,7 @@ const PurchaseModal: React.FC<PurchaseModalProps> = ({ isOpen, vehicle, onClose,
         <div className="text-center mb-6">
           <h2 className="text-2xl font-bold text-green-600">Add to Cart</h2>
           <p className="text-gray-600">
-            CVMS Certificate for {vehicle.vehicle_year} {vehicle.brand} {vehicle.model}
+            CVMS Certificate for {vehicle.year} {vehicle.brand} {vehicle.model}
           </p>
         </div>
 
@@ -34,7 +34,7 @@ const PurchaseModal: React.FC<PurchaseModalProps> = ({ isOpen, vehicle, onClose,
           <div className="flex justify-between mb-2">
             <span className="text-gray-600">Vehicle:</span>
             <span className="font-medium">
-              {vehicle.vehicle_year} {vehicle.brand} {vehicle.model}
+              {vehicle.year} {vehicle.brand} {vehicle.model}
             </span>
           </div>
           <div className="flex justify-between mb-2">

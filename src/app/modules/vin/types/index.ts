@@ -7,7 +7,7 @@ export interface VehicleDetails {
   model: string
   engine_type: string
   vreg?: string
-  vehicle_type?: string
+  // vehicle_type?: string
   payment_status?: string
   country: string
   manufacturer:string

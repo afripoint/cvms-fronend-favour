@@ -2,10 +2,15 @@ import React, { lazy, Suspense } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { store } from './app/core/store';
-import { CartPage } from './app/modules/cart';
-import PaymentMethodPage from './app/pages/payment/PaymentMethodPage';
-import Certificate from './app/modules/report/pages/CertificatePage';
-import VerifyCertificatePage from './app/modules/report/components/report/Certificate';
+// import { CartPage } from './app/modules/cart';
+// import PaymentMethodPage from './app/pages/payment/PaymentMethodPage';
+// import Certificate from './app/modules/report/pages/CertificatePage';
+// import VerifyCertificatePage from './app/modules/report/components/report/Certificate';
+// In App.tsx, convert these to lazy loads
+const Certificate = lazy(() => import('./app/modules/report/pages/CertificatePage'));
+const VerifyCertificatePage = lazy(() => import('./app/modules/report/components/report/Certificate'));
+const CartPage = lazy(() => import('./app/modules/cart').then(module => ({ default: module.CartPage })));
+const PaymentMethodPage = lazy(() => import('./app/pages/payment/PaymentMethodPage'));
 
 
 
