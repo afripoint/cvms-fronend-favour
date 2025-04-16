@@ -5,11 +5,18 @@ export interface VehicleDetails {
   vin: string
   brand: string
   model: string
-  vehicle_year: number
   engine_type: string
   vreg?: string
   vehicle_type?: string
   payment_status?: string
+  country: string
+  manufacturer:string
+  class: string
+  region: string
+  wmi: string
+  vds: string
+  vis: string
+  year: string
   
 }
 

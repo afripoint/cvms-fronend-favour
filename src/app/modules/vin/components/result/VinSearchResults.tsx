@@ -23,7 +23,7 @@ const VinSearchResults: React.FC<VinSearchResultsProps> = ({ searchResults, onNe
   const vehicleToCartItem = (vehicle: VehicleDetails): CartItem => {
     return {
       id: vehicle.vin,
-      name: `${vehicle.vehicle_year} ${vehicle.brand} ${vehicle.model}`,
+      name: `${vehicle.year} ${vehicle.manufacturer} ${vehicle.model}`,
       quantity: 1,
       price: 19.99, // Standard price for CVMS report
       type: "CVMS Standard Report",
@@ -99,7 +99,7 @@ const VinSearchResults: React.FC<VinSearchResultsProps> = ({ searchResults, onNe
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center">
               <div className="mb-3 sm:mb-0">
                 <h3 className="text-base md:text-lg font-medium text-gray-700">
-                  {vehicle.vehicle_year} {vehicle.brand} {vehicle.model}
+                  {vehicle.year} {vehicle.manufacturer} {vehicle.model}
                 </h3>
                 <p className="text-sm md:text-base text-gray-500 break-words">VIN: {vehicle.vin}</p>
               </div>

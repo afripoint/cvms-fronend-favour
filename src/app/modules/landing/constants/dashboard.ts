@@ -14,7 +14,7 @@ export const features: Feature[] = [
   {
     title: "Accredify",
     description:
-      "Access comprehensive details about your vehicle, including salvage status, customs duty status, type, make ,model and many more.",
+      "Easily search and verify accredited agents, terminals, bonded warehouses, and maritime truckers recognized by Customs. Ensures you're working only with officially approved service providers throughout your import/export process.",
     icon:"/icons/accredify.svg",
     
   },

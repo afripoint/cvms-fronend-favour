@@ -44,7 +44,7 @@ const VehicleTeaserResult: React.FC<VehicleTeaserResultProps> = ({
           <div className="w-full md:w-auto">
             <p className="text-gray-500 text-sm">VEHICLE</p>
             <h3 className="font-medium text-gray-800 uppercase text-sm md:text-base break-words">
-              {vehicle.brand} {vehicle.model} {vehicle.vreg || "SR5"} {vehicle.vehicle_year}
+              {vehicle.manufacturer} {vehicle.model} {vehicle.wmi || "SR5"} {vehicle.year}
             </h3>
           </div>
           <div className="w-1/2 md:w-auto flex flex-col items-start md:items-end">
@@ -60,7 +60,34 @@ const VehicleTeaserResult: React.FC<VehicleTeaserResultProps> = ({
         {/* Vehicle details grid - responsive grid with 1 column on mobile, 2 on larger screens */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-2">
           <div className="flex flex-col md:flex-row md:items-center md:space-x-3">
-            <label className="text-green-500 md:w-24 md:text-right md:pr-3 mb-1 md:mb-0">Model:</label>
+            <label className="text-green-500 md:w-24 md:text-right md:pr-3 mb-1 md:mb-0">Vin:</label>
+            <input
+              type="text"
+              value={vehicle.vin}
+              readOnly
+              className="flex-1 border border-gray-300 rounded px-3 py-2 text-sm md:text-base"
+            />
+          </div>
+          <div className="flex flex-col md:flex-row md:items-center md:space-x-2">
+            <label className="text-green-500 md:w-24 md:text-right md:pr-2 mb-1 md:mb-0">Country:</label>
+            <input
+              type="text"
+              value={vehicle.country}
+              readOnly
+              className="flex-1 border border-gray-300 rounded px-3 py-2 text-sm md:text-base"
+            />
+          </div>
+          <div className="flex flex-col md:flex-row md:items-center md:space-x-2">
+            <label className="text-green-500 md:w-24 md:text-right md:pr-2 mb-1 md:mb-0">Manufacturer:</label>
+            <input
+              type="text"
+              value={vehicle.manufacturer}
+              readOnly
+              className="flex-1 border border-gray-300 rounded px-3 py-2 text-sm md:text-base"
+            />
+          </div>
+          <div className="flex flex-col md:flex-row md:items-center md:space-x-2">
+            <label className="text-green-500 md:w-24 md:text-right md:pr-2 mb-1 md:mb-0">Model:</label>
             <input
               type="text"
               value={vehicle.model}
@@ -69,64 +96,57 @@ const VehicleTeaserResult: React.FC<VehicleTeaserResultProps> = ({
             />
           </div>
           <div className="flex flex-col md:flex-row md:items-center md:space-x-2">
-            <label className="text-green-500 md:w-24 md:text-right md:pr-2 mb-1 md:mb-0">Make:</label>
+            <label className="text-green-500 md:w-24 md:text-right md:pr-2 mb-1 md:mb-0">Class:</label>
             <input
               type="text"
-              value={vehicle.brand}
+              value={vehicle.class}
               readOnly
               className="flex-1 border border-gray-300 rounded px-3 py-2 text-sm md:text-base"
             />
           </div>
           <div className="flex flex-col md:flex-row md:items-center md:space-x-2">
-            <label className="text-green-500 md:w-24 md:text-right md:pr-2 mb-1 md:mb-0">Vehicle Year:</label>
+            <label className="text-green-500 md:w-24 md:text-right md:pr-2 mb-1 md:mb-0">Region:</label>
             <input
               type="text"
-              value={vehicle.vehicle_year}
+              value={vehicle.region}
               readOnly
               className="flex-1 border border-gray-300 rounded px-3 py-2 text-sm md:text-base"
             />
           </div>
           <div className="flex flex-col md:flex-row md:items-center md:space-x-2">
-            <label className="text-green-500 md:w-24 md:text-right md:pr-2 mb-1 md:mb-0">Engine Type:</label>
+            <label className="text-green-500 md:w-24 md:text-right md:pr-2 mb-1 md:mb-0">Wmi:</label>
             <input
               type="text"
-              value={vehicle.engine_type}
+              value={vehicle.wmi}
               readOnly
               className="flex-1 border border-gray-300 rounded px-3 py-2 text-sm md:text-base"
             />
           </div>
-          {/* <div className="flex flex-col md:flex-row md:items-center md:space-x-2">
-            <label className="text-green-500 md:w-24 md:text-right md:pr-2 mb-1 md:mb-0">VReg:</label>
-            <input
-              type="text"
-              value={vehicle.vreg}
-              readOnly
-              className="flex-1 border border-gray-300 rounded px-3 py-2 text-sm md:text-base"
-            />
-          </div> */}
           <div className="flex flex-col md:flex-row md:items-center md:space-x-2">
-            <label className="text-green-500 md:w-24 md:text-right md:pr-2 mb-1 md:mb-0">VIN:</label>
+            <label className="text-green-500 md:w-24 md:text-right md:pr-2 mb-1 md:mb-0">Vds:</label>
             <input
               type="text"
-              value={vehicle.vin}
+              value={vehicle.vds}
               readOnly
               className="flex-1 border border-gray-300 rounded px-3 py-2 text-sm md:text-base"
             />
           </div>
-          {/* <div className="flex flex-col md:flex-row md:items-center md:space-x-2">
-            <label className="text-green-500 md:w-24 md:text-right md:pr-2 mb-1 md:mb-0">Payment Status:</label>
+
+          <div className="flex flex-col md:flex-row md:items-center md:space-x-2">
+            <label className="text-green-500 md:w-24 md:text-right md:pr-2 mb-1 md:mb-0">Vis:</label>
             <input
               type="text"
-              value={vehicle.payment_status}
+              value={vehicle.vis}
               readOnly
               className="flex-1 border border-gray-300 rounded px-3 py-2 text-sm md:text-base"
             />
-          </div> */}
+          </div>
+
           <div className="flex flex-col md:flex-row md:items-center md:space-x-2">
-            <label className="text-green-500 md:w-24 md:text-right md:pr-2 mb-1 md:mb-0">Vehicle Type:</label>
+            <label className="text-green-500 md:w-24 md:text-right md:pr-2 mb-1 md:mb-0">Year:</label>
             <input
               type="text"
-              value={vehicle.vehicle_type}
+              value={vehicle.year}
               readOnly
               className="flex-1 border border-gray-300 rounded px-3 py-2 text-sm md:text-base"
             />
@@ -171,7 +191,7 @@ const VehicleTeaserResult: React.FC<VehicleTeaserResultProps> = ({
       </div>
 
       {/* Full report section - responsive padding and spacing */}
-      <div className="w-full max-w-4xl mx-auto mt-6 md:mt-8 mb-4 px-4">
+      <div className="w-full max-w-4xl mx-auto mt-10 md:mt-8 mb-4 px-4">
         <h3 className="text-base md:text-lg font-bold text-[#000000] text-center uppercase mb-4 md:mb-6">Full Report Will Include:</h3>
         <div className="flex justify-center">
           <div className="flex flex-col sm:flex-row justify-between border-b-[#0b0b0b] border-b-2 items-center w-full max-w-md px-2">
@@ -198,7 +218,7 @@ const VehicleTeaserResult: React.FC<VehicleTeaserResultProps> = ({
         </div>
 
         {!isPurchased && (
-          <div className="flex justify-center mt-4">
+          <div className="flex justify-center mt-8 mb-6">
             <button 
               onClick={onNewSearch} 
               className="text-green-600 hover:text-green-500 font-medium flex items-center text-sm md:text-base"

@@ -77,13 +77,19 @@ const SignUpForm: React.FC = () => {
     if (fieldName === "companyName" || fieldName === "businessName") {
       return role === "company account"; // Only show for company role
     }
+    
+    if (fieldName === "businessRegNo"){
+      return role === "company account";
+    }
 
-    if (fieldName === "declarantCode" || fieldName === "businessRegNo") {
+    if (fieldName === "declarantCode") {
       return (
-        role === "agent account/freight forwarders" ||
-        role === "company account"
+        role === "agent account/freight forwarders"
+        
       ); // Show for both agent and company
     }
+
+    // || fieldName === "businessRegNo"
 
     return false;
   };
@@ -307,7 +313,7 @@ const SignUpForm: React.FC = () => {
                 </div>
               )}
 
-              {shouldShowField("businessName") && (
+              {/* {shouldShowField("businessName") && (
                 <div className="md:col-span-2">
                   <label className="block text-xs font-medium text-gray-700 mb-1">
                     Business Name*
@@ -322,10 +328,10 @@ const SignUpForm: React.FC = () => {
                     required
                   />
                 </div>
-              )}
+              )} */}
 
               {shouldShowField("declarantCode") && (
-                <div>
+                <div className="md:col-span-2">
                   <label className="block text-xs font-medium text-gray-700 mb-1">
                     Declarant Code*
                   </label>
@@ -341,10 +347,12 @@ const SignUpForm: React.FC = () => {
                 </div>
               )}
 
+
+
               {shouldShowField("businessRegNo") && (
-                <div>
+                <div className="md:col-span-2">
                   <label className="block text-xs font-medium text-gray-700 mb-1">
-                    Business Registration Number*
+                    CAC Number*
                   </label>
                   <input
                     type="text"
@@ -357,6 +365,8 @@ const SignUpForm: React.FC = () => {
                   />
                 </div>
               )}
+
+
 
               {shouldShowField("address") && (
                 <div className="md:col-span-2">

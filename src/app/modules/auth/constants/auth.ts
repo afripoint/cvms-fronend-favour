@@ -11,7 +11,7 @@ export const ACCOUNT_TYPES = [
     id: "individual",
     title: "Individual Account",
     description:
-      "For individuals who want to track shipments, view consignment status updates, and search for accredited agents.",
+      "Verify vehicle customs duty status through VIN checks, track consignments within customs, and search for accredited agents and customs-affiliated bodies.",
     value: "individual account",
     icon: "/icons/company.png",
   },
@@ -19,7 +19,7 @@ export const ACCOUNT_TYPES = [
     id: "agent",
     title: "Agent Account",
     description:
-      "For licensed agents or companies authorized by customs to manage clearance processes, review certifications, and perform local TIN verification.",
+      "Designed for licensed customs agents. Includes all application features, with added access to verification tools and onboarding as an accredited service provider under Customs.",
     value: "agent account/freight forwarders",
     icon: "/icons/agent.png",
   },
@@ -27,7 +27,7 @@ export const ACCOUNT_TYPES = [
     id: "company",
     title: "Company Account",
     description:
-      "For businesses involved in import/export activities that want to verify status, track consignments, search for accredited agents, and access all other account features.",
+      "Built for businesses managing large-scale imports/exports. Unlocks all platform features — including VIN checks, consignment tracking, agent management, and full operational oversight.",
     value: "company account",
     icon: "/icons/individual.png",
   },

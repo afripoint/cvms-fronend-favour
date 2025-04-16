@@ -16,13 +16,19 @@ const _handleSelectVin = (vin: string) => {
     const vehicle: VehicleDetails = {
       id: vin,
       vin: vin,
-      brand: "",
+      manufacturer: "",
       model: "",
-      vehicle_year: 0,
-      engine_type: "",
+      year: "",
+      vis: "",
       vreg: "",
-      vehicle_type: "",
-      payment_status: "",
+      class: "",
+      brand: "",
+      engine_type: "",
+      country: "",
+      region: "",
+      wmi: "",
+      vds: ""
+    
     }
 
     dispatch(setSelectedVehicle(vehicle))

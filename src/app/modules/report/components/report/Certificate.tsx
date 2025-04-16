@@ -149,39 +149,39 @@ const VerifyCertificatePage = () => {
               <div className="p-6">
                 <div className="grid grid-cols-1 gap-4">
                   <div>
-                    <h3 className="text-sm font-medium text-gray-500">Certificate Number</h3>
-                    <p className="mt-1 text-lg font-semibold">{certificateDetails.certificateNumber}</p>
+                    {/* <h3 className="text-sm font-medium text-gray-500">Certificate Number</h3>
+                    <p className="mt-1 text-lg font-semibold">{certificateDetails.certificateNumber}</p> */}
                   </div>
                   
                   <div>
-                    <h3 className="text-sm font-medium text-gray-500">VIN</h3>
-                    <p className="mt-1 text-lg font-semibold">{certificateDetails.vin}</p>
+                    {/* <h3 className="text-sm font-medium text-gray-500">VIN</h3>
+                    <p className="mt-1 text-lg font-semibold">{certificateDetails.vin}</p> */}
                   </div>
                   
                   {certificateDetails.makeModel && (
                     <div>
-                      <h3 className="text-sm font-medium text-gray-500">Make/Model</h3>
-                      <p className="mt-1">{certificateDetails.makeModel}</p>
+                      {/* <h3 className="text-sm font-medium text-gray-500">Make/Model</h3>
+                      <p className="mt-1">{certificateDetails.makeModel}</p> */}
                     </div>
                   )}
                   
                   {certificateDetails.year && (
                     <div>
-                      <h3 className="text-sm font-medium text-gray-500">Year</h3>
-                      <p className="mt-1">{certificateDetails.year}</p>
+                      {/* <h3 className="text-sm font-medium text-gray-500">Year</h3>
+                      <p className="mt-1">{certificateDetails.year}</p> */}
                     </div>
                   )}
                   
                   {certificateDetails.ownerName && (
                     <div>
-                      <h3 className="text-sm font-medium text-gray-500">Owner</h3>
-                      <p className="mt-1">{certificateDetails.ownerName}</p>
+                      {/* <h3 className="text-sm font-medium text-gray-500">Owner</h3>
+                      <p className="mt-1">{certificateDetails.ownerName}</p> */}
                     </div>
                   )}
                   
                   <div>
-                    <h3 className="text-sm font-medium text-gray-500">Issue Date</h3>
-                    <p className="mt-1">{certificateDetails.date}</p>
+                    {/* <h3 className="text-sm font-medium text-gray-500">Issue Date</h3>
+                    <p className="mt-1">{certificateDetails.date}</p> */}
                   </div>
                 </div>
                 

@@ -126,7 +126,7 @@ const VinSearchSection: React.FC<VinSearchSectionProps> = ({
         )}
 
         {/* Main VIN input field */}
-        <div className="flex items-center gap-4 mb-4 max-w-3xl mx-auto">
+        <div className="flex items-center gap-4 mb-4 max-w-2xl mx-auto">
           <div className="flex-grow max-w-xl">
             <input
               type="text"
@@ -259,11 +259,11 @@ const VinSearchSection: React.FC<VinSearchSectionProps> = ({
       </div>
 
       {/* Chat bubble icon */}
-      <div className="absolute bottom-4 right-4">
+      {/* <div className="absolute bottom-4 right-4">
         <button className="bg-green-400 rounded-full p-3">
           <img src="/icons/Chaticon.svg" alt="Chat" width={25} height={25} />
         </button>
-      </div>
+      </div> */}
     </div>
   )
 }

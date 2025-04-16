@@ -59,7 +59,7 @@ const MultipleVinModal: React.FC<MultipleVinModalProps> = ({ isOpen, onClose, on
 
     const link = document.createElement("a")
     link.href = url
-    link.download = "sample-vin-template.xlsx"
+    link.download = "Customs_Duty1 (2).xlsx"
     document.body.appendChild(link)
     link.click()
     document.body.removeChild(link)

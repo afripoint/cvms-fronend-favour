@@ -4,9 +4,13 @@ import { workflowSteps } from "../../../constants/benefits"
 const CvmsVehicle: React.FC = () => {
   return (
     <div className="bg-white px-12 rounded-lg shadow-sm max-w-6xl mx-auto min-h-[350px] flex flex-col justify-center">
-      <h2 id="how-it-works" className="text-2xl font-bold text-center text-[#000000] mb-10">
+      {/* <h2 id="how-it-works" className="text-2xl font-bold text-center text-[#000000] mb-10">
         How does CVMS Work?
-      </h2>
+      </h2> */}
+
+<h2 id="how-it-works" className="text-2xl font-bold text-center text-[#000000] mb-10">
+  How does CVMS Work?
+</h2>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6 relative pr-16">
         {workflowSteps.map((step) => (
