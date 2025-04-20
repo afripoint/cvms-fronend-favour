@@ -65,5 +65,3 @@ jobs:
               --network cvms_shared_network \
               ${{ secrets.DOCKER_HUB_USERNAME }}/$IMAGE_NAME:$IMAGE_TAG
           EOF
-
-
