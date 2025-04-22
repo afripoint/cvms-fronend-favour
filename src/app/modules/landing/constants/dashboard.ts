@@ -14,7 +14,7 @@ export const features: Feature[] = [
   {
     title: "Accredify",
     description:
-      "Quickly verify accredited agents, terminals, warehouses, and truckers approved by Customs. work with authorized service providers for your import/export needs.",
+      "Quickly verify accredited agents, terminals, warehouses, and truckers approved by Customs. Work with authorized service providers for your import/export needs.",
     icon:"/icons/accredify.svg",
     
   },

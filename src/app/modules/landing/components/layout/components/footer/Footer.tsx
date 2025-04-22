@@ -16,20 +16,18 @@ const Footer: React.FC = () => {
           </div>
         </section>
 
-        <section className="ml-5 w-[79%] max-md:ml-0 max-md:w-full">
+        <section className="ml-24 w-[79%] max-md:ml-0 max-md:w-full">
           <div className="max-md:mt-10 max-md:max-w-full">
             <div className="flex gap-5 max-md:flex-col">
-              <div className="w-[34%] max-md:ml-0 max-md:w-full">
-                <FooterNavSection {...footerNavSections.aboutUs} />
+              
+              <div className="ml-20 w-1/5 max-md:ml-0 max-md:w-full">
+                <FooterNavSection {...footerNavSections.hotlines} />
               </div>
-              <div className="ml-5 w-1/5 max-md:ml-0 max-md:w-full">
-                <FooterNavSection {...footerNavSections.learn} />
+              <div className="ml-20 w-[27%] max-md:ml-0 max-md:w-full">
+                <FooterNavSection {...footerNavSections.supportAdresses} />
               </div>
-              <div className="ml-5 w-[27%] max-md:ml-0 max-md:w-full">
-                <FooterNavSection {...footerNavSections.developers} />
-              </div>
-              <div className="ml-5 w-[19%] max-md:ml-0 max-md:w-full">
-                <FooterNavSection {...footerNavSections.support} />
+              <div className="ml-14 w-[19%] max-md:ml-0 max-md:w-full">
+                <FooterNavSection {...footerNavSections.resources} />
               </div>
             </div>
           </div>

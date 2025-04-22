@@ -34,7 +34,7 @@ const ContactContainer: React.FC = () => {
   }
 
   return (
-    <main className="flex justify-around gap-6 p-6 py-10 mx-auto my-0 bg-[#F2F2F7] w-full max-md:flex-col max-md:p-4 max-sm:p-3 mb-16">
+    <main className="flex justify-around gap-6 p-6 py-10 mx-auto my-0 bg-[#F2F2F7] w-full max-md:flex-col max-md:p-4 max-sm:p-3 pb-16">
       <section className="flex flex-col gap-10 w-[320px] max-md:w-full">
         <header className="flex flex-col gap-1">
           <p className="text-sm tracking-normal leading-5 text-green-500">Contact us</p>

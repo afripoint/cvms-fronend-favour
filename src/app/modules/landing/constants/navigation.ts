@@ -5,44 +5,39 @@ export const navigationItems: NavigationItem[] = [
   { label: "VIN Check", href: "vin" },
   { label: "Status Tracker", href: "#" },
   { label: "Accredify", href: "#" },
-  { label: "Supply Chain", href: "#" },
-  { label: "How it Works", href: "how-it-works" },
+  // { label: "Supply Chain", href: "#" },
+  { label: "How it Works", href: "#how-it-works" },
 ]
 
 export const footerNavSections = {
-  aboutUs: {
-    title: "About Us",
+  hotlines: {
+    title: "Hotlines",
     links: [
-      { text: "Why Choose CVMS?", href: "#" },
-      { text: "Company", href: "#" },
-      { text: "Pricing", href: "#" },
-      { text: "Career", href: "#" },
-      { text: "Privacy", href: "#" },
-      { text: "Testimonial", href: "#" },
+      { text: "+2349076603819", href: "#" },
+      { text: "+2349029817913", href: "#" },
+      
     ],
   },
-  learn: {
-    title: "Learn",
+  supportAdresses: {
+    title: "Support Addresses",
     links: [
-      { text: "Blog", href: "#" },
-      { text: "User Guides", href: "#" },
+      { text: "cvmsproject@afripointgroup.com", href: "#" },
+      { text: "support@afripointgroup.com", href: "#" },
+      { text: "payments@afripointgroup.com", href: "#" },
+
+      
     ],
   },
-  developers: {
-    title: "Developers",
+  resources: {
+    title: "Resources",
     links: [
-      { text: "Documentation", href: "#" },
-      { text: "Integrations", href: "#" },
+      { text: "Terms of Use", href: "#" },
+      { text: "Privacy Policy", href: "#" },
+      { text: "CVMS User Guides", href: "#" },
+      { text: "FAQs", href: "#" },
     ],
   },
-  support: {
-    title: "Support",
-    links: [
-      { text: "Help Desk", href: "#" },
-      { text: "Contact Us", href: "#" },
-      { text: "FAQ", href: "#" },
-    ],
-  },
+  
 }
 
 export const socialLinks = [

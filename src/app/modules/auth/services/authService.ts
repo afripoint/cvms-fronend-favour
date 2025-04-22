@@ -2,7 +2,7 @@ import axios from "axios"
 import type { RegistrationData, User } from "../types/auth"
 import { appSaveToLocalStorage, appGetFromLocalStorage, appRemoveFromLocalStorage, StorageKeys } from "../../../core/storage/storage"
 
-const API_URL = "https://afridev.com.ng/auth"
+const API_URL = "cvms-api.afripointdev.com/auth"
 
 // Create axios instance with improved error handling
 const authAxios = axios.create({
@@ -115,10 +115,36 @@ const authService = {
     }
   },
 
-  resetPasswordTokenCheck: async (token: string): Promise<any> => {
+  // resetPasswordTokenCheck: async (token: string): Promise<any> => {
+  //   try {
+  //     console.log("Validating reset password token")
+  //     const response = await authAxios.post("/reset-password-token-check/", { token })
+  //     console.log("Token validation successful")
+  //     return response.data
+  //   } catch (error: any) {
+  //     console.error("Token validation error:", error.response?.data || error.message)
+  //     throw error
+  //   }
+  // },
+
+  // setNewPassword: async (token: string, newPassword: string): Promise<any> => {
+  //   try {
+  //     console.log("Setting new password with token")
+  //     const response = await authAxios.post("/set-new-password/", { token, new_password: newPassword })
+  //     console.log("Password reset successful")
+  //     return response.data
+  //   } catch (error: any) {
+  //     console.error("Password reset error:", error.response?.data || error.message)
+  //     throw error
+  //   }
+  // },
+
+
+
+  resetPasswordTokenCheck: async (uidb64: string, token: string): Promise<any> => {
     try {
       console.log("Validating reset password token")
-      const response = await authAxios.post("/reset-password-token-check/", { token })
+      const response = await authAxios.get(`/reset-password-token-check/${uidb64}/${token}/`)
       console.log("Token validation successful")
       return response.data
     } catch (error: any) {
@@ -126,11 +152,16 @@ const authService = {
       throw error
     }
   },
-
-  setNewPassword: async (token: string, newPassword: string): Promise<any> => {
+  
+  // Updated setNewPassword function to match the pattern
+  setNewPassword: async (uidb64: string, token: string, newPassword: string): Promise<any> => {
     try {
       console.log("Setting new password with token")
-      const response = await authAxios.post("/set-new-password/", { token, new_password: newPassword })
+      const response = await authAxios.post("/set-new-password/", { 
+        uidb64,
+        token, 
+        new_password: newPassword 
+      })
       console.log("Password reset successful")
       return response.data
     } catch (error: any) {
@@ -185,6 +216,15 @@ const authService = {
     } catch (error: any) {
       console.error("OTP verification error:", error.response?.data || error.message)
       throw error
+    }
+  },
+  
+  verifyNIN: async (nin: string, email?: string): Promise<any> => {
+    try {
+      const response = await authAxios.post("/verifications/nin/", { nin, email });
+      return response.data;
+    } catch (error: any) {
+      throw error;
     }
   },
 

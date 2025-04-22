@@ -13,7 +13,10 @@ export interface User {
   local_govt?: string
   is_accredify?: boolean
   "NIN Verified"?: boolean // Add this property to fix the TypeScript error
+  NIN?: string;
+  NINVerified?: boolean;
 }
+
 
 export interface AuthState {
   user: User | null
@@ -66,7 +69,7 @@ export interface SignUpFormData {
   email: string
   agency_Name: string
   company_Name: string
-  business_Name: string
+
   declarant_Code: string
   cac: string
   address: string
@@ -125,11 +128,21 @@ export enum PasswordResetStep {
 }
 
 export interface PasswordResetState {
+  // currentStep: PasswordResetStep
+  // email: string
+  // token: string | null
+  // isLoading: boolean
+  // error: string | null
+
   currentStep: PasswordResetStep
   email: string
+  uidb64: string | null
   token: string | null
-  isLoading: boolean
   error: string | null
+  isLoading: boolean
 }
+
+
+
 
 

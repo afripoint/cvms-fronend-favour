@@ -3,16 +3,16 @@ import { workflowSteps } from "../../../constants/benefits"
 
 const CvmsVehicle: React.FC = () => {
   return (
-    <div className="bg-white px-12 rounded-lg shadow-sm max-w-6xl mx-auto min-h-[350px] flex flex-col justify-center">
-      {/* <h2 id="how-it-works" className="text-2xl font-bold text-center text-[#000000] mb-10">
+    <div 
+      id="how-it-works" 
+      className="bg-white px-6 sm:px-12 rounded-lg shadow-sm max-w-6xl mx-auto min-h-[60vh] flex flex-col justify-center py-12 scroll-mt-20"
+    >
+      {/* Heading with adjusted spacing */}
+      <h2 className="text-2xl font-bold text-center text-[#000000] mb-10">
         How does CVMS Work?
-      </h2> */}
+      </h2>
 
-<h2 id="how-it-works" className="text-2xl font-bold text-center text-[#000000] mb-10">
-  How does CVMS Work?
-</h2>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6 relative pr-16">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-12 relative pr-0 md:pr-16">
         {workflowSteps.map((step) => (
           <div key={step.id} className="flex">
             <div className="mr-4">
@@ -27,9 +27,9 @@ const CvmsVehicle: React.FC = () => {
           </div>
         ))}
 
-        {/* Vehicle Image - moved much further to the right */}
-        <div className="absolute right-0 bottom-0 transform translate-y-1/2 translate-x-20">
-          <img src='/images/vehicle.svg' alt="Vehicle" className="w-48 h-auto" />
+        {/* Vehicle Image */}
+        <div className="absolute right-0 bottom-0 transform translate-y-1/2 translate-x-8 md:translate-x-20">
+          <img src='/images/vehicle.svg' alt="Vehicle" className="w-36 md:w-48 h-auto" />
         </div>
       </div>
     </div>
@@ -37,4 +37,3 @@ const CvmsVehicle: React.FC = () => {
 }
 
 export default CvmsVehicle
-

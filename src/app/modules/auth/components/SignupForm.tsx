@@ -1,7 +1,7 @@
 "use client";
 
 import type React from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import type { AppDispatch, RootState } from "../../../core/store";
@@ -13,6 +13,7 @@ import { COUNTRY_CODES } from "../constants/auth";
 import { useFormValidation } from "../hooks/useFormValidation";
 import { registerUser } from "../redux/slices/authSlice";
 import { setCurrentStep } from "../redux/slices/uiSlice";
+import { County, useStatesAndCounties } from '../hooks/useStatesAndLGAs';
 
 const SignUpForm: React.FC = () => {
   const { role, is_accredify, selectedServices } = useSelector(
@@ -26,6 +27,19 @@ const SignUpForm: React.FC = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
 
+  const { 
+    states, 
+    loading: locationDataLoading, 
+    error: locationDataError,
+    getStateUuidByName,
+    fetchCountiesForState
+  } = useStatesAndCounties();
+
+  // Using the mock data through the hook
+  const [filteredCounties, setFilteredCounties] = useState<County[]>([]);
+  const [selectedStateUuid, setSelectedStateUuid] = useState<string | null>(null);
+  const [countyLoading, setCountyLoading] = useState(false);
+
   const [formData, setFormData] = useState<SignUpFormData>({
     first_Name: "",
     last_Name: "",
@@ -34,7 +48,6 @@ const SignUpForm: React.FC = () => {
     email: "",
     agency_Name: "",
     company_Name: "",
-    business_Name: "",
     declarant_Code: "",
     cac: "",
     address: "",
@@ -49,6 +62,37 @@ const SignUpForm: React.FC = () => {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [showOTPModal, setShowOTPModal] = useState(false);
   const [selectedCountry, setSelectedCountry] = useState(COUNTRY_CODES[0]);
+
+  // Update filtered counties when state changes
+  useEffect(() => {
+    const handleStateChange = async () => {
+      if (formData.state) {
+        const stateUuid = getStateUuidByName(formData.state);
+        if (stateUuid) {
+          setSelectedStateUuid(stateUuid);
+          
+          // Fetch counties for the selected state
+          setCountyLoading(true);
+          try {
+            const stateCounties = await fetchCountiesForState(stateUuid);
+            setFilteredCounties(stateCounties);
+          } catch (error) {
+            console.error("Failed to fetch counties:", error);
+          } finally {
+            setCountyLoading(false);
+          }
+        } else {
+          setSelectedStateUuid(null);
+          setFilteredCounties([]);
+        }
+      } else {
+        setSelectedStateUuid(null);
+        setFilteredCounties([]);
+      }
+    };
+  
+    handleStateChange();
+  }, [formData.state, getStateUuidByName, fetchCountiesForState]);
 
   const shouldShowField = (fieldName: string) => {
     if (
@@ -85,11 +129,8 @@ const SignUpForm: React.FC = () => {
     if (fieldName === "declarantCode") {
       return (
         role === "agent account/freight forwarders"
-        
       ); // Show for both agent and company
     }
-
-    // || fieldName === "businessRegNo"
 
     return false;
   };
@@ -99,9 +140,21 @@ const SignUpForm: React.FC = () => {
     shouldShowField
   );
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    
+    // If changing the state field, also reset the local_govt field
+    if (name === "state") {
+      setFormData((prev) => ({ 
+        ...prev, 
+        [name]: value,
+        local_govt: ""  // Reset local_govt when state changes
+      }));
+    } else {
+      setFormData((prev) => ({ ...prev, [name]: value }));
+    }
   };
 
   const handleNextClick = (e: React.FormEvent) => {
@@ -199,6 +252,13 @@ const SignUpForm: React.FC = () => {
           <p className="text-gray-500 text-center text-sm mb-4">
             Enter your details below to create your account and get started.
           </p>
+
+          {locationDataError && (
+            <div className="mb-4 p-3 bg-red-50 text-red-500 text-sm rounded border border-red-100">
+              <strong>Error:</strong> {locationDataError}
+              <div className="mt-1">Please try refreshing the page or contact support if the issue persists.</div>
+            </div>
+          )}
 
           <form onSubmit={handleNextClick}>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-4">
@@ -313,23 +373,6 @@ const SignUpForm: React.FC = () => {
                 </div>
               )}
 
-              {/* {shouldShowField("businessName") && (
-                <div className="md:col-span-2">
-                  <label className="block text-xs font-medium text-gray-700 mb-1">
-                    Business Name*
-                  </label>
-                  <input
-                    type="text"
-                    name="business_Name"
-                    value={formData.business_Name}
-                    onChange={handleChange}
-                    className="w-full px-3 py-1.5 border rounded-md text-sm"
-                    placeholder="Enter your business name"
-                    required
-                  />
-                </div>
-              )} */}
-
               {shouldShowField("declarantCode") && (
                 <div className="md:col-span-2">
                   <label className="block text-xs font-medium text-gray-700 mb-1">
@@ -347,7 +390,7 @@ const SignUpForm: React.FC = () => {
                 </div>
               )}
 
-
+              {/* Removed duplicate declarantCode block */}
 
               {shouldShowField("businessRegNo") && (
                 <div className="md:col-span-2">
@@ -360,13 +403,11 @@ const SignUpForm: React.FC = () => {
                     value={formData.cac}
                     onChange={handleChange}
                     className="w-full px-3 py-1.5 border rounded-md text-sm"
-                    placeholder="e.g. NY/STCT/887"
+                    placeholder="e.g. RC1234567"
                     required
                   />
                 </div>
               )}
-
-
 
               {shouldShowField("address") && (
                 <div className="md:col-span-2">
@@ -394,32 +435,53 @@ const SignUpForm: React.FC = () => {
                   <label className="block text-xs font-medium text-gray-700 mb-1">
                     State*
                   </label>
-                  <input
-                    type="text"
+                  <select
                     name="state"
                     value={formData.state}
                     onChange={handleChange}
-                    className="w-full px-3 py-1.5 border rounded-md text-sm"
-                    placeholder="Enter state"
+                    className="w-full px-3 py-1.5 border rounded-md text-sm bg-white"
                     required
-                  />
+                    disabled={locationDataLoading || !!locationDataError}
+                  >
+                    <option value="">Select State</option>
+                    {states.map((state) => (
+                      <option key={state.uuid} value={state.name}>
+                        {state.name}
+                      </option>
+                    ))}
+                  </select>
+                  {locationDataLoading && (
+                    <p className="mt-1 text-xs text-gray-500">Loading states...</p>
+                  )}
                 </div>
               )}
 
               {shouldShowField("lga") && (
                 <div>
                   <label className="block text-xs font-medium text-gray-700 mb-1">
-                    L.G.A*
+                    County*
                   </label>
-                  <input
-                    type="text"
+                  <select
                     name="local_govt"
                     value={formData.local_govt}
                     onChange={handleChange}
-                    className="w-full px-3 py-1.5 border rounded-md text-sm"
-                    placeholder="Enter local government area"
+                    className="w-full px-3 py-1.5 border rounded-md text-sm bg-white"
                     required
-                  />
+                    disabled={!selectedStateUuid || countyLoading || !!locationDataError}
+                  >
+                    <option value="">Select County</option>
+                    {filteredCounties.map((county) => (
+                      <option key={county.uuid} value={county.name}>
+                        {county.name}
+                      </option>
+                    ))}
+                  </select>
+                  {!selectedStateUuid && !locationDataError && (
+                    <p className="mt-1 text-xs text-gray-500">Please select a state first</p>
+                  )}
+                  {selectedStateUuid && countyLoading && (
+                    <p className="mt-1 text-xs text-gray-500">Loading counties...</p>
+                  )}
                 </div>
               )}
 
@@ -578,11 +640,11 @@ const SignUpForm: React.FC = () => {
               <button
                 type="submit"
                 className={`flex-1 py-1.5 px-4 ${
-                  isFormValid
+                  isFormValid && !locationDataLoading && !locationDataError
                     ? "bg-green-500 hover:bg-green-600 text-black"
                     : "bg-gray-300 text-white cursor-not-allowed"
                 } rounded-md transition text-sm`}
-                disabled={!isFormValid}
+                disabled={!isFormValid || locationDataLoading || !!locationDataError}
               >
                 Next
               </button>

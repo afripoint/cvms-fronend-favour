@@ -12,7 +12,10 @@ const initialState: AuthState = {
   otpResent: false,
   selectedServices: [],
   successMessage: null,
+
 }
+
+
 
 
 // This could be in a utils file or in your authSlice.ts
@@ -175,11 +178,36 @@ export const forgotPassword = createAsyncThunk("auth/forgotPassword", async (ema
   }
 })
 
+// export const resetPasswordTokenCheck = createAsyncThunk(
+//   "auth/resetPasswordTokenCheck",
+//   async (token: string, { rejectWithValue }) => {
+//     try {
+//       const response = await authService.resetPasswordTokenCheck(token)
+//       return response
+//     } catch (error: any) {
+//       return rejectWithValue(extractErrorMessage(error))
+//     }
+//   },
+// )
+
+// export const setNewPassword = createAsyncThunk(
+//   "auth/setNewPassword",
+//   async ({ token, newPassword }: { token: string; newPassword: string }, { rejectWithValue }) => {
+//     try {
+//       const response = await authService.setNewPassword(token, newPassword)
+//       return response
+//     } catch (error: any) {
+//       return rejectWithValue(extractErrorMessage(error))
+//     }
+//   },
+// )
+
+
 export const resetPasswordTokenCheck = createAsyncThunk(
   "auth/resetPasswordTokenCheck",
-  async (token: string, { rejectWithValue }) => {
+  async ({ uidb64, token }: { uidb64: string; token: string }, { rejectWithValue }) => {
     try {
-      const response = await authService.resetPasswordTokenCheck(token)
+      const response = await authService.resetPasswordTokenCheck(uidb64, token)
       return response
     } catch (error: any) {
       return rejectWithValue(extractErrorMessage(error))
@@ -187,17 +215,30 @@ export const resetPasswordTokenCheck = createAsyncThunk(
   },
 )
 
+// Updated setNewPassword in authSlice.ts
 export const setNewPassword = createAsyncThunk(
   "auth/setNewPassword",
-  async ({ token, newPassword }: { token: string; newPassword: string }, { rejectWithValue }) => {
+  async ({ uidb64, token, newPassword }: { uidb64: string; token: string; newPassword: string }, { rejectWithValue }) => {
     try {
-      const response = await authService.setNewPassword(token, newPassword)
+      const response = await authService.setNewPassword(uidb64, token, newPassword)
       return response
     } catch (error: any) {
       return rejectWithValue(extractErrorMessage(error))
     }
   },
 )
+
+export const verifyNIN = createAsyncThunk(
+  "auth/verifyNIN",
+  async ({ nin, email }: { nin: string; email?: string }, { rejectWithValue }) => {
+    try {
+      const response = await authService.verifyNIN(nin, email);
+      return response;
+    } catch (error: any) {
+      return rejectWithValue(extractErrorMessage(error));
+    }
+  }
+);
 
 export const fetchCurrentUser = createAsyncThunk("auth/getCurrentUser", async (_, { rejectWithValue }) => {
   try {
@@ -363,6 +404,21 @@ const authSlice = createSlice({
         state.isAuthenticated = false
         state.user = null
       })
+
+      // Add to the authSlice extraReducers
+builder.addCase(verifyNIN.pending, (state) => {
+  state.isLoading = true;
+  state.error = null;
+})
+.addCase(verifyNIN.fulfilled, (state, action: PayloadAction<any>) => {
+  state.isLoading = false;
+  state.user = { ...state.user, NIN: action.payload.nin, NINVerified: true };
+})
+.addCase(verifyNIN.rejected, (state, action) => {
+  state.isLoading = false;
+  state.error = action.payload as string;
+});
+
 
     // Logout user
     builder.addCase(logoutUser.fulfilled, (state) => {
