@@ -27,7 +27,7 @@ export interface VinSearchHistoryItem {
       throw new Error('Authentication token not found');
     }
 
-    const response = await fetch('https://cvms-backend-conversion.onrender.com/vin/search-history/', {
+    const response = await fetch('http://cvms-api.afripointdev.com/vin/search-history/', {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',

@@ -81,7 +81,7 @@ const Certificate = () => {
         throw new Error('No access token found');
       }
       
-      const response = await fetch('cvms-api.afripointdev.com/vin/search-history/', {
+      const response = await fetch('http://cvms-api.afripointdev.com/vin/search-history/', {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -248,7 +248,7 @@ const Certificate = () => {
         throw new Error('No access token found');
       }
       
-      const response = await fetch('cvms-api.afripointdev.com/vin/search-history/', {
+      const response = await fetch('http://cvms-api.afripointdev.com/vin/search-history/', {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',

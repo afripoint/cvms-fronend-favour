@@ -2,7 +2,7 @@ import axios from "axios"
 import type { RegistrationData, User } from "../types/auth"
 import { appSaveToLocalStorage, appGetFromLocalStorage, appRemoveFromLocalStorage, StorageKeys } from "../../../core/storage/storage"
 
-const API_URL = "cvms-api.afripointdev.com/auth"
+const API_URL = "http://cvms-api.afripointdev.com/auth"
 
 // Create axios instance with improved error handling
 const authAxios = axios.create({

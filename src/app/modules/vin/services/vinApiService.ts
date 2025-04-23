@@ -196,7 +196,7 @@ import axios from "axios"
 import * as XLSX from "xlsx"
 import type { ApiResponse, VehicleDetails } from "../types"
 
-const API_BASE_URL = "cvms-api.afripointdev.com/vin"
+const API_BASE_URL = "http://cvms-api.afripointdev.com/vin"
 
 // Define interfaces for API responses
 interface VinResponseItem {
