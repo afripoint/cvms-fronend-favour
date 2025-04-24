@@ -276,37 +276,72 @@ const ResetPassword: React.FC = () => {
     setFormData((prev) => ({ ...prev, [name]: value }))
   }
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
+  // const handleSubmit = async (e: React.FormEvent) => {
+  //   e.preventDefault()
 
-    if (!isValid) {
-      return
-    }
+  //   if (!isValid) {
+  //     return
+  //   }
 
-    try {
-      // Get values from URL or Redux state
-      const queryParams = new URLSearchParams(location.search)
-      const urlUidb64 = queryParams.get("uidb64") || uidb64
-      const urlToken = queryParams.get("token") || token
+  //   try {
+  //     // Get values from URL or Redux state
+  //     const queryParams = new URLSearchParams(location.search)
+  //     const urlUidb64 = queryParams.get("uidb64") || uidb64
+  //     const urlToken = queryParams.get("token") || token
 
-      if (!urlUidb64 || !urlToken) {
-        throw new Error("Invalid or missing token information")
-      }
+  //     if (!urlUidb64 || !urlToken) {
+  //       throw new Error("Invalid or missing token information")
+  //     }
 
-      await dispatch(
-        setNewPassword({ 
-          uidb64: urlUidb64, 
-          token: urlToken, 
-          newPassword: formData.password 
-        })
-      ).unwrap()
+  //     await dispatch(
+  //       setNewPassword({ 
+  //         uidb64: urlUidb64, 
+  //         token: urlToken, 
+  //         newPassword: formData.password 
+  //       })
+  //     ).unwrap()
       
-      dispatch(setStep(PasswordResetStep.SUCCESS))
-      navigate("/reset-password-success")
-    } catch (error) {
-      console.error("Failed to reset password:", error)
-    }
+  //     dispatch(setStep(PasswordResetStep.SUCCESS))
+  //     navigate("/reset-password-success")
+  //   } catch (error) {
+  //     console.error("Failed to reset password:", error)
+  //   }
+  // }
+
+
+  // Update this function in ResetPassword.tsx
+const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault()
+
+  if (!isValid) {
+    return
   }
+
+  try {
+    // Get values from URL or Redux state
+    const queryParams = new URLSearchParams(location.search)
+    const urlUidb64 = queryParams.get("uidb64") || uidb64
+    const urlToken = queryParams.get("token") || token
+
+    if (!urlUidb64 || !urlToken) {
+      throw new Error("Invalid or missing token information")
+    }
+
+    await dispatch(
+      setNewPassword({ 
+        uidb64: urlUidb64, 
+        token: urlToken, 
+        newPassword: formData.password 
+      })
+    ).unwrap()
+    
+    dispatch(setStep(PasswordResetStep.SUCCESS))
+    // Use the same pattern as the incoming URL - with /auth prefix
+    navigate("/auth/reset-password-success")
+  } catch (error) {
+    console.error("Failed to reset password:", error)
+  }
+}
 
   // Show loading or redirect if token is invalid
   if (!isTokenValid) {
