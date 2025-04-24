@@ -68,7 +68,7 @@ export const generateCertificate = async (data: CertificateData) => {
       width: 210mm;
       height: 297mm;
       position: relative;
-      background: url('./images/CVMS\ Certificate\ New\ art\ 002.png') no-repeat center center;
+      background: url('./images/certificateimg2.png') no-repeat center center;
       background-size: cover;
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
       overflow: hidden;
@@ -87,7 +87,7 @@ export const generateCertificate = async (data: CertificateData) => {
       transform: translate(-50%, -50%);
       width: 70%;
       height: 100%;
-      background-image: url('./images/CVMS\ Certificate\ New\ art\ 003.png');
+      background-image: url('./images/certificateimg3.png');
       background-repeat: no-repeat;
       background-position: center center;
       background-size: contain;
@@ -264,7 +264,7 @@ export const generateCertificate = async (data: CertificateData) => {
     <div class="certificate-content">
       <!-- Header -->
       <div class="header">
-        <img src="./images/CVMS Certificate New art 003.png" alt="" class="logo">
+        <img src="./images/certificateimg3.png" alt="" class="logo">
         <div class="title-container">
           <h4 class="title">CUSTOMS VERIFICATION</h4>
           <h4 class="subtitle">MANAGEMENT SYSTEM</h4>
