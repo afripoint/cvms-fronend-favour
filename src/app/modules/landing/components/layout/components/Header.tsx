@@ -131,13 +131,13 @@ export const Header: React.FC = () => {
               <>
                 <Link 
                   to="/login" 
-                  className={`bg-[#F2F2F7] rounded-sm hover:bg-gray-100 px-3 lg:px-4 ${isScrolled ? 'py-1 text-sm' : 'py-2 text-base'} transition-all duration-300 whitespace-nowrap`}
+                  className={`bg-[#F2F2F7] text-[#000000]  rounded-sm hover:bg-gray-100 px-3 lg:px-4 ${isScrolled ? 'py-1 text-sm' : 'py-2 text-base'} transition-all duration-300 whitespace-nowrap`}
                 >
                   Login <span className="ml-1">→</span>
                 </Link>
                 <Link 
                   to="/account-type" 
-                  className={`bg-[#34C759] rounded-sm hover:bg-green-200 px-3 lg:px-4 ${isScrolled ? 'py-1 text-sm' : 'py-2 text-base'} transition-all duration-300 whitespace-nowrap text-white`}
+                  className={`bg-[#34C759] text-[#000000] rounded-sm hover:bg-green-200 px-3 lg:px-4 ${isScrolled ? 'py-1 text-sm' : 'py-2 text-base'} transition-all duration-300 whitespace-nowrap text-white`}
                 >
                   Sign up
                 </Link>
@@ -160,13 +160,13 @@ export const Header: React.FC = () => {
                 {/* Login and signup buttons for tablet when not logged in */}
                 <Link 
                   to="/login" 
-                  className={`bg-[#F2F2F7] rounded-sm hover:bg-gray-100 px-3 ${isScrolled ? 'py-1 text-sm' : 'py-2 text-base'} transition-all duration-300 whitespace-nowrap`}
+                  className={`bg-[#F2F2F7] text-[#000000] rounded-sm hover:bg-gray-100 px-3 ${isScrolled ? 'py-1 text-sm' : 'py-2 text-base'} transition-all duration-300 whitespace-nowrap`}
                 >
                   Login <span className="ml-1">→</span>
                 </Link>
                 <Link 
                   to="/account-type" 
-                  className={`bg-[#34C759] rounded-sm hover:bg-green-200 px-3 ${isScrolled ? 'py-1 text-sm' : 'py-2 text-base'} transition-all duration-300 whitespace-nowrap text-white`}
+                  className={`bg-[#34C759]  text-[#000000] rounded-sm hover:bg-green-200 px-3 ${isScrolled ? 'py-1 text-sm' : 'py-2 text-base'} transition-all duration-300 whitespace-nowrap text-white`}
                 >
                   Sign up
                 </Link>
@@ -210,7 +210,7 @@ export const Header: React.FC = () => {
                 {/* Show Login button on mobile when not enough space */}
                 <Link 
                   to="/login" 
-                  className={`bg-[#F2F2F7] rounded-sm hover:bg-gray-100 px-3 ${isScrolled ? 'py-1 text-sm' : 'py-1 text-sm'} transition-all duration-300 whitespace-nowrap`}
+                  className={`bg-[#F2F2F7] text-[#000000] rounded-sm hover:bg-gray-100 px-3 ${isScrolled ? 'py-1 text-sm' : 'py-1 text-sm'} transition-all duration-300 whitespace-nowrap`}
                 >
                   Login
                 </Link>
@@ -286,14 +286,14 @@ export const Header: React.FC = () => {
               <Link 
                 to="/login" 
                 onClick={() => setIsMobileMenuOpen(false)}
-                className="block w-full bg-[#F2F2F7] rounded-sm text-center py-2 text-base"
+                className="block w-full bg-[#F2F2F7] text-[#000000] rounded-sm text-center py-2 text-base"
               >
                 Login <span className="ml-1">→</span>
               </Link>
               <Link 
                 to="/account-type" 
                 onClick={() => setIsMobileMenuOpen(false)}
-                className="block w-full bg-[#34C759] text-white rounded-sm text-center py-2 text-base"
+                className="block w-full bg-[#34C759] text-[#000000] rounded-sm text-center py-2 text-base"
               >
                 Sign up
               </Link>

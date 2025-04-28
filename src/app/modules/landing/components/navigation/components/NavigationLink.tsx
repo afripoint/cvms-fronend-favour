@@ -20,12 +20,12 @@ export const NavigationLinks: React.FC = () => {
       ))}
 
       {/* Login link with arrow */}
-      <Link to="/login" className="bg-[#F2F2F7] rounded-sm hover:bg-gray-100 px-4 py-2">
+      <Link to="/login" className="bg-[#F2F2F7] text-[#000000] rounded-sm hover:bg-gray-100 px-4 py-2">
         Login <span className="ml-1">→</span>
       </Link>
 
       {/* Sign up button */}
-      <Link to="/account-type" className="bg-[#34C759] rounded-sm hover:bg-green-200 px-4 py-2">
+      <Link to="/account-type" className="bg-[#34C759] text-[#000000] rounded-sm hover:bg-green-200 px-4 py-2">
         Sign up
       </Link>
     </nav>

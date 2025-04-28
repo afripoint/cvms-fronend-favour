@@ -3,8 +3,8 @@ import type { NavigationItem } from "../types"
 export const navigationItems: NavigationItem[] = [
   { label: "Home", href: "/" },
   { label: "VIN Check", href: "vin" },
-  { label: "Status Tracker", href: "#" },
-  { label: "Accredify", href: "#" },
+   { label: "Status Tracker", href: "/status-tracker" },
+  { label: "Accredify", href: "/accredify" },
   // { label: "Supply Chain", href: "#" },
   { label: "How it Works", href: "#how-it-works" },
 ]

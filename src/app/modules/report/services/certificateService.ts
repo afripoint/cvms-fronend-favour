@@ -45,7 +45,7 @@ export const generateCertificate = async (data: CertificateData) => {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Customs Vehicle Certificate</title>
+  <title>Customs Certificate</title>
   <style>
     @page {
       size: A4;
@@ -273,7 +273,7 @@ export const generateCertificate = async (data: CertificateData) => {
 
       <!-- Certificate Title -->
       <h2 class="certificate-title">
-        VEHICLE CERTIFICATE
+        CUSTOMS CERTIFICATE
       </h2>
       
       <!-- Certificate Description -->
@@ -332,8 +332,13 @@ export const generateCertificate = async (data: CertificateData) => {
             </p>
           </div>
           <p class="date">
-            This certificate is generated on April 23, 2025
+            This certificate is generated on ${new Date().toLocaleDateString('en-US', { 
+              month: 'long', 
+              day: 'numeric', 
+              year: 'numeric' 
+            })}
           </p>
+          
         </div>
 
         <img src="${qrCodeDataUrl}" class="qr-code" alt="QR Code">

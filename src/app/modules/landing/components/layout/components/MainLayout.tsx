@@ -25,22 +25,23 @@
 
 // MainLayout.tsx
 import type React from "react"
-import { useState, useEffect } from "react" // Add useState and useEffect
+// import { useState, useEffect } from "react" // Add useState and useEffect
+import { useEffect } from "react"
 import Header from "./Header"
 import Footer from "./footer/Footer"
 import ChatWidget from "../../chat/ChatWidget"
 import { useSelector } from "react-redux" // Add useSele
-import { toast } from "react-toastify" // Add toast
+// import { toast } from "react-toastify" // Add toast
 import 'react-toastify/dist/ReactToastify.css' // Add toast styles
 import { RootState } from "../../../../../core/store"
-import NINVerificationModal from "../../../../nin/components/NINVerificationModal"
+// import NINVerificationModal from "../../../../nin/components/NINVerificationModal"
 
 interface MainLayoutProps {
   children: React.ReactNode
 }
 
 const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
-  const [showNINModal, setShowNINModal] = useState(false);
+  // const [showNINModal, setShowNINModal] = useState(false);
   const { isAuthenticated, user } = useSelector((state: RootState) => state.auth);
 
   useEffect(() => {
@@ -51,7 +52,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
         const now = Date.now();
         
         if (!lastPrompt || now - parseInt(lastPrompt) > 1 * 60 * 60 * 1000) {
-          setShowNINModal(true);
+          // setShowNINModal(true);
           localStorage.setItem('lastNINPrompt', now.toString());
         }
       }, 1 * 60 * 1000); // Check every hour
@@ -68,7 +69,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
       <Footer />
       <ChatWidget />
       {/* Add NIN Verification Modal */}
-      {showNINModal && (
+      {/* {showNINModal && (
         <NINVerificationModal
           isOpen={showNINModal}
           onClose={() => setShowNINModal(false)}
@@ -77,7 +78,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
             toast.success("NIN verification successful! Your account is now fully activated.");
           }}
         />
-      )}
+      )} */}
     </div>
   )
 }

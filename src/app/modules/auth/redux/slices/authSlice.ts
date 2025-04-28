@@ -248,6 +248,9 @@ export const fetchCurrentUser = createAsyncThunk("auth/getCurrentUser", async (_
   }
 })
 
+
+
+
 export const logoutUser = createAsyncThunk("auth/logout", async () => {
   await authService.logout()
   return null
@@ -418,6 +421,9 @@ builder.addCase(verifyNIN.pending, (state) => {
   state.isLoading = false;
   state.error = action.payload as string;
 });
+
+
+
 
 
     // Logout user

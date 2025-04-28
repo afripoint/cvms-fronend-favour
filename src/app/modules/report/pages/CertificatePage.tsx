@@ -327,7 +327,7 @@ const Certificate = () => {
             Back to Home
           </Link>
           
-          <h1 className="text-xl md:text-2xl font-bold mt-2 mb-2">Vehicle Certificates</h1>
+          <h1 className="text-xl md:text-2xl font-bold mt-2 mb-2">Customs Certificates</h1>
         </nav>
         
         <div className="w-full max-w-3xl mx-auto bg-[#F2F2F7] p-3 sm:p-6 rounded-lg shadow-md">

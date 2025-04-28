@@ -357,7 +357,7 @@ import SuccessPaymentModal from "./SuccessPaymentModal"
 import { useSelector, useDispatch } from "react-redux"
 import type { RootState } from "../../../../core/store"
 import { clearCart } from "../../../cart/redux/slices/cartSlice"
-import NINVerificationModal from "../../../nin/components/NINVerificationModal"
+// import NINVerificationModal from "../../../nin/components/NINVerificationModal"
 
 // Types
 type PaymentMethod = "remita" | "paystack"
@@ -392,7 +392,7 @@ const PaymentGatewayModal: React.FC<PaymentGatewayModalProps> = ({
   email = "customer@example.com",
 }) => {
   const { isAuthenticated, user } = useSelector((state: RootState) => state.auth);
-  const [showNINModal, setShowNINModal] = useState(false);
+  // const [showNINModal, setShowNINModal] = useState(false);
   const cartItems = useSelector((state: RootState) => state.cart.items)
   const dispatch = useDispatch()
 
@@ -548,7 +548,7 @@ const PaymentGatewayModal: React.FC<PaymentGatewayModalProps> = ({
     if (!selectedMethod) return
 
     if (isAuthenticated && user && !user.NINVerified) {
-      setShowNINModal(true);
+      // setShowNINModal(true);
       return;
     }
 
@@ -572,7 +572,7 @@ const PaymentGatewayModal: React.FC<PaymentGatewayModalProps> = ({
       <ToastContainer position="bottom-right" autoClose={5000} />
 
       {/* NIN Verification Modal */}
-      {showNINModal && (
+      {/* {showNINModal && (
         <NINVerificationModal
           isOpen={showNINModal}
           onClose={() => setShowNINModal(false)}
@@ -582,7 +582,7 @@ const PaymentGatewayModal: React.FC<PaymentGatewayModalProps> = ({
             handlePayment();
           }}
         />
-      )}
+      )} */}
 
       <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
         <div className="bg-white rounded-lg shadow-xl w-96 p-6">

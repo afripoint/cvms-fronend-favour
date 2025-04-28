@@ -283,6 +283,8 @@ const authService = {
     }
   },
 
+  
+
   logout: async () => {
     try {
       console.log("Logging out user")
