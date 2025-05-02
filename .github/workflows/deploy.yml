@@ -3,7 +3,7 @@ name: Deploy Frontend to Hostinger
 on:
   push:
     branches:
-      - cvms-dev
+      - cvms-devops
 
 env:
   IMAGE_NAME: uatcvmsnigeria-frontend
@@ -43,25 +43,7 @@ jobs:
           password: ${{ secrets.DOCKER_HUB_TOKEN }}
 
       # Build and push the Docker image to Docker Hub
-      - name: Build and push Docker image
+      - name: Build and push Docker images
         run: |
           docker build -t ${{ secrets.DOCKER_HUB_USERNAME }}/$IMAGE_NAME:$IMAGE_TAG .
           docker push ${{ secrets.DOCKER_HUB_USERNAME }}/$IMAGE_NAME:$IMAGE_TAG
-
-      # Set up SSH agent with the private key for Hostinger server access
-      - name: Set up SSH
-        uses: webfactory/ssh-agent@v0.9.0
-        with:
-          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
-
-      # Deploy the frontend Docker container to Hostinger
-      - name: Deploy on Hostinger server
-        run: |
-          ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} << EOF
-            docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/$IMAGE_NAME:$IMAGE_TAG
-            docker stop uatcvmsnigeria-frontend || true
-            docker rm uatcvmsnigeria-frontend || true
-            docker run -d --name uatcvmsnigeria-frontend \
-              --network cvms_shared_network \
-              ${{ secrets.DOCKER_HUB_USERNAME }}/$IMAGE_NAME:$IMAGE_TAG
-          EOF

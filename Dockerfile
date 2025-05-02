@@ -29,12 +29,12 @@ RUN adduser -D nodeuser \
 
 USER nodeuser
 
-EXPOSE 3000
+EXPOSE 80
 
 # Health check (using correct flags)
 HEALTHCHECK --interval=30s --timeout=3s \
-  CMD wget --spider --quiet http://localhost:3000 || exit 1
+  CMD wget --spider --quiet http://localhost:80 || exit 1
 
 # Start the app
-CMD ["serve", "-s", "dist", "-l", "3000"]
+CMD ["serve", "-s", "dist", "-l", "80"]
 
