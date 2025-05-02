@@ -35,6 +35,33 @@ export interface StepIndicatorProps {
 }
 
 
+// export interface OTPDeliveryModalProps {
+//   isOpen: boolean;
+//   onClose: () => void;
+//   onSubmit: (deliveryMethod: "email" | "sms") => void;
+//   email: string;
+//   phone: string;
+//   hasPhone: boolean;
+//   errorMessage?: string | null; // Add this line
+// }
+
+
+// In auth.ts, update the OTPDeliveryModalProps interface
+// export interface OTPDeliveryModalProps {
+//   isOpen: boolean;
+//   onClose: () => void;
+//   onSubmit: (deliveryMethod: "email" | "sms") => void;
+//   email: string;
+//   phone: string;
+//   hasPhone: boolean;
+//   errorMessage?: string | null;
+//   title?: string; // Add this
+//   description?: string; // Add this
+//   submitButtonText?: string; // Add this
+//   showLoginLink?: boolean; // Add this
+// }
+
+
 export interface OTPDeliveryModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -42,7 +69,12 @@ export interface OTPDeliveryModalProps {
   email: string;
   phone: string;
   hasPhone: boolean;
-  errorMessage?: string | null; // Add this line
+  errorMessage?: string | null;
+  title?: string;
+  description?: string;
+  submitButtonText?: string;
+  showLoginLink?: boolean;
+  isPasswordChange?: boolean; // Add this new prop
 }
 
 export interface ServiceRequestModalProps {

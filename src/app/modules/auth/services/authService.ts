@@ -1,6 +1,7 @@
 import axios from "axios"
 import type { RegistrationData, User } from "../types/auth"
 import { appSaveToLocalStorage, appGetFromLocalStorage, appRemoveFromLocalStorage, StorageKeys } from "../../../core/storage/storage"
+// import { extractErrorMessage } from "../redux/slices/authSlice"
 
 const API_URL = "http://cvms-api.afripointdev.com/auth"
 
@@ -169,6 +170,42 @@ const authService = {
       throw error
     }
   },
+
+  changePassword: async (oldPassword: string, newPassword: string): Promise<any> => {
+    try {
+      const response = await authAxios.post("/change-password/", { 
+        old_password: oldPassword,
+        new_password: newPassword 
+      })
+      return response.data
+    } catch (error: any) {
+      // throw new Error(extractErrorMessage(error))
+    }
+  },
+
+  // initiatePasswordChange: async (oldPassword: string, newPassword: string): Promise<any> => {
+  //   try {
+  //     const response = await authAxios.post("/auth/change-password/initiate", {
+  //       old_password: oldPassword,
+  //       new_password: newPassword
+  //     });
+  //     return response.data;
+  //   } catch (error: any) {
+  //     throw new Error(extractErrorMessage(error));
+  //   }
+  // },
+
+  // verifyPasswordChangeOTP: async (email: string, otp: string): Promise<any> => {
+  //   try {
+  //     const response = await authAxios.post("/auth/change-password/verify", {
+  //       email,
+  //       otp
+  //     });
+  //     return response.data;
+  //   } catch (error: any) {
+  //     throw new Error(extractErrorMessage(error));
+  //   }
+  // },
 
 
   verifyOtp: async (email: string, otp: string, phone_number?: string): Promise<any> => {

@@ -25,7 +25,7 @@ const VinSearchResults: React.FC<VinSearchResultsProps> = ({ searchResults, onNe
       id: vehicle.vin,
       name: `${vehicle.year} ${vehicle.manufacturer} ${vehicle.model}`,
       quantity: 1,
-      price: 2500, // Standard price for CVMS report
+      price: 10000, // Standard price for CVMS report
       type: "CVMS Standard Report",
     }
   }

@@ -557,7 +557,7 @@ const SignUpForm: React.FC = () => {
                       />
                     </svg>
                     <span className="text-xs text-gray-500">
-                      Must contain 1 uppercase, 1 number, min. 8 characters
+                      Must contain 1 uppercase, 1 number, 1 special character, min. 8 characters
                     </span>
                   </div>
                   {passwordError && (

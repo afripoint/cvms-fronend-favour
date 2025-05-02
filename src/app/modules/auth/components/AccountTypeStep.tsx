@@ -60,7 +60,7 @@ const AccountType: React.FC = () => {
             {ACCOUNT_TYPES.map((accountType) => (
               <div
                 key={accountType.id}
-                className={`border rounded-lg p-4 flex items-center cursor-pointer hover:bg-gray-50 transition ${
+                className={`border-2 rounded-lg p-4 flex items-center cursor-pointer hover:bg-gray-50 transition ${
                   role === accountType.value ? "bg-green-50 border-green-500" : ""
                 }`}
                 onClick={() => handleAccountTypeSelect(accountType.value as any)}
