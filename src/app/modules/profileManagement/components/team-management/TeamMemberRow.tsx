@@ -1,59 +1,4 @@
-// // src/modules/settings/components/TeamsTab/TeamMemberRow.tsx
-// import { FiEye, FiEdit2, FiTrash2 } from 'react-icons/fi';
-// import { TeamMember } from '../../types';
-
-
-// interface TeamMemberRowProps {
-//   member: TeamMember;
-// }
-
-// const TeamMemberRow: React.FC<TeamMemberRowProps> = ({ member }) => {
-//   return (
-//     <tr className=" border-t border-gray-200">
-//       <td className="py-4 px-4">
-//         <div className="flex items-center">
-//           <div className="w-8 h-8 rounded-full bg-purple-200 flex items-center justify-center mr-3 text-purple-600 font-medium">
-//             {member.initials || member.name.split(' ').map(n => n[0]).join('')}
-//           </div>
-//           <span>{member.name}</span>
-//         </div>
-//       </td>
-//       <td className="py-4 px-6 text-gray-600">{member.email}</td>
-//       <td className="py-4 px-6 text-gray-600">{member.role}</td>
-//       <td className="py-4 px-6 text-gray-600">{member.lastLogin || 'Never'}</td>
-//       <td className="py-4 px-6">
-//         <span className={`inline-flex items-center ${
-//           member.status === 'Active' 
-//             ? 'bg-green-100 text-green-600' 
-//             : 'bg-gray-100 text-gray-600'
-//           } text-xs px-3 py-1 rounded-full`}>
-//           • {member.status}
-//         </span>
-//       </td>
-//       <td className="py-4 px-4">
-//         <div className="flex space-x-2">
-//           <button className="text-gray-600 hover:text-gray-900 p-2 rounded-md hover:bg-gray-100">
-//             <FiEye size={16} />
-//           </button>
-//           <button className="text-gray-600 hover:text-gray-900 p-2 rounded-md hover:bg-gray-100">
-//             <FiEdit2 size={20} />
-//           </button>
-//           <button className="text-red-500 hover:text-red-700 p-2 rounded-md hover:bg-red-100">
-//             <FiTrash2 size={20} />
-//           </button>
-//         </div>
-//       </td>
-//     </tr>
-//   );
-// };
-
-// export default TeamMemberRow;
-
-
-
-
-// src/modules/settings/components/TeamsTab/TeamMemberRow.tsx
-// src/modules/settings/components/TeamsTab/TeamMemberRow.tsx
+import React from 'react';
 import { FiEye, FiEdit2, FiTrash2 } from 'react-icons/fi';
 import { TeamMember } from '../../types';
 
@@ -72,49 +17,57 @@ const TeamMemberRow: React.FC<TeamMemberRowProps> = ({
 }) => {
   return (
     <tr className="border-t border-gray-200">
-      <td className="py-4 px-4">
+      <td className="py-3 sm:py-4 px-2 sm:px-4">
         <div className="flex items-center">
-          <div className="w-8 h-8 rounded-full bg-purple-200 flex items-center justify-center mr-3 text-purple-600 font-medium">
+          <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-purple-200 flex items-center justify-center mr-2 sm:mr-3 text-purple-600 font-medium text-xs sm:text-sm">
             {member.initials || member.name.split(' ').map((n: string) => n[0]).join('')}
           </div>
-          <span>{member.name}</span>
+          <span className="text-sm sm:text-base truncate max-w-[100px] sm:max-w-none">{member.name}</span>
         </div>
       </td>
-      <td className="py-4 px-6 text-gray-600">{member.email}</td>
-      {/* <td className="py-4 px-6 text-gray-600">{member.role}</td>
-      <td className="py-4 px-6 text-gray-600">{member.phone || 'N/A'}</td> */}
-      <td className="py-4 px-6 text-gray-600">{member.lastLogin || 'Never'}</td>
-      <td className="py-4 px-6">
+      <td className="py-3 sm:py-4 px-2 sm:px-6 text-gray-600 text-xs sm:text-sm">
+        <span className="truncate block max-w-[100px] sm:max-w-[200px] md:max-w-none">{member.email}</span>
+      </td>
+      {/* <td className="hidden md:table-cell py-4 px-6 text-gray-600">{member.role}</td>
+      <td className="hidden lg:table-cell py-4 px-6 text-gray-600">{member.phone || 'N/A'}</td> */}
+      <td className="hidden sm:table-cell py-3 sm:py-4 px-2 sm:px-6 text-gray-600 text-xs sm:text-sm">{member.lastLogin || 'Never'}</td>
+      <td className="py-3 sm:py-4 px-2 sm:px-6">
         <span className={`inline-flex items-center ${
           member.status === 'Active' 
             ? 'bg-green-100 text-green-600' 
             : 'bg-gray-100 text-gray-600'
-          } text-xs px-3 py-1 rounded-full`}>
+          } text-xs px-2 sm:px-3 py-1 rounded-full`}>
           • {member.status}
         </span>
       </td>
-      <td className="py-4 px-4">
-        <div className="flex space-x-2">
+      <td className="py-3 sm:py-4 px-2 sm:px-4">
+        <div className="flex space-x-1 sm:space-x-2">
           <button 
-            className="text-gray-600 hover:text-gray-900 p-2 rounded-md hover:bg-gray-100"
+            className="text-gray-600 hover:text-gray-900 p-1 sm:p-2 rounded-md hover:bg-gray-100"
             onClick={() => onView(member)}
             title="View details"
+            aria-label="View member details"
           >
-            <FiEye size={16} />
+            <FiEye size={14} className="sm:hidden" />
+            <FiEye size={16} className="hidden sm:block" />
           </button>
           <button 
-            className="text-gray-600 hover:text-gray-900 p-2 rounded-md hover:bg-gray-100"
+            className="text-gray-600 hover:text-gray-900 p-1 sm:p-2 rounded-md hover:bg-gray-100"
             onClick={() => onEdit(member)}
             title="Edit member"
+            aria-label="Edit member"
           >
-            <FiEdit2 size={16} />
+            <FiEdit2 size={14} className="sm:hidden" />
+            <FiEdit2 size={16} className="hidden sm:block" />
           </button>
           <button 
-            className="text-red-500 hover:text-red-700 p-2 rounded-md hover:bg-red-100"
+            className="text-red-500 hover:text-red-700 p-1 sm:p-2 rounded-md hover:bg-red-100"
             onClick={() => onDelete(member.id)}
             title="Delete member"
+            aria-label="Delete member"
           >
-            <FiTrash2 size={16} />
+            <FiTrash2 size={14} className="sm:hidden" />
+            <FiTrash2 size={16} className="hidden sm:block" />
           </button>
         </div>
       </td>
