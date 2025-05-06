@@ -47,3 +47,24 @@ jobs:
         run: |
           docker build -t ${{ secrets.DOCKER_HUB_USERNAME }}/$IMAGE_NAME:$IMAGE_TAG .
           docker push ${{ secrets.DOCKER_HUB_USERNAME }}/$IMAGE_NAME:$IMAGE_TAG
+
+      # Set up SSH agent for deployment
+      - name: Set up SSH
+        uses: webfactory/ssh-agent@v0.7.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      # Add server to known hosts
+      - name: Add server to known hosts
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.KNOWN_HOSTS }}" >> ~/.ssh/known_hosts
+
+      # Deploy frontend service on server (using correct service name)
+      - name: Deploy frontend service
+        run: |
+          ssh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} '
+            cd ~/cvms
+            docker-compose -f docker-compose.prod.yml pull uatcvmsnigeria-frontend
+            docker-compose -f docker-compose.prod.yml up -d uatcvmsnigeria-frontend
+          '
