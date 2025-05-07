@@ -62,9 +62,9 @@ const cartSlice = createSlice({
       // This is a simplified promo code handler
       // In a real app, you'd validate the promo code against a backend
       const validPromoCodes: { [key: string]: number } = {
-        SAVE10: 10,
-        FIRST50: 50,
-        WELCOME: 75,
+        SAVE10: 500,
+        FIRST50: 1000,
+        WELCOME: 1500,
       }
 
       const promoCode = action.payload.toUpperCase()

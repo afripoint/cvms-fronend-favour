@@ -514,7 +514,7 @@ export default function SuccessPaymentModal({
             Print Receipt
           </Button>
           <Button className="w-full bg-green-500 hover:bg-green-600 text-white text-xs py-2" onClick={handleDownload}>
-            Download Certificate
+            Proceed
           </Button>
         </div>
       </Card>

@@ -12,7 +12,6 @@ import { ChevronDown, ChevronLeft, ChevronUp } from "lucide-react"
 import PaymentGatewayModal from "../../modules/payment/components/modal/PaymentGatewayModal"
 //import SuccessPaymentModal from "../../modules/payment/components/modal/SuccessPaymentModal"
 
-
 // Define types for cart items
 interface CartItem {
   id: string
@@ -27,53 +26,97 @@ const PurchasePlanModal: React.FC<{
   onClose: () => void
   onSelectPlan: (plan: string) => void
 }> = ({ onClose, onSelectPlan }) => {
+  const [selectedPlan, setSelectedPlan] = useState<string | null>(null)
+
   const plans = [
     {
-      name: "Basic",
-      price: "N2,500",
-      searches: "basic plan... Run 2 VIN searches only",
+      name: "Starter Plan",
+      description: "1 VIN Allocation",
+      price: "N7,500",
+      subText: "Best for one-off VIN lookups. Ideal for personal imports or occasional users.",
     },
     {
-      name: "Standard",
-      price: "N10,000",
-      searches: "silver plan...  Run 3 VIN searches & 2 Vehicle Reports",
+      name: "Solo Bundle",
+      description: "2 VIN Allocations",
+      price: "N14,500",
+      subText: "For light users – check up to 2 cars quickly.",
     },
     {
-      name: "Premium",
-      price: "N20,000",
-      searches: "pearl plan... Run 5 VIN searches & 5 Vehicle Reports",
+      name: "Trader Bundle",
+      description: "5 VIN Allocations",
+      price: "N36,000",
+      subText: "Perfect for dealers, clearing agents, or SMEs running 5 VIN checks.",
+    },
+    {
+      name: "Business Bundle",
+      description: "10 VIN Allocations",
+      price: "N73,000",
+      subText: "Mid-tier option for growing car businesses or agents.",
+    },
+    {
+      name: "Enterprise Plan",
+      description: "65 VIN Allocations",
+      price: "N500,000",
+      subText: "Built for large-scale operators running frequent VIN checks.",
     },
   ]
 
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4 mt-12">
-      <div className="bg-white rounded-lg w-full max-w-md sm:max-w-lg md:max-w-2xl shadow-lg">
-        <div className="p-4">
-          <h2 className="text-lg sm:text-xl font-semibold text-center mb-4">All available plans</h2>
+  const handleContinue = () => {
+    if (selectedPlan) {
+      onSelectPlan(selectedPlan)
+    }
+  }
 
-          <div className="space-y-3 mb-3">
+  return (
+    <div className="fixed inset-0 z-50 mt-12 flex items-center justify-center bg-black bg-opacity-50 p-4 overflow-y-auto">
+      <div className="bg-white rounded-lg w-full max-w-md sm:max-w-lg shadow-lg my-8">
+        <div className="p-4 relative max-h-[80vh] overflow-y-auto">
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="text-md font-medium">All available plans</h2>
+            <button onClick={onClose} className="text-gray-500 text-xl hover:text-gray-700">
+              ×
+            </button>
+          </div>
+
+          <div className="space-y-2 mb-4">
             {plans.map((plan) => (
               <div
                 key={plan.name}
-                className="border rounded-lg p-3 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 hover:bg-green-50 cursor-pointer"
-                onClick={() => onSelectPlan(plan.name)}
+                onClick={() => setSelectedPlan(plan.name)}
+                className={`border rounded-lg p-3 cursor-pointer ${
+                  selectedPlan === plan.name ? "border-2 border-[#00A229] " : "border border-[#D1D1D1] hover:border-gray-300"
+                }`}
               >
-                <div>
-                  <h3 className="font-normal text-xs text-[#8E8E93]">PLAN NAME: {plan.name}</h3>
-                  <p className="font-bold text-black">{plan.price}</p>
-                  <p className="text-xs font-semibold text-black">{plan.searches}</p>
+                <div className="flex items-center justify-between mb-1">
+                  <div className="flex items-center">
+                    <input
+                      type="radio"
+                      name="plan"
+                      checked={selectedPlan === plan.name}
+                      onChange={() => setSelectedPlan(plan.name)}
+                      className="h-4 w-4 border-gray-300 focus:ring-[#00A229] accent-[#00A229]"
+                      style={{ accentColor: "#10b981" }}
+                    />
+                    <span className="ml-2 font-bold text-sm">{plan.name}</span>
+                  </div>
+                  <span className="font-bold text-sm">{plan.price}</span>
                 </div>
-
-                <button className="text-[#34C759] border border-[#34C759] bg-green-50 px-3 py-1 rounded-md text-sm w-full sm:w-auto text-center">
-                  Select Plan
-                </button>
+                <div className="ml-6 text-xs text-[#000000]">
+                  <div>{plan.description}</div>
+                  <div className="text-xs text-[#8E8E93] mt-1">{plan.subText}</div>
+                </div>
               </div>
             ))}
           </div>
 
           <button
-            className="w-full bg-green-50 text-green-600 py-2 rounded-lg font-semibold hover:bg-green-100 transition"
-            onClick={onClose}
+            onClick={handleContinue}
+            disabled={!selectedPlan}
+            className={`w-full py-2 text-center rounded-lg font-medium ${
+              selectedPlan
+                ? "bg-[#00A229] text-white hover:bg-green-600"
+                : "bg-gray-200 text-gray-500 cursor-not-allowed"
+            }`}
           >
             Continue
           </button>
@@ -124,6 +167,13 @@ const PaymentMethodPage: React.FC = () => {
     } else if (selectedMethod === "purchase") {
       setShowPurchasePlanModal(true)
     }
+  }
+
+  // Handle plan selection from modal
+  const handlePlanSelect = (plan: string) => {
+    console.log(`Selected plan: ${plan}`)
+    setShowPurchasePlanModal(false)
+    setShowPaymentGatewayModal(true)
   }
 
   // Handle payment completion from payment gateway
@@ -209,6 +259,7 @@ const PaymentMethodPage: React.FC = () => {
                   checked={selectedMethod === "oneTime"}
                   onChange={() => handleMethodSelect("oneTime")}
                   className="mr-2 sm:mr-4 h-4 sm:h-5 w-4 sm:w-5 text-green-600"
+                  style={{ accentColor: "#10b981" }}
                 />
                 <div className="flex-grow flex items-center justify-between">
                   <div>
@@ -229,7 +280,8 @@ const PaymentMethodPage: React.FC = () => {
                   name="paymentMethod"
                   checked={selectedMethod === "purchase"}
                   onChange={() => handleMethodSelect("purchase")}
-                  className="mr-2 sm:mr-4 h-4 sm:h-5 w-4 sm:w-5"
+                  className="mr-2 sm:mr-4 h-4 sm:h-5 w-4 sm:w-5 text-green-600"
+                  style={{ accentColor: "#10b981" }}
                 />
                 <div className="flex-grow flex items-center justify-between pr-16 sm:pr-20">
                   <div>
@@ -318,14 +370,7 @@ const PaymentMethodPage: React.FC = () => {
 
       {/* Modals */}
       {showPurchasePlanModal && (
-        <PurchasePlanModal
-          onClose={() => setShowPurchasePlanModal(false)}
-          onSelectPlan={(plan) => {
-            console.log(`Selected plan: ${plan}`);
-            setShowPurchasePlanModal(false);
-            setShowPaymentGatewayModal(true);
-          }}
-        />
+        <PurchasePlanModal onClose={() => setShowPurchasePlanModal(false)} onSelectPlan={handlePlanSelect} />
       )}
 
       {showPaymentGatewayModal && (
@@ -336,7 +381,6 @@ const PaymentMethodPage: React.FC = () => {
           email="customer@example.com" // You should get this from your user state/context
         />
       )}
-
     </MainLayout>
   )
 }
