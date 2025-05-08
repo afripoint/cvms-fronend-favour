@@ -459,7 +459,7 @@ const SignUpForm: React.FC = () => {
               {shouldShowField("lga") && (
                 <div>
                   <label className="block text-xs font-medium text-gray-700 mb-1">
-                    County*
+                    Local Govt*
                   </label>
                   <select
                     name="local_govt"
@@ -469,7 +469,7 @@ const SignUpForm: React.FC = () => {
                     required
                     disabled={!selectedStateUuid || countyLoading || !!locationDataError}
                   >
-                    <option value="">Select County</option>
+                    <option value="">Select Local Govt</option>
                     {filteredCounties.map((county) => (
                       <option key={county.uuid} value={county.name}>
                         {county.name}
@@ -497,7 +497,7 @@ const SignUpForm: React.FC = () => {
                       value={formData.password}
                       onChange={handleChange}
                       className="w-full px-3 py-1.5 border rounded-md text-sm"
-                      placeholder="••••••••"
+                      // placeholder="••••••••"
                       required
                     />
                     <button
@@ -578,7 +578,7 @@ const SignUpForm: React.FC = () => {
                       value={formData.confirm_Password}
                       onChange={handleChange}
                       className="w-full px-3 py-1.5 border rounded-md text-sm"
-                      placeholder="••••••••"
+                      // placeholder="••••••••"
                       required
                     />
                     <button
