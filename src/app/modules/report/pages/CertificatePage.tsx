@@ -305,7 +305,9 @@ const Certificate = () => {
         {/* Main Content Container */}
         <div className="w-full max-w-5xl mx-auto bg-gray-100 rounded-lg shadow-sm p-0 md:p-6">
           {/* Download All Button - Mobile */}
+
           <div className="md:hidden flex justify-end p-3">
+            
             <button
               className="flex gap-2 bg-white items-center border border-gray-300 rounded-md px-3 py-1 text-sm"
               onClick={handleDownloadAll}
