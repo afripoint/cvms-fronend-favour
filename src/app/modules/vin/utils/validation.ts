@@ -52,11 +52,11 @@ export interface VinSearchResultsProps {
   onNewSearch: () => void
 }
 
-export interface VehicleTeaserResultProps {
-  vehicle: VehicleDetails
-  onPurchase: () => void
-  onNewSearch: () => void
-}
+// export interface VehicleTeaserResultProps {
+//   vehicle: VehicleDetails
+//   onPurchase: () => void
+//   onNewSearch: () => void
+// }
 
 export interface ErrorMessageProps {
   message: string

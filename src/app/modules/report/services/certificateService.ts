@@ -4,6 +4,7 @@ import QRCode from 'qrcode';
 interface CertificateData {
   vin: string;
   makeModel: string;
+  model: string;
   year: string | number;
   certificateNumber: string;
   ownerName: string;
@@ -291,7 +292,10 @@ export const generateCertificate = async (data: CertificateData) => {
               <span class="info-label">VIN:</span> ${data.vin}
             </p>
             <p class="info-item">
-              <span class="info-label">Make/Model:</span> ${data.makeModel}
+              <span class="info-label">Make:</span> ${data.makeModel}
+            </p>
+            <p class="info-item">
+              <span class="info-label">Model:</span> ${data.model}
             </p>
             <p class="info-item">
               <span class="info-label">Year:</span> ${data.year}
@@ -301,22 +305,11 @@ export const generateCertificate = async (data: CertificateData) => {
 
         <!-- Certificate Number -->
         <div class="section">
-          <h3 class="section-title">Certificate Number</h3>
+          <h3 class="section-title">Registration Number</h3>
           <p class="info-item">${data.certificateNumber}</p>
         </div>
 
-        <!-- Owner Information -->
-        <div class="section">
-          <h3 class="section-title">Owner's Information</h3>
-          <div>
-            <p class="info-item">
-              <span class="info-label">Name:</span> ${data.ownerName}
-            </p>
-            <p class="info-item">
-              <span class="info-label">Address:</span> ${data.ownerAddress}
-            </p>
-          </div>
-        </div>
+        
       </div>
 
       <!-- Footer -->

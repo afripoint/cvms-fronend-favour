@@ -497,7 +497,6 @@ const SignUpForm: React.FC = () => {
                       value={formData.password}
                       onChange={handleChange}
                       className="w-full px-3 py-1.5 border rounded-md text-sm"
-                      // placeholder="••••••••"
                       required
                     />
                     <button
@@ -578,7 +577,6 @@ const SignUpForm: React.FC = () => {
                       value={formData.confirm_Password}
                       onChange={handleChange}
                       className="w-full px-3 py-1.5 border rounded-md text-sm"
-                      // placeholder="••••••••"
                       required
                     />
                     <button

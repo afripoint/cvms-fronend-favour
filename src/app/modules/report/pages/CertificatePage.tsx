@@ -180,6 +180,7 @@ const Certificate = () => {
       const certificateData = {
         vin: vehicleRecord.vin?.vin || vin,
         makeModel: vehicleRecord.vin?.brand || "",
+        model: vehicleRecord.vin?.make || "Ford Mustang",
         year: vehicleRecord.vin?.vehicle_year || "",
         certificateNumber: vehicleRecord.cert_num || "",
         ownerName: userData.fullName,

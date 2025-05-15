@@ -52,3 +52,17 @@ const ReportCard: FC<ReportCardProps> = ({ report }) => {
 };
 
 export default ReportCard;
+
+
+// <!-- Owner Information -->
+        // <div class="section">
+        //   <h3 class="section-title">Owner's Information</h3>
+        //   <div>
+        //     <p class="info-item">
+        //       <span class="info-label">Name:</span> ${data.ownerName}
+        //     </p>
+        //     <p class="info-item">
+        //       <span class="info-label">Address:</span> ${data.ownerAddress}
+        //     </p>
+        //   </div>
+        // </div>
