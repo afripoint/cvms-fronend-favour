@@ -3,7 +3,7 @@ import type { RegistrationData, User } from "../types/auth"
 import { appSaveToLocalStorage, appGetFromLocalStorage, appRemoveFromLocalStorage, StorageKeys } from "../../../core/storage/storage"
 // import { extractErrorMessage } from "../redux/slices/authSlice"
 
-const API_URL = "http://cvms-api.afripointdev.com/auth"
+const API_URL = "https://cvms-microservice.afripointdev.com/auth"
 
 // Create axios instance with improved error handling
 const authAxios = axios.create({

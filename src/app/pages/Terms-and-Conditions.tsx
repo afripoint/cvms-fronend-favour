@@ -31,7 +31,7 @@ export default function TermsAndConditions() {
         </aside> */}
 
         {/* Main Content */}
-        <main className="flex-1">
+        <main className="flex-1  py-8">
           <div className="mb-6 flex items-center text-sm text-[#667085]">
             <Link to="#" className="hover:underline">
               Resources

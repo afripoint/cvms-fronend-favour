@@ -149,7 +149,8 @@ import TrackingDetails from './app/pages/status-tracker/tracking-details';
 import PrivacyPolicy from './app/pages/Privacy';
 import TermsAndConditions from './app/pages/Terms-and-Conditions';
 import Faq from './app/pages/Faq';
-// import UserGuidePage from './app/pages/guides/[id]/page';
+import UserGuidePage from './app/pages/guides/page';
+import AccreditedAgenciesPage from './app/modules/landing/components/layout/components/style-guide/Articles';
 
 // Lazy load components
 const Certificate = lazy(() => import('./app/modules/report/pages/CertificatePage'));
@@ -222,7 +223,9 @@ const AppContent: React.FC = () => {
           <Route path="/privacy-policy" element={<PrivacyPolicy />} />
           <Route path="/terms-of-use" element={< TermsAndConditions/>} />
           <Route path="/faq" element={< Faq/>} />
-          {/* <Route path="/user-guide" element={<UserGuidePage />} /> */}
+          <Route path="/user-guide" element={<UserGuidePage />} />
+          <Route path="/accredited-agencies" element={<AccreditedAgenciesPage/>} /> 
+          
 
           <Route path="/account-type" element={<AccountType />} />
           <Route path="/signup" element={<SignUpForm />} />

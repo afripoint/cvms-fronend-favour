@@ -52,14 +52,14 @@ const PasswordResetContainer: React.FC = () => {
   // Determine which component to show based on path and query parameters
   const renderStep = () => {
     // If we're on /auth/reset-password with token and uidb64 parameters, show reset form
-    if (location.pathname === "/auth/reset-password" && 
+    if (location.pathname === "/reset-password" && 
         location.search.includes("token") && 
         location.search.includes("uidb64")) {
       return <ResetPassword />
     }
     
     // If we're on /auth/reset-password-success, show success page
-    if (location.pathname === "/auth/reset-password-success") {
+    if (location.pathname === "/reset-password-success") {
       return <PasswordResetSuccess />
     }
     

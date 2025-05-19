@@ -1,114 +1,106 @@
-import { GuideItem } from "../types"
-
-
-export const guides: GuideItem[] = [
+export const guides = [
   {
-    id: "guide-1",
+    id: 1,
     title: "How To Customise your Dashboard",
     description:
       "New to our platform? This comprehensive guide will walk you through the basics and help you set up your account for success.",
+    thumbnail: "/images/styleguide.svg",
     type: "video",
     duration: 7,
-    thumbnail: "/thumbnail-1.png",
-    youtubeId: "_nXQYhtJOj4",
-    completed: true,
+    contentUrl: "https://youtu.be/_nXQYhtJOj4?si=8K8Z-Xnnosup7Y0j",
+    content: "",
   },
   {
-    id: "guide-2",
-    title: "How To Customise your Dashboard",
+    id: 2,
+    title: "Finding Accredited Agencies",
     description:
-      "New to our platform? This comprehensive guide will walk you through the basics and help you set up your account for success.",
+      "Learn how to search and filter for accredited agencies in your area to ensure compliance with customs regulations.",
+    thumbnail: "/images/styleguides.svg",
+    type: "article",
+    duration: 5,
+    contentUrl: "",
+    redirectTo: "/accredited-agencies",
+    content: "",
+  },
+  {
+    id: 3,
+    title: "How To Track Shipment Status",
+    description:
+      "Track your shipments in real-time and get updates on customs clearance progress with our status tracking system.",
+    thumbnail: "/images/stylesimg.svg",
     type: "video",
     duration: 7,
-    thumbnail: "/thumbnail-2.png",
-    youtubeId: "_nXQYhtJOj4",
-    completed: false,
+    contentUrl: "https://youtu.be/_nXQYhtJOj4?si=8K8Z-Xnnosup7Y0j",
+    content: "",
   },
   {
-    id: "guide-3",
-    title: "How To Customise your Dashboard",
+    id: 4,
+    title: "Understanding VIN Verification",
     description:
-      "New to our platform? This comprehensive guide will walk you through the basics and help you set up your account for success.",
+      "Learn about the Vehicle Identification Number verification process and how it ensures compliance with import regulations.",
+    thumbnail: "/images/styleguides.svg",
     type: "video",
     duration: 7,
-    thumbnail: "/thumbnail-3.png",
-    youtubeId: "_nXQYhtJOj4",
-    completed: true,
+    contentUrl: "https://youtu.be/_nXQYhtJOj4?si=8K8Z-Xnnosup7Y0j",
+    content: "",
   },
   {
-    id: "guide-4",
-    title: "How To Customise your Dashboard",
+    id: 5,
+    title: "Data Privacy and Security",
     description:
-      "New to our platform? This comprehensive guide will walk you through the basics and help you set up your account for success.",
+      "Understand how we protect your data and what information we collect to provide our customs verification services.",
+    thumbnail: "/images/stylesimg.svg",
+    type: "article",
+    duration: 4,
+    contentUrl: "",
+    redirectTo: "/accredited-agencies",
+    content: "",
+  },
+  {
+    id: 6,
+    title: "Customs Documentation Guide",
+    description:
+      "A comprehensive overview of all the documentation required for smooth customs clearance of your shipments.",
+    thumbnail: "/images/styleguides.svg",
+    type: "article",
+    duration: 8,
+    contentUrl: "",
+    content:
+      "# Documentation Requirements for Customs Clearance\n\nProper documentation is essential for smooth customs clearance. This guide covers all the necessary paperwork you'll need.\n\n## Essential Documents\n\n### Commercial Invoice\n\nThe commercial invoice is the primary document used by customs authorities to determine the value of imported goods for assessment of duties and taxes. It must include:\n\n- Complete names and addresses of the seller, buyer, and shipper\n- Date of sale\n- Detailed description of the goods\n- Quantity of goods\n- Purchase price or value per item\n- Type of currency\n- Terms of sale (Incoterms)\n- Invoice number\n\n### Packing List\n\nThe packing list provides detailed information about the shipment content and is used to verify what's being shipped. It should include:\n\n- Shipper and consignee information\n- Invoice number\n- Date of shipment\n- Mode of transport\n- Carrier information\n- Itemized packing contents\n- Dimensions and weight of packages\n- Package markings and numbers\n\n### Bill of Lading or Air Waybill\n\nThis document serves as a receipt issued by the carrier to the shipper and as a contract for the transportation service. It includes:\n\n- Shipper and consignee details\n- Notify party\n- Vessel/flight details\n- Port of loading and discharge\n- Description of goods\n- Number of packages\n- Weight and measurement of cargo\n\n## Additional Documentation\n\nDepending on the nature of goods and country requirements, you may also need:\n\n- Certificate of Origin\n- Import licenses or permits\n- Inspection certificates\n- Dangerous goods declaration\n- Insurance certificate\n- Letter of Credit\n\n## Electronic Submission\n\nMany countries now require electronic submission of customs documentation before arrival. The CVMS platform allows you to upload and submit all required documents electronically, ensuring faster processing and reducing the risk of delays.",
+  },
+  {
+    id: 7,
+    title: "Accredited Agencies Directory",
+    description:
+      "Access our comprehensive directory of accredited agencies and learn how to find the right partner for your customs needs.",
+    thumbnail: "/images/stylesimg.svg",
+    type: "article",
+    duration: 3,
+    contentUrl: "",
+    redirectTo: "/accredited-agencies",
+    content: "",
+  },
+  {
+    id: 8,
+    title: "Import Duty Calculator Tutorial",
+    description:
+      "Learn how to use our import duty calculator to estimate taxes and fees for your shipments before they arrive.",
+    thumbnail: "/images/styleguide.svg",
     type: "video",
-    duration: 7,
-    thumbnail: "/thumbnail-1.png",
-    youtubeId: "_nXQYhtJOj4",
-    completed: false,
+    duration: 6,
+    contentUrl: "https://youtu.be/_nXQYhtJOj4?si=8K8Z-Xnnosup7Y0j",
+    content: "",
   },
   {
-    id: "guide-5",
-    title: "How To Customise your Dashboard",
+    id: 9,
+    title: "Compliance Requirements Guide",
     description:
-      "New to our platform? This comprehensive guide will walk you through the basics and help you set up your account for success.",
+      "Stay up-to-date with the latest customs compliance requirements and avoid penalties or shipment delays.",
+    thumbnail: "/images/styleguides.svg",
     type: "article",
     duration: 7,
-    thumbnail: "/thumbnail-2.png",
-    content:
-      "# How To Customise your Dashboard\n\nWelcome to our platform! This guide will help you set up your dashboard for maximum efficiency.\n\n## Step 1: Access Your Dashboard\n\nAfter logging in, you'll be taken to your dashboard automatically. If not, click on the 'Dashboard' option in the main menu.\n\n## Step 2: Understand the Layout\n\nYour dashboard is divided into several widgets that display different types of information. Each widget can be customized, moved, or removed.\n\n## Step 3: Customize Widgets\n\nTo customize a widget, click on the three dots in the top-right corner of any widget. This will open a menu with options to:\n- Resize the widget\n- Change the data displayed\n- Change the visualization type\n- Remove the widget\n\n## Step 4: Add New Widgets\n\nTo add a new widget, click on the '+ Add Widget' button at the bottom of your dashboard. You can choose from various widget types like:\n- Status summary\n- Recent activities\n- Quick actions\n- Charts and graphs\n- Custom lists\n\n## Step 5: Save Your Layout\n\nAfter making changes, don't forget to click the 'Save Layout' button at the top of the page. This will ensure your customizations are preserved for your next login.\n\n## Need More Help?\n\nIf you need additional assistance, please contact our support team or check out our other guides.",
-    completed: true,
+    contentUrl: "",
+    redirectTo: "/accredited-agencies",
+    content: "",
   },
-  {
-    id: "guide-6",
-    title: "How To Customise your Dashboard",
-    description:
-      "New to our platform? This comprehensive guide will walk you through the basics and help you set up your account for success.",
-    type: "article",
-    duration: 7,
-    thumbnail: "/thumbnail-3.png",
-    content:
-      "# How To Customise your Dashboard\n\nWelcome to our platform! This guide will help you set up your dashboard for maximum efficiency.\n\n## Step 1: Access Your Dashboard\n\nAfter logging in, you'll be taken to your dashboard automatically. If not, click on the 'Dashboard' option in the main menu.\n\n## Step 2: Understand the Layout\n\nYour dashboard is divided into several widgets that display different types of information. Each widget can be customized, moved, or removed.\n\n## Step 3: Customize Widgets\n\nTo customize a widget, click on the three dots in the top-right corner of any widget. This will open a menu with options to:\n- Resize the widget\n- Change the data displayed\n- Change the visualization type\n- Remove the widget\n\n## Step 4: Add New Widgets\n\nTo add a new widget, click on the '+ Add Widget' button at the bottom of your dashboard. You can choose from various widget types like:\n- Status summary\n- Recent activities\n- Quick actions\n- Charts and graphs\n- Custom lists\n\n## Step 5: Save Your Layout\n\nAfter making changes, don't forget to click the 'Save Layout' button at the top of the page. This will ensure your customizations are preserved for your next login.\n\n## Need More Help?\n\nIf you need additional assistance, please contact our support team or check out our other guides.",
-    completed: false,
-  },
-  {
-    id: "guide-7",
-    title: "How To Customise your Dashboard",
-    description:
-      "New to our platform? This comprehensive guide will walk you through the basics and help you set up your account for success.",
-    type: "video",
-    duration: 7,
-    thumbnail: "/thumbnail-1.png",
-    youtubeId: "_nXQYhtJOj4",
-    completed: true,
-  },
-  {
-    id: "guide-8",
-    title: "How To Customise your Dashboard",
-    description:
-      "New to our platform? This comprehensive guide will walk you through the basics and help you set up your account for success.",
-    type: "video",
-    duration: 7,
-    thumbnail: "/thumbnail-2.png",
-    youtubeId: "_nXQYhtJOj4",
-    completed: false,
-  },
-  {
-    id: "guide-9",
-    title: "How To Customise your Dashboard",
-    description:
-      "New to our platform? This comprehensive guide will walk you through the basics and help you set up your account for success.",
-    type: "video",
-    duration: 7,
-    thumbnail: "/thumbnail-3.png",
-    youtubeId: "_nXQYhtJOj4",
-    completed: true,
-  },
-]
-
-export const languages = [
-  { code: "EN", name: "English" },
-  { code: "JA", name: "Japanese" },
-  { code: "FR", name: "French" },
-  { code: "ES", name: "Spanish" },
-  { code: "DE", name: "German" },
 ]
