@@ -1,11 +1,10 @@
 "use client"
 
-import React from 'react';
+import React, { useState } from 'react';
+import { Minus, Plus } from "lucide-react";
 
-import { useState } from "react"
-import { Minus, Plus } from "lucide-react"
-import { Link } from "react-router-dom"
-
+// Use a regular anchor instead of Link
+// This avoids the React Router dependency issue
 interface FAQ {
   id: number
   question: string
@@ -25,9 +24,9 @@ export const faqData: FAQCategoryData = {
       answer: (
         <p>
           Visit{" "}
-          <Link to="#" className="text-[#2a9f47] hover:underline">
+          <a href="#" className="text-[#2a9f47] hover:underline">
             cvms.ng/signup
-          </Link>
+          </a>
           , fill out the registration form with accurate details, and verify your email to activate your account.
         </p>
       ),
