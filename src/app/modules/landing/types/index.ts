@@ -61,22 +61,3 @@ export interface ProfileSectionProps {
 }
 
 
-export type GuideItem = {
-  id: string
-  title: string
-  description: string
-  type: "video" | "article"
-  duration: number
-  thumbnail: string
-  content?: string
-  videoUrl?: string
-  youtubeId?: string // Added YouTube ID field
-  completed?: boolean
-}
-
-export type FilterType = "all" | "articles" | "videos"
-
-export type LanguageOption = {
-  code: string
-  name: string
-}
