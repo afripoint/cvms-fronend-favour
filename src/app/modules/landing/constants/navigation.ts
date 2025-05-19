@@ -31,10 +31,10 @@ export const footerNavSections = {
   resources: {
     title: "Resources",
     links: [
-      { text: "Terms of Use", href: "#" },
-      { text: "Privacy Policy", href: "#" },
-      { text: "CVMS User Guides", href: "#" },
-      { text: "FAQs", href: "#" },
+      { text: "Terms of Use", href: "/terms-of-use" },
+      { text: "Privacy Policy", href: "/privacy-policy" },
+      { text: "CVMS User Guides", href: "/user-guide" },
+      { text: "FAQs", href: "/faq" },
     ],
   },
   

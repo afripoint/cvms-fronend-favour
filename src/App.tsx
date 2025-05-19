@@ -146,6 +146,10 @@ import 'react-toastify/dist/ReactToastify.css';
 import Accredify from './app/pages/accredify';
 import StatusTracker from './app/pages/status-tracker';
 import TrackingDetails from './app/pages/status-tracker/tracking-details';
+import PrivacyPolicy from './app/pages/Privacy';
+import TermsAndConditions from './app/pages/Terms-and-Conditions';
+import Faq from './app/pages/Faq';
+// import UserGuidePage from './app/pages/guides/[id]/page';
 
 // Lazy load components
 const Certificate = lazy(() => import('./app/modules/report/pages/CertificatePage'));
@@ -215,6 +219,11 @@ const AppContent: React.FC = () => {
         <Routes>
           {/* Public routes */}
           <Route path="/" element={<Home />} />
+          <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+          <Route path="/terms-of-use" element={< TermsAndConditions/>} />
+          <Route path="/faq" element={< Faq/>} />
+          {/* <Route path="/user-guide" element={<UserGuidePage />} /> */}
+
           <Route path="/account-type" element={<AccountType />} />
           <Route path="/signup" element={<SignUpForm />} />
           <Route path="/verify-otp" element={<OTPVerificationPage />} />
@@ -237,6 +246,8 @@ const AppContent: React.FC = () => {
           <Route path="/accredify" element={<Accredify />} />
           <Route path="/status-tracker" element={<StatusTracker />} />
           <Route path="/tracking/:id" element={<TrackingDetails />} />
+
+          <Route path="/privacy" element={<PrivacyPolicy />} />
 
           <Route path="/cart" element={<CartPage />} />
           <Route path="/payment-method" element={<PaymentMethodPage />} />
