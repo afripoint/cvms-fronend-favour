@@ -1,6 +1,6 @@
 "use client"
 
-import type React from "react"
+import React from "react";
 import { useSelector } from "react-redux"
 import { useNavigate } from "react-router-dom"
 import type { RootState } from "../../../../../core/store"

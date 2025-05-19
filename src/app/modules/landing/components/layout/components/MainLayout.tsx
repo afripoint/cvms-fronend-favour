@@ -24,7 +24,7 @@
 
 
 // MainLayout.tsx
-import type React from "react"
+import React from 'react';
 // import { useState, useEffect } from "react" // Add useState and useEffect
 import { useEffect } from "react"
 import Header from "./Header"
