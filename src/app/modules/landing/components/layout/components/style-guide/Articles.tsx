@@ -1,5 +1,5 @@
 
-import { ChevronRight, Clock, ShoppingCart } from "lucide-react"
+import { ChevronRight, Clock} from "lucide-react"
 import { Link } from "react-router-dom"
 import MainLayout from "../MainLayout"
 

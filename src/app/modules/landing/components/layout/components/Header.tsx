@@ -451,7 +451,7 @@ export const Header: React.FC = () => {
             {hasValidUserData ? (
               <>
                 <CartIcon />
-                <ProfileSection firstName={userData.first_name} lastName={userData.last_name} email={userData.email} />
+                <ProfileSection firstName={userData.first_name} lastName={userData.last_name} email={userData.email} phone_number={userData.phone_number} />
               </>
             ) : (
               <>
@@ -479,7 +479,7 @@ export const Header: React.FC = () => {
             {/* Show user initials only when logged in */}
             {hasValidUserData ? (
               <div className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center text-sm font-medium">
-                <ProfileSection firstName={userData.first_name} lastName={userData.last_name} email={userData.email} />
+                <ProfileSection firstName={userData.first_name} lastName={userData.last_name} email={userData.email} phone_number={userData.phone_number} />
               </div>
             ) : (
               <>

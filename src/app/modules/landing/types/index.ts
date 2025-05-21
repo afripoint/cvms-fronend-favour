@@ -34,6 +34,7 @@ export interface User {
   first_name?: string
   last_name?: string
   email?: string
+  phone_number?: string
   role?: string
 }
 
@@ -58,6 +59,7 @@ export interface ProfileSectionProps {
   lastName?: string
   email?: string
   role?: string
+  phone_number?: string
 }
 
 

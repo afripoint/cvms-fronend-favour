@@ -238,6 +238,8 @@ import ProfileImageUpload from '../file-management.tsx/file-upload';
 
 import { AccountType } from '../../types';
 import CACUpload from '../file-management.tsx/Cac-Upload';
+import Status from '../file-management.tsx/Status-Upload';
+import Authorization from '../file-management.tsx/Authorization-upload';
 
 const AccountTab = () => {
   const dispatch = useDispatch();
@@ -247,6 +249,8 @@ const AccountTab = () => {
   
   // Ensure CAC upload is shown for Company accounts, regardless of the Redux state
   const shouldShowCacUpload = isBusinessAccount || userData.accountType === 'Company';
+  const shouldletterUpload = isBusinessAccount || userData.accountType === 'Company';
+  const shouldStatusUpload = isBusinessAccount || userData.accountType === 'Company';
   
   const [isEditing, setIsEditing] = useState(false);
   const [additionalPhone, setAdditionalPhone] = useState('');
@@ -403,6 +407,40 @@ const AccountTab = () => {
             />
           </div>
         </div>
+
+        {shouldletterUpload && (
+          <div>
+            <h3 className="text-md font-medium text-gray-700 mb-2">Corporate Affairs Commission (CAC) Document</h3>
+            <p className="text-sm text-gray-500 mb-3">Upload your company's CAC registration document</p>
+            <Authorization
+              onUpload={(file: File) => {
+                console.log('File uploaded:', file);
+                dispatch(submitCac(file.name));
+                alert('CAC document uploaded successfully!');
+              }} 
+            />
+            {cacSubmitted && (
+              <p className="text-sm text-green-500 mt-2">✓ CAC document submitted successfully</p>
+            )}
+          </div>
+        )}
+
+        {shouldStatusUpload && (
+          <div>
+            <h3 className="text-md font-medium text-gray-700 mb-2">Upload a letter of authorization signed by your </h3>
+            <p className="text-sm text-gray-500 mb-3">company’s secretary or director.</p>
+            <Status
+              onUpload={(file: File) => {
+                console.log('File uploaded:', file);
+                dispatch(submitCac(file.name));
+                alert('Status Certificate uploaded successfully!');
+              }} 
+            />
+            {cacSubmitted && (
+              <p className="text-sm text-green-500 mt-2">✓ Status Certificate submitted successfully</p>
+            )}
+          </div>
+        )}
 
         {shouldShowCacUpload && (
           <div>

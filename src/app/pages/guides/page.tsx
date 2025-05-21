@@ -1,11 +1,11 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { ChevronRight, Clock, Play, Search, FileText } from "lucide-react"
+import { ChevronRight, Clock, Play, FileText } from "lucide-react"
 import { guides } from "../../modules/landing/lib/data"
 import { MainLayout } from "../../modules/landing/components/layout"
 import { Link, useNavigate } from "react-router-dom"
-import Input from "../../modules/shared/components/ui/Input"
+// import Input from "../../modules/shared/components/ui/Input"
 import { cn } from "../../modules/vin/utils/utils"
 import { Tabs, TabsList, TabsTrigger } from "../../modules/landing/components/layout/ui/Tab"
 import { Dialog, DialogContent } from "@radix-ui/react-dialog"
@@ -13,10 +13,10 @@ import { Dialog, DialogContent } from "@radix-ui/react-dialog"
 
 export default function UserGuidePage() {
   const navigate = useNavigate()
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [_mobileMenuOpen, _setMobileMenuOpen] = useState(false)
   const [selectedVideo, setSelectedVideo] = useState<null | (typeof guides)[0]>(null)
   const [activeTab, setActiveTab] = useState("all")
-  const [searchQuery, setSearchQuery] = useState("")
+  const [searchQuery, _setSearchQuery] = useState("")
   const [filteredGuides, setFilteredGuides] = useState(guides)
 
   // Filter guides based on active tab and search query

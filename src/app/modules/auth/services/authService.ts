@@ -1,9 +1,34 @@
 import axios from "axios"
-import type { RegistrationData, User } from "../types/auth"
+import type { LoginResponse, RegistrationData,} from "../types/auth"
 import { appSaveToLocalStorage, appGetFromLocalStorage, appRemoveFromLocalStorage, StorageKeys } from "../../../core/storage/storage"
-// import { extractErrorMessage } from "../redux/slices/authSlice"
 
 const API_URL = "https://cvms-microservice.afripointdev.com/auth"
+
+// Define types for HTTP headers
+type HttpHeaders = {
+  'Content-Type': string;
+  'Authorization'?: string;
+  [key: string]: string | undefined;
+};
+
+// Debug function to log token information
+const debugTokenStatus = () => {
+  const directToken = localStorage.getItem("authToken");
+  const tokenDataStr = localStorage.getItem(StorageKeys.TOKEN_DATA);
+  let tokenData = null;
+  try {
+    if (tokenDataStr) {
+      tokenData = JSON.parse(tokenDataStr);
+    }
+  } catch (e) {
+    console.error("Error parsing token data:", e);
+  }
+
+  console.log("--- Token Debug Info ---");
+  console.log("Direct Token:", directToken ? "exists" : "missing");
+  console.log("Token Data:", tokenData);
+  console.log("----------------------");
+};
 
 // Create axios instance with improved error handling
 const authAxios = axios.create({
@@ -15,43 +40,85 @@ const authAxios = axios.create({
   withCredentials: true,
 })
 
-// Add request interceptor for debugging
+// Improved token retrieval function
+const getAuthToken = (): string | null => {
+  // First check for direct token
+  const directToken = localStorage.getItem("authToken");
+  if (directToken) {
+    try {
+      // If it's JSON, parse it (in case it was accidentally stringified)
+      return JSON.parse(directToken);
+    } catch (e) {
+      // If it's not JSON, just return it as is
+      return directToken;
+    }
+  }
+  
+  // Then check token data object
+  const tokenDataStr = localStorage.getItem(StorageKeys.TOKEN_DATA);
+  if (tokenDataStr) {
+    try {
+      const tokenData = JSON.parse(tokenDataStr);
+      return tokenData?.access_token || null;
+    } catch (e) {
+      console.error("Error parsing token data:", e);
+      return null;
+    }
+  }
+  
+  return null;
+};
+
+// Add request interceptor for debugging and token handling
 authAxios.interceptors.request.use(
   (config) => {
-    console.log("Request being sent:", config)
-
-    // Add auth token to header if available
-    const token =
-      appGetFromLocalStorage<string>("authToken") ||
-      appGetFromLocalStorage<{ access_token: string }>(StorageKeys.TOKEN_DATA)?.access_token
+    // Debug token status for every request
+    debugTokenStatus();
+    
+    // Get token using the helper function
+    const token = getAuthToken();
+    
     if (token) {
-      config.headers.Authorization = `Bearer ${token}`
+      console.log("Adding token to request:", token.substring(0, 10) + "...");
+      // Ensure headers object exists
+      config.headers = config.headers || {};
+      // Set authorization header
+      config.headers.Authorization = `Bearer ${token}`;
+    } else {
+      console.warn("No authentication token available for request");
     }
 
-    return config
+    console.log("Final Request Config:", {
+      url: config.url,
+      method: config.method,
+      headers: config.headers,
+    });
+
+    return config;
   },
   (error) => {
-    console.error("Request error:", error)
-    return Promise.reject(error)
+    console.error("Request error:", error);
+    return Promise.reject(error);
   },
-)
+);
 
 // Add response interceptor for debugging
 authAxios.interceptors.response.use(
   (response) => {
-    console.log("Response received:", response)
-    return response
+    console.log("Response received:", response.status, response.statusText);
+    return response;
   },
   (error) => {
-    console.error("Response error details:", error.response)
-    return Promise.reject(error.response)
+    console.error("Response error details:", 
+      error.response?.status, 
+      error.response?.statusText,
+      error.response?.data
+    );
+    return Promise.reject(error.response || error);
   },
-
-)
+);
 
 const authService = {
-  
-
   register: async (userData: RegistrationData): Promise<any> => {
     try {
       console.log("Sending registration data:", userData)
@@ -66,44 +133,85 @@ const authService = {
       return response.data
     } catch (error: any) {
       console.error("Registration error:", error)
-      
-      // Don't wrap the error in a new Error object, just throw the response as is
-      // so it can be properly processed by extractErrorMessage
       throw error
     }
   },
 
-  login: async (email: string, password: string): Promise<any> => {
+  // login: async (email: string, password: string): Promise<any> => {
+  //   try {
+  //     console.log("Attempting login for:", email);
+  //     const response = await authAxios.post("/login/", { email, password });
+
+  //     console.log("Login successful, response:", response.data);
+
+  //     // Save token directly in localStorage to ensure it's stored correctly
+  //     if (response.data.token) {
+  //       const token = response.data.token;
+        
+  //       // Save token directly
+  //       localStorage.setItem("authToken", token);
+  //       console.log("Saved auth token directly:", token.substring(0, 10) + "...");
+        
+  //       // Save token data object
+  //       const tokenData = {
+  //         access_token: token,
+  //         refresh_token: response.data.refresh_token || "",
+  //       };
+  //       localStorage.setItem(StorageKeys.TOKEN_DATA, JSON.stringify(tokenData));
+  //       console.log("Saved token data object:", tokenData);
+        
+  //       // Add to axios defaults
+  //       authAxios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+  //     } else {
+  //       console.warn("No token received in login response");
+  //     }
+
+  //     // Store user data if available
+  //     if (response.data.user) {
+  //       appSaveToLocalStorage(StorageKeys.USER_DATA, response.data.user);
+  //       console.log("Saved user data");
+  //     }
+
+  //     // Debug final token status
+  //     debugTokenStatus();
+
+  //     return response.data;
+  //   } catch (error: any) {
+  //     console.error("Login error:", error.response?.data || error.message);
+  //     throw error;
+  //   }
+  // },
+
+
+  login: async (email: string, password: string): Promise<LoginResponse> => {
     try {
-      console.log("Attempting login for:", email)
-      const response = await authAxios.post("/login/", { email, password })
-
-      console.log("Login successful")
-
-      // Save token and user data
-      if (response.data.token) {
-        appSaveToLocalStorage("authToken", response.data.token)
-        authAxios.defaults.headers.common["Authorization"] = `Bearer ${response.data.token}`
-
-        // Store token in predefined storage key
-        appSaveToLocalStorage(StorageKeys.TOKEN_DATA, {
-          access_token: response.data.token,
-          refresh_token: response.data.refresh_token || "",
-        })
+      const response = await authAxios.post<LoginResponse>("/login/", { email, password });
+      
+      // Store tokens and user data
+      if (response.data.tokens?.access_token) {
+        const tokenData = {
+          access_token: response.data.tokens.access_token,
+          refresh_token: response.data.tokens.refresh_token || ""
+        };
+        
+        // Store using your storage utility
+        appSaveToLocalStorage(StorageKeys.TOKEN_DATA, tokenData);
+        appSaveToLocalStorage(StorageKeys.USER_DATA, response.data.user);
+        
+        // Also store directly for backward compatibility
+        localStorage.setItem("authToken", response.data.tokens.access_token);
+        
+        // Set default auth header
+        authAxios.defaults.headers.common["Authorization"] = `Bearer ${response.data.tokens.access_token}`;
       }
-
-      // Store user data if available
-      if (response.data.user) {
-        appSaveToLocalStorage(StorageKeys.USER_DATA, response.data.user)
-      }
-
-      return response.data
-    } catch (error: any) {
-      console.error("Login error:", error.response?.data || error.message)
-      throw error
+      
+      return response.data;
+    } catch (error) {
+      console.error("Login error:", error);
+      throw error;
     }
   },
-
+  
   forgotPassword: async (email: string): Promise<any> => {
     try {
       console.log("Sending password reset request for:", email)
@@ -115,32 +223,6 @@ const authService = {
       throw error
     }
   },
-
-  // resetPasswordTokenCheck: async (token: string): Promise<any> => {
-  //   try {
-  //     console.log("Validating reset password token")
-  //     const response = await authAxios.post("/reset-password-token-check/", { token })
-  //     console.log("Token validation successful")
-  //     return response.data
-  //   } catch (error: any) {
-  //     console.error("Token validation error:", error.response?.data || error.message)
-  //     throw error
-  //   }
-  // },
-
-  // setNewPassword: async (token: string, newPassword: string): Promise<any> => {
-  //   try {
-  //     console.log("Setting new password with token")
-  //     const response = await authAxios.post("/set-new-password/", { token, new_password: newPassword })
-  //     console.log("Password reset successful")
-  //     return response.data
-  //   } catch (error: any) {
-  //     console.error("Password reset error:", error.response?.data || error.message)
-  //     throw error
-  //   }
-  // },
-
-
 
   resetPasswordTokenCheck: async (uidb64: string, token: string): Promise<any> => {
     try {
@@ -154,7 +236,6 @@ const authService = {
     }
   },
   
-  // Updated setNewPassword function to match the pattern
   setNewPassword: async (uidb64: string, token: string, newPassword: string): Promise<any> => {
     try {
       console.log("Setting new password with token")
@@ -171,88 +252,287 @@ const authService = {
     }
   },
 
-  changePassword: async (oldPassword: string, newPassword: string): Promise<any> => {
-    try {
-      const response = await authAxios.post("/change-password/", { 
-        old_password: oldPassword,
-        new_password: newPassword 
-      })
-      return response.data
-    } catch (error: any) {
-      // throw new Error(extractErrorMessage(error))
+  sendOtp: async (): Promise<any> => {
+  try {
+    // Get the current token
+    const token = getAuthToken();
+    
+    if (!token) {
+      throw new Error("User is not authenticated. Please login first.");
     }
-  },
 
-  // initiatePasswordChange: async (oldPassword: string, newPassword: string): Promise<any> => {
-  //   try {
-  //     const response = await authAxios.post("/auth/change-password/initiate", {
-  //       old_password: oldPassword,
-  //       new_password: newPassword
-  //     });
-  //     return response.data;
-  //   } catch (error: any) {
-  //     throw new Error(extractErrorMessage(error));
-  //   }
-  // },
-
-  // verifyPasswordChangeOTP: async (email: string, otp: string): Promise<any> => {
-  //   try {
-  //     const response = await authAxios.post("/auth/change-password/verify", {
-  //       email,
-  //       otp
-  //     });
-  //     return response.data;
-  //   } catch (error: any) {
-  //     throw new Error(extractErrorMessage(error));
-  //   }
-  // },
-
+    // Verify token is valid (optional)
+    console.log("Using token:", token.substring(0, 10) + "...");
+    
+    // Make the request
+    const response = await authAxios.post("/send-otp/");
+    return response.data;
+    
+  } catch (error: any) {
+    console.error("OTP send error:", error.response?.data || error.message);
+    
+    // Handle specific error cases
+    if (error.response?.status === 401) {
+      // Token might be expired - clear storage and prompt re-login
+      appRemoveFromLocalStorage(StorageKeys.TOKEN_DATA);
+      localStorage.removeItem("authToken");
+      throw new Error("Session expired. Please login again.");
+    }
+    
+    throw error;
+  }
+},
 
   verifyOtp: async (email: string, otp: string, phone_number?: string): Promise<any> => {
     try {
-      console.log("Sending OTP verification data:", { email, otp, phone_number })
+      console.log("Sending OTP verification data:", { email, otp, phone_number });
   
-      const payload: any = { email, otp }
+      const payload: any = { email, otp };
       if (phone_number) {
-        payload.phone_number = phone_number
-        appSaveToLocalStorage("userPhoneNumber", phone_number)
+        payload.phone_number = phone_number;
+        localStorage.setItem("userPhoneNumber", phone_number);
       }
   
-      // Enhanced logging for debugging
-      console.log("Sending verification payload:", payload)
-      const response = await authAxios.post("/verify-otp/", payload)
-      console.log("Full OTP verification response:", response)
+      // Get token and create headers
+      debugTokenStatus();
+      const token = getAuthToken();
+      console.log("Using token for verifyOtp:", token ? `${token.substring(0, 10)}...` : "No token found");
+      
+      const response = await axios({
+        method: 'post',
+        url: `${API_URL}/verify-otp/`,
+        headers: {
+          'Content-Type': 'application/json',
+          ...(token ? { 'Authorization': `Bearer ${token}` } : {}),
+        },
+        data: payload,
+        withCredentials: true
+      });
+      
+      console.log("OTP verification successful, response:", response.data);
   
       if (!response.data) {
-        throw new Error("Empty response received from server")
+        throw new Error("Empty response received from server");
       }
   
+      // Handle token if present in the response
       if (response.data.token) {
-        appSaveToLocalStorage("authToken", response.data.token)
-        authAxios.defaults.headers.common["Authorization"] = `Bearer ${response.data.token}`
+        const newToken = response.data.token;
+        localStorage.setItem("authToken", newToken);
+        console.log("Updated auth token:", newToken.substring(0, 10) + "...");
         
-        // Store token in predefined storage key
-        appSaveToLocalStorage(StorageKeys.TOKEN_DATA, {
-          access_token: response.data.token,
+        const tokenData = {
+          access_token: newToken,
           refresh_token: response.data.refresh_token || "",
-        })
-  
-        // Make sure account is activated by checking user status
-        if (response.data.user && response.data.user.is_active === false) {
-          console.warn("User account is still inactive after OTP verification")
-        }
-      } else {
-        console.warn("No auth token received in OTP verification response")
+        };
+        localStorage.setItem(StorageKeys.TOKEN_DATA, JSON.stringify(tokenData));
+        console.log("Updated token data object");
       }
   
+      // Store user data if available
       if (response.data.user) {
-        appSaveToLocalStorage(StorageKeys.USER_DATA, response.data.user)
+        appSaveToLocalStorage(StorageKeys.USER_DATA, response.data.user);
+        console.log("Updated user data");
       }
   
-      return response.data
+      // Debug final token status
+      debugTokenStatus();
+      
+      return response.data;
     } catch (error: any) {
-      console.error("OTP verification error:", error.response?.data || error.message)
-      throw error
+      console.error("OTP verification error:", 
+        error.response?.status,
+        error.response?.statusText,
+        error.response?.data || error.message
+      );
+      throw error.response || error;
+    }
+  },
+
+
+  verifyConfirmPasswordOtp: async (email: string, otp: string, phone_number?: string): Promise<any> => {
+    try {
+      console.log("Sending OTP verification data:", { email, otp, phone_number });
+  
+      const payload: any = { email, otp };
+      if (phone_number) {
+        payload.phone_number = phone_number;
+        localStorage.setItem("userPhoneNumber", phone_number);
+      }
+  
+      // Get token and create headers
+      debugTokenStatus();
+      const token = getAuthToken();
+      console.log("Using token for verifyOtp:", token ? `${token.substring(0, 10)}...` : "No token found");
+      
+      const response = await axios({
+        method: 'post',
+        url: `${API_URL}/sub-user-verify-otp/`,
+        headers: {
+          'Content-Type': 'application/json',
+          ...(token ? { 'Authorization': `Bearer ${token}` } : {}),
+        },
+        data: payload,
+        withCredentials: true
+      });
+      
+      console.log("OTP verification successful, response:", response.data);
+  
+      if (!response.data) {
+        throw new Error("Empty response received from server");
+      }
+  
+      // Handle token if present in the response
+      if (response.data.token) {
+        const newToken = response.data.token;
+        localStorage.setItem("authToken", newToken);
+        console.log("Updated auth token:", newToken.substring(0, 10) + "...");
+        
+        const tokenData = {
+          access_token: newToken,
+          refresh_token: response.data.refresh_token || "",
+        };
+        localStorage.setItem(StorageKeys.TOKEN_DATA, JSON.stringify(tokenData));
+        console.log("Updated token data object");
+      }
+  
+      // Store user data if available
+      if (response.data.user) {
+        appSaveToLocalStorage(StorageKeys.USER_DATA, response.data.user);
+        console.log("Updated user data");
+      }
+  
+      // Debug final token status
+      debugTokenStatus();
+      
+      return response.data;
+    } catch (error: any) {
+      console.error("OTP verification error:", 
+        error.response?.status,
+        error.response?.statusText,
+        error.response?.data || error.message
+      );
+      throw error.response || error;
+    }
+  },
+
+  // changePassword: async (oldPassword: string, newPassword: string): Promise<any> => {
+  //   try {
+  //     console.log("Changing password");
+      
+  //     // Get token and create headers
+  //     debugTokenStatus();
+  //     const token = getAuthToken();
+  //     console.log("Using token for changePassword:", token ? `${token.substring(0, 10)}...` : "No token found");
+      
+  //     const response = await axios({
+  //       method: 'put',
+  //       url: `${API_URL}/change-password/`,
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //         ...(token ? { 'Authorization': `Bearer ${token}` } : {}),
+  //       },
+  //       data: { 
+  //         old_password: oldPassword,
+  //         new_password: newPassword,
+  //         confirm_new_password: newPassword,
+        
+  //       },
+  //       withCredentials: true
+  //     });
+      
+  //     console.log("Password changed successfully");
+  //     return response.data;
+  //   } catch (error: any) {
+  //     console.error("Password change error:", 
+  //       error.response?.status,
+  //       error.response?.statusText,
+  //       error.response?.data || error.message
+  //     );
+  //     throw error.response || error;
+  //   }
+  // },
+
+  changePassword: async (oldPassword: string, newPassword: string): Promise<any> => {
+    try {
+      console.log("Changing password");
+      
+      // Get token
+      const token = getAuthToken();
+      
+      if (!token) {
+        throw new Error("User is not authenticated. Please login first.");
+      }
+      
+      console.log("Using token for changePassword:", token ? `${token.substring(0, 10)}...` : "No token found");
+      
+      // Create request headers with proper Authorization
+      const headers: HttpHeaders = {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      };
+      
+      // Log headers for debugging
+      console.log("Request headers:", headers);
+      
+      // Use direct axios call to ensure headers are set properly
+      const response = await axios({
+        method: 'patch',
+        url: `${API_URL}/change-password/`,
+        headers: headers,
+        data: { 
+          old_password: oldPassword,
+          new_password: newPassword,
+          confirm_new_password: newPassword,
+        },
+        withCredentials: true
+      });
+      
+      console.log("Password changed successfully");
+      return response.data;
+    } catch (error: any) {
+      // Enhanced error logging
+      console.error("Password change error:", error);
+      if (error.response) {
+        console.error("Response status:", error.response.status);
+        console.error("Response data:", error.response.data);
+        
+        // Check for specific error types
+        if (error.response.status === 403) {
+          throw new Error("Permission denied. You may not have the right permissions to change the password.");
+        } else if (error.response.status === 401) {
+          throw new Error("Authentication failed. Your session may have expired.");
+        }
+      }
+      
+      throw error.response?.data?.detail 
+        ? new Error(error.response.data.detail) 
+        : error;
+    }
+  },
+  
+  resendOtp: async (email: string, deliveryMethod: "email" | "sms"): Promise<any> => {
+    try {
+      console.log("Resending OTP via", deliveryMethod, "to:", email);
+  
+      // Get phone number from localStorage if available
+      const phoneNumber = appGetFromLocalStorage<string>("userPhoneNumber") || "";
+  
+      // Build the payload according to the backend requirements
+      const payload = {
+        email: email,
+        phone_number: phoneNumber || "not_provided",
+        message_choice: deliveryMethod,
+      };
+  
+      console.log("Sending resend OTP payload:", payload);
+      const response = await authAxios.put("/resend-otp/", payload);
+  
+      console.log("OTP resent successfully");
+      return response.data;
+    } catch (error: any) {
+      console.error("OTP resend error:", error.response?.data || error.message);
+      throw error;
     }
   },
   
@@ -265,129 +545,54 @@ const authService = {
     }
   },
 
-
-
-  // resendOtp: async (email: string, deliveryMethod: "email" | "sms"): Promise<any> => {
-  //   try {
-  //     console.log("Resending OTP via", deliveryMethod, "to:", email)
-  
-  //     // Get phone number from localStorage if available
-  //     const phoneNumber = appGetFromLocalStorage<string>("userPhoneNumber") || ""
-  
-  //     // Build the payload according to the backend requirements
-  //     const payload = {
-  //       email: email,
-  //       // Always include phone_number as required by the API
-  //       // If not available, provide a placeholder to satisfy the API requirement
-  //       phone_number: phoneNumber || "not_provided", // Use a placeholder if no phone number
-  //       message_choice: deliveryMethod,
-  //     }
-  
-  //     console.log("Sending resend OTP payload:", payload)
-  //     const response = await authAxios.put("/resend-otp/", payload)
-  
-  //     console.log("OTP resent successfully")
-  //     return response.data
-  //   } catch (error: any) {
-  //     console.error("OTP resend error:", error.response?.data || error.message)
-  //     throw error
-  //   }
-  // },
-  
-  resendOtp: async (email: string, deliveryMethod: "email" | "sms"): Promise<any> => {
-    try {
-      console.log("Resending OTP via", deliveryMethod, "to:", email)
-  
-      // Get phone number from localStorage if available
-      const phoneNumber = appGetFromLocalStorage<string>("userPhoneNumber") || ""
-  
-      // Build the payload according to the backend requirements
-      // The API requires the phone_number field to not be blank
-      const payload = {
-        email: email,
-        phone_number: phoneNumber || "not_provided", // Providing a placeholder value if no phone number
-        message_choice: deliveryMethod,
-      }
-  
-      console.log("Sending resend OTP payload:", payload)
-      const response = await authAxios.put("/resend-otp/", payload)
-  
-      console.log("OTP resent successfully")
-      return response.data
-    } catch (error: any) {
-      console.error("OTP resend error:", error.response?.data || error.message)
-      throw error
-    }
-  },
-
-  
-
   logout: async () => {
     try {
-      console.log("Logging out user")
-      await authAxios.post("/logout/")
+      console.log("Logging out user");
+      
+      // Get token for logout request
+      const token = getAuthToken();
+      
+      if (token) {
+        try {
+          await axios({
+            method: 'post',
+            url: `${API_URL}/logout/`,
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${token}`,
+            },
+            withCredentials: true
+          });
+        } catch (logoutError) {
+          console.warn("Logout API call failed, but will continue with local logout:", logoutError);
+        }
+      }
 
-      // Remove auth header
-      delete authAxios.defaults.headers.common["Authorization"]
-      console.log("User logged out successfully")
-
+      console.log("Clearing local storage data");
+      
       // Clear stored user data and tokens
-      appRemoveFromLocalStorage("authToken")
-      appRemoveFromLocalStorage(StorageKeys.USER_DATA)
-      appRemoveFromLocalStorage(StorageKeys.TOKEN_DATA)
-      appRemoveFromLocalStorage("userPhoneNumber")
+      localStorage.removeItem("authToken");
+      localStorage.removeItem(StorageKeys.USER_DATA);
+      localStorage.removeItem(StorageKeys.TOKEN_DATA);
+      localStorage.removeItem("userPhoneNumber");
+      
+      // Remove auth header
+      delete authAxios.defaults.headers.common["Authorization"];
+      
+      console.log("User logged out successfully");
     } catch (error: any) {
-      console.error("Logout error:", error.response?.data || error.message)
+      console.error("Logout error:", error.response?.data || error.message);
 
       // Still remove auth header and clear storage even if API call fails
-      delete authAxios.defaults.headers.common["Authorization"]
-      appRemoveFromLocalStorage("authToken")
-      appRemoveFromLocalStorage(StorageKeys.USER_DATA)
-      appRemoveFromLocalStorage(StorageKeys.TOKEN_DATA)
-      appRemoveFromLocalStorage("userPhoneNumber")
+      delete authAxios.defaults.headers.common["Authorization"];
+      localStorage.removeItem("authToken");
+      localStorage.removeItem(StorageKeys.USER_DATA);
+      localStorage.removeItem(StorageKeys.TOKEN_DATA);
+      localStorage.removeItem("userPhoneNumber");
 
-      throw error
-    }
-  },
-
-  getCurrentUser: async (): Promise<User> => {
-    try {
-      // First try to get from storage
-      const storedUser = appGetFromLocalStorage<User>(StorageKeys.USER_DATA)
-
-      if (storedUser) {
-        console.log("User data retrieved from storage")
-        return storedUser
-      }
-
-      console.log("Fetching current user data from API")
-      const response = await authAxios.get("/user/")
-      console.log("User data fetched successfully")
-
-      // Store the fresh user data
-      if (response.data) {
-        appSaveToLocalStorage(StorageKeys.USER_DATA, response.data)
-      }
-
-      return response.data
-    } catch (error: any) {
-      console.error("Get current user error:", error.response?.data || error.message)
-      throw error
-    }
-  },
-
-  isAuthenticated: async (): Promise<boolean> => {
-    try {
-      console.log("Checking authentication status")
-      await authAxios.get("/check-auth/")
-      console.log("User is authenticated")
-      return true
-    } catch (error: any) {
-      console.log("User is not authenticated")
-      return false
+      throw error;
     }
   },
 }
 
-export default authService
-
+export default authService;

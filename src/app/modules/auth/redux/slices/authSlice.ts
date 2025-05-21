@@ -145,6 +145,19 @@ export const verifyOtp = createAsyncThunk(
   },
 )
 
+
+export const verifyConfirmPasswordOtp = createAsyncThunk(
+  "auth/verifyOtp",
+  async ({ email, otp, phone_number }: { email: string; otp: string; phone_number?: string }, { rejectWithValue }) => {
+    try {
+      const response = await authService.verifyConfirmPasswordOtp(email, otp, phone_number)
+      return response
+    } catch (error: any) {
+      return rejectWithValue(extractErrorMessage(error))
+    }
+  },
+)
+
 export const resendOtp = createAsyncThunk(
   "auth/resendOtp",
   async ({ email, deliveryMethod }: { email: string; deliveryMethod: "email" | "sms" }, { rejectWithValue }) => {
@@ -240,13 +253,13 @@ export const verifyNIN = createAsyncThunk(
   }
 );
 
-export const fetchCurrentUser = createAsyncThunk("auth/getCurrentUser", async (_, { rejectWithValue }) => {
-  try {
-    return await authService.getCurrentUser()
-  } catch (error: any) {
-    return rejectWithValue(extractErrorMessage(error))
-  }
-})
+// export const fetchCurrentUser = createAsyncThunk("auth/getCurrentUser", async (_, { rejectWithValue }) => {
+//   try {
+//     return await authService.getCurrentUser()
+//   } catch (error: any) {
+//     return rejectWithValue(extractErrorMessage(error))
+//   }
+// })
 
 
 
@@ -394,19 +407,19 @@ const authSlice = createSlice({
       })
 
     // Fetch current user
-    builder
-      .addCase(fetchCurrentUser.pending, (state) => {
-        state.isLoading = true
-      })
-      .addCase(fetchCurrentUser.fulfilled, (state, action: PayloadAction<any>) => {
-        state.isLoading = false
-        state.user = action.payload || {}
-      })
-      .addCase(fetchCurrentUser.rejected, (state) => {
-        state.isLoading = false
-        state.isAuthenticated = false
-        state.user = null
-      })
+    // builder
+    //   .addCase(fetchCurrentUser.pending, (state) => {
+    //     state.isLoading = true
+    //   })
+    //   .addCase(fetchCurrentUser.fulfilled, (state, action: PayloadAction<any>) => {
+    //     state.isLoading = false
+    //     state.user = action.payload || {}
+    //   })
+    //   .addCase(fetchCurrentUser.rejected, (state) => {
+    //     state.isLoading = false
+    //     state.isAuthenticated = false
+    //     state.user = null
+    //   })
 
       // Add to the authSlice extraReducers
 builder.addCase(verifyNIN.pending, (state) => {

@@ -1,32 +1,100 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { authService } from "../../modules/auth/services";
-import OTPDeliveryModal from "../../modules/auth/components/OTPDeliveryModal";
+import OTPInputModal from "../../modules/auth/components/Otp-Input-Modal";
+import { useEffect, useState } from "react";
+// import { useNavigate } from "react-router-dom";
+// import { useSelector } from "react-redux";
+// import type { RootState } from "../../core/store";
+import { useAuth } from "../../modules/auth/hooks";
 
 interface ChangePasswordModalProps {
   isOpen: boolean;
   onClose: () => void;
   email: string;
-  phone?: string;
-  hasPhone?: boolean; // Explicit control for SMS option visibility
+  phone_number?: string;
+  hasPhone?: boolean;
 }
 
 const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({ 
   isOpen, 
   onClose, 
   email, 
-  phone = "",
-//   hasPhone = true // Force SMS visibility by default
+  phone_number,
+  // hasPhone,
 }) => {
-  const [currentStep, setCurrentStep] = useState<"form" | "otp">("form");
+  
+  const {userData} = useAuth()
+  console.log (phone_number, email, userData)
+  
+  // Define steps for the password change flow
+  type Step = "enter-otp" | "change-password";
+  const [currentStep, setCurrentStep] = useState<Step>("enter-otp");
+  
+  // OTP related states
+  const [otpDeliveryMethod, _setOtpDeliveryMethod] = useState<"email" | "sms">("email");
+  const [otpError, setOtpError] = useState("");
+  
+  // Password form states
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const navigate = useNavigate();
+  
+  // const navigate = useNavigate();
 
+  // Immediately send OTP when modal opens
+  useEffect(() => {
+    if (isOpen) {
+      // Reset states when modal opens
+      setOtpError("");
+      setError("");
+      setOldPassword("");
+      setNewPassword("");
+      setConfirmPassword("");
+      
+      // Default to email delivery, immediate OTP send
+      sendOTP();
+    }
+  }, [isOpen]);
+
+  // Handle sending OTP - simplified version that doesn't send parameters
+  const sendOTP = async () => {
+    setIsLoading(true);
+    
+    try {
+      // Call API to send OTP - no parameters needed
+      await authService.sendOtp();
+      toast.success(`Verification code sent`);
+    } catch (err: any) {
+      setOtpError(err.message || `Failed to send verification code`);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Handle OTP verification
+  const handleOTPVerify = async (otpCode: string ) => {
+    if (!otpCode || otpCode.length < 4) {
+      setOtpError("Please enter a valid verification code");
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      // Call API to verify OTP
+      await authService.verifyConfirmPasswordOtp(email, otpCode, userData.phone_number);
+      toast.success("Identity verified successfully");
+      setCurrentStep("change-password");
+      setOtpError("");
+    } catch (err: any) {
+      setOtpError(err.message || "Invalid verification code. Please try again.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Handle password change submission
   const handlePasswordSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
@@ -43,60 +111,36 @@ const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({
     setIsLoading(true);
     try {
       await authService.changePassword(oldPassword, newPassword);
-      setCurrentStep("otp");
-      setError("");
+      toast.success("Password successfully changed");
+      onClose();
+      // Optionally redirect
+      // navigate("/dashboard");
     } catch (err: any) {
-      setError(err.message || "Failed to initiate password change");
+      setError(err.message || "Failed to change password");
     } finally {
       setIsLoading(false);
     }
   };
 
-//   const handleOTPSubmit = async (deliveryMethod: "email" | "sms") => {
-//     try {
-//       // Here you would typically verify the OTP
-//       // For now, we'll just show success
-//       toast.success("Password successfully changed");
-//       onClose();
-//       navigate("/dashboard"); // or "/settings"
-//     } catch (err: any) {
-//       setError(err.message || "OTP verification failed");
-//     }
-//   };
-
-const handleOTPSubmit = async (deliveryMethod: "email" | "sms") => {
-    try {
-      // Here you would typically verify the OTP based on the delivery method
-      console.log(`Verifying OTP sent via ${deliveryMethod}`);
-      // For now, we'll just show success
-      toast.success("Password successfully changed");
-      onClose();
-      navigate("/dashboard"); // or "/settings"
-    } catch (err: any) {
-      setError(err.message || "OTP verification failed");
-    }
-  };
-
   if (!isOpen) return null;
 
-  if (currentStep === "otp") {
+  // Render OTP input step
+  if (currentStep === "enter-otp") {
     return (
-        <OTPDeliveryModal
+      <OTPInputModal
         isOpen={isOpen}
         onClose={onClose}
-        onSubmit={handleOTPSubmit}
+        onVerify={handleOTPVerify}
         email={email}
-        phone={phone || "+123456789"} // Provide default phone number if not available
-        hasPhone={!!phone} // Show SMS option only if phone is provided
-        isPasswordChange={true} // Flag for OTPDeliveryModal to know this is password change flow
-        title="Verify Password Change"
-        description="To confirm your password change, please choose how you'd like to receive your verification code."
-        submitButtonText="Verify"
-        showLoginLink={false}
+        deliveryMethod={otpDeliveryMethod}
+        onResend={sendOTP}
+        errorMessage={otpError}
+        isLoading={isLoading}
       />
     );
   }
-
+  
+  // Render password change form
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
       <div className="bg-white rounded-lg shadow-lg max-w-md w-full">
@@ -113,7 +157,7 @@ const handleOTPSubmit = async (deliveryMethod: "email" | "sms") => {
             <div className="space-y-4 mb-6">
               <div>
                 <label htmlFor="oldPassword" className="block text-sm font-medium text-gray-700 mb-1">
-                  Old Password
+                  Current Password
                 </label>
                 <input
                   id="oldPassword"
@@ -174,10 +218,10 @@ const handleOTPSubmit = async (deliveryMethod: "email" | "sms") => {
                       <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                       <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                     </svg>
-                    Processing...
+                    Changing...
                   </>
                 ) : (
-                  "Continue"
+                  "Change Password"
                 )}
               </button>
             </div>
