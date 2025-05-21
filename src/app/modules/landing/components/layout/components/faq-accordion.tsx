@@ -1,10 +1,7 @@
 "use client"
 
-import type React from "react"
-
-import { useState } from "react"
+import React, { useState } from "react"
 import { Minus, Plus } from "lucide-react"
-import { Link } from "react-router-dom"
 
 interface FAQ {
   id: number
@@ -25,9 +22,9 @@ export const faqData: FAQCategoryData = {
       answer: (
         <p>
           Visit{" "}
-          <Link to="#" className="text-[#2a9f47] hover:underline">
+          <a href="#" className="text-[#2a9f47] hover:underline">
             cvms.ng/signup
-          </Link>
+          </a>
           , fill out the registration form with accurate details, and verify your email to activate your account.
         </p>
       ),
@@ -159,7 +156,7 @@ export const faqData: FAQCategoryData = {
       ),
     },
   ],
-  "Support &Trouble shooting": [
+  "Support & Troubleshooting": [
     {
       id: 14,
       question: "How do I contact customer support?",
@@ -210,17 +207,24 @@ interface FAQAccordionProps {
 }
 
 export function FAQAccordion({ faqs }: FAQAccordionProps) {
-  const [openFaqs, setOpenFaqs] = useState<number[]>(faqs.filter((faq) => faq.isOpen).map((faq) => faq.id))
+  const [openFaqs, setOpenFaqs] = useState<number[]>(
+    faqs.filter((faq) => faq.isOpen).map((faq) => faq.id)
+  )
 
   const toggleFaq = (id: number) => {
-    setOpenFaqs((prev) => (prev.includes(id) ? prev.filter((faqId) => faqId !== id) : [...prev, id]))
+    setOpenFaqs((prev) => 
+      prev.includes(id) ? prev.filter((faqId) => faqId !== id) : [...prev, id]
+    )
   }
 
   return (
     <div className="space-y-4">
       {faqs.map((faq) => (
         <div key={faq.id} className="border border-[#dcdcdc] rounded-lg p-4">
-          <div className="flex justify-between items-center cursor-pointer" onClick={() => toggleFaq(faq.id)}>
+          <div 
+            className="flex justify-between items-center cursor-pointer" 
+            onClick={() => toggleFaq(faq.id)}
+          >
             <h3 className="font-medium">{faq.question}</h3>
             <button className="bg-[#2a9f47] rounded-full p-1">
               {openFaqs.includes(faq.id) ? (
@@ -233,6 +237,37 @@ export function FAQAccordion({ faqs }: FAQAccordionProps) {
           {openFaqs.includes(faq.id) && <div className="mt-2">{faq.answer}</div>}
         </div>
       ))}
+    </div>
+  )
+}
+
+// Example usage
+export default function FAQPage() {
+  const [selectedCategory, setSelectedCategory] = useState<string>("General")
+  
+  return (
+    <div className="max-w-4xl mx-auto py-8 px-4">
+      <h1 className="text-2xl font-bold mb-6">Frequently Asked Questions</h1>
+      
+      <div className="mb-6 flex flex-wrap gap-2">
+        {Object.keys(faqData).map((category) => (
+          <button
+            key={category}
+            onClick={() => setSelectedCategory(category)}
+            className={`px-4 py-2 rounded-full ${
+              selectedCategory === category
+                ? "bg-[#2a9f47] text-white"
+                : "bg-gray-100 text-gray-700"
+            }`}
+          >
+            {category}
+          </button>
+        ))}
+      </div>
+      
+      {faqData[selectedCategory] && (
+        <FAQAccordion faqs={faqData[selectedCategory]} />
+      )}
     </div>
   )
 }
