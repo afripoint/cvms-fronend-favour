@@ -1,7 +1,8 @@
 "use client"
 
-import React, { useState } from "react"
+import { useState } from "react"
 import { Minus, Plus } from "lucide-react"
+import { Link } from "react-router-dom"
 
 interface FAQ {
   id: number
@@ -22,9 +23,9 @@ export const faqData: FAQCategoryData = {
       answer: (
         <p>
           Visit{" "}
-          <a href="#" className="text-[#2a9f47] hover:underline">
+          <Link to="" className="text-[#2a9f47] hover:underline">
             cvms.ng/signup
-          </a>
+          </Link>
           , fill out the registration form with accurate details, and verify your email to activate your account.
         </p>
       ),

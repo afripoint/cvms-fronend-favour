@@ -2,7 +2,7 @@
 
 import type React from "react"
 import { useState } from "react"
-import { useNavigate } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import { useDispatch, useSelector } from "react-redux"
 
 import type { AppDispatch, RootState } from "../../../core/store"
@@ -92,20 +92,20 @@ const AccountType: React.FC = () => {
 
           <div className="mt-4 text-center text-bold">
             <span className="text-black-500">Have an Account? </span>
-            <a href="/login" className="text-green-600 hover:underline text-bold">
+            <Link to="/login" className="text-green-600 hover:underline text-bold">
               Sign In
-            </a>
+            </Link>
           </div>
 
           <div className="mt-4 text-sm text-[#929292] text-center">
             By clicking "Continue" you agree to our{" "}
-            <a href="#" className="text-[#929292]">
+            <Link to="#" className="text-[#929292]">
               terms of use
-            </a>{" "}
+            </Link>{" "}
             and{" "}
-            <a href="#" className="text-[#929292]">
+            <Link to="#" className="text-[#929292]">
               privacy policy
-            </a>
+            </Link>
           </div>
         </div>
       </div>

@@ -27,6 +27,7 @@
 
 import type * as React from "react"
 import { socialLinks } from "../../../../constants/navigation"
+import { Link } from "react-router-dom"
 
 export const FooterSocialLinks: React.FC = () => {
   return (
@@ -35,9 +36,9 @@ export const FooterSocialLinks: React.FC = () => {
       aria-label="Social Media Links"
     >
       {socialLinks.map((link, index) => (
-        <a 
+        <Link 
           key={index} 
-          href="#" 
+          to="#" 
           className="hover:opacity-80 transition-opacity" 
           aria-label={link.alt}
         >
@@ -46,7 +47,7 @@ export const FooterSocialLinks: React.FC = () => {
             alt={link.alt}
             className="object-contain shrink-0 w-5 sm:w-6 aspect-square"
           />
-        </a>
+        </Link>
       ))}
     </nav>
   )

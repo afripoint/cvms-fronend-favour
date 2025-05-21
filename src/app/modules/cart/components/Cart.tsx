@@ -2,7 +2,7 @@
 import type React from "react"
 import { useSelector, useDispatch } from "react-redux"
 import type { RootState } from "../../../core/store"
-import { useNavigate } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import { removeFromCart, applyPromoCode } from "../redux/slices/cartSlice"
 import { useState } from "react"
 
@@ -166,13 +166,13 @@ const Cart: React.FC = () => {
                   />
                   <label htmlFor="terms" className="text-xs text-gray-600">
                     By clicking this, I agree to CVMS's{" "}
-                    <a href="/terms" className="text-green-500 hover:underline">
+                    <Link to="/terms" className="text-green-500 hover:underline">
                       Terms & Conditions
-                    </a>{" "}
+                    </Link>{" "}
                     and{" "}
-                    <a href="/privacy" className="text-green-500 hover:underline">
+                    <Link to="/privacy" className="text-green-500 hover:underline">
                       Privacy Policy
-                    </a>
+                    </Link>
                   </label>
                 </div>
               )}

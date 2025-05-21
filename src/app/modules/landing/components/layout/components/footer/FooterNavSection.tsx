@@ -59,8 +59,9 @@
 
 
 
-import type * as React from "react"
+import React from "react"
 import type { FooterNavSectionProps } from "../../../../types"
+import { Link } from "react-router-dom"
 
 export const FooterNavSection: React.FC<FooterNavSectionProps> = ({ title, links }) => {
   return (
@@ -69,15 +70,15 @@ export const FooterNavSection: React.FC<FooterNavSectionProps> = ({ title, links
       <ul className="mt-2 sm:mt-3 w-full text-sm sm:text-base text-[#000000CC]">
         {links.map((link, index) => (
           <li key={index} className={index > 0 ? "mt-1 sm:mt-2" : ""}>
-            <a
-              href={link.href}
+            <Link
+              to={link.href}
               className={`block hover:text-[#000000CC] transition-colors ${
                 link.text === "cvmsproject@afripointgroup.com" ? "underline break-words" : ""
               }`}
               aria-label={`Navigate to ${link.text}`}
             >
               {link.text}
-            </a>
+            </Link>
           </li>
         ))}
       </ul>

@@ -7,6 +7,7 @@ import PhoneInput from "./PhoneInput"
 import { contactMethods } from "../../../constants/contact"
 import { useContactForm } from "../../../hooks/useContactForm"
 import { MailIcon, PhoneIcon } from "../../../../shared/components/icons/icons"
+import { Link } from "react-router-dom"
 
 const ContactContainer: React.FC = () => {
   const {
@@ -172,9 +173,9 @@ const ContactContainer: React.FC = () => {
               </div>
               <span className="text-xs tracking-normal leading-5 text-black">
                 You agree to our{" "}
-                <a href="#" className="text-green-700 underline">
+                <Link to="/" className="text-green-700 underline">
                   Privacy Policy
-                </a>
+                </Link>
               </span>
             </label>
 
