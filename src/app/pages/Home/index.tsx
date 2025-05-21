@@ -1,4 +1,4 @@
-import type React from "react"
+import React from "react"
 import { HeroSection } from "../../modules/landing/components/hero"
 import { Dashboard, FeatureSection } from "../../modules/landing/components/dashboard"
 import { Benefits } from "../../modules/landing/components/benefits"

@@ -1,4 +1,4 @@
-      import type React from "react"
+      import React from "react"
       import { MainLayout } from "../../modules/landing/components/layout"
       
         import TrackingHero from "../../modules/status-tracker/components/trackingHero";

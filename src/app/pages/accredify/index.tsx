@@ -11,7 +11,7 @@
 
 
 
-import type React from "react"
+import React from "react"
 import { MainLayout } from "../../modules/landing/components/layout"
 import AgencySearch from "../../modules/accredify/components/AgencySearch";
 import RecommendedAgencies from "../../modules/accredify/components/RecommendedAgencies";
