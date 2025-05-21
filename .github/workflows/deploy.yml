@@ -3,7 +3,7 @@ name: Deploy Frontend to Hostinger
 on:
   push:
     branches:
-      - cvms/vin-checkout-integration
+      - micro-service-integration
 
 env:
   IMAGE_NAME: uatcvmsnigeria-frontend
