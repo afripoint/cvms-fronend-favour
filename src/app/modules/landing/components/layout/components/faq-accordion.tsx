@@ -3,6 +3,7 @@
 import { useState } from "react"
 import { Minus, Plus } from "lucide-react"
 import { Link } from "react-router-dom"
+import React from "react" 
 
 interface FAQ {
   id: number
