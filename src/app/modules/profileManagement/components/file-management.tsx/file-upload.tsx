@@ -4,7 +4,12 @@ import { useSelector, useDispatch } from 'react-redux';
 import { selectUserData } from '../../redux/selectors';
 import { updateUserData } from '../../redux/actions';
 
-const ProfileImageUpload = () => {
+interface ProfileImageUploadProps {
+  onUpload: (file: File) => void;
+  isSubmitted: boolean;
+}
+
+const ProfileImageUpload = ({ onUpload, isSubmitted }: ProfileImageUploadProps) => {
   const userData = useSelector(selectUserData);
   const dispatch = useDispatch();
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
@@ -19,7 +24,12 @@ const ProfileImageUpload = () => {
         return;
       }
       
-      // Create an image object to check dimensions
+      // Check file size (max 5MB)
+      if (file.size > 5 * 1024 * 1024) {
+        alert('Image size should not exceed 5MB');
+        return;
+      }
+      
       const img = new Image();
       img.onload = () => {
         if (img.width < 400 || img.height < 400) {
@@ -27,19 +37,15 @@ const ProfileImageUpload = () => {
           return;
         }
         
-        // Check file size (max 5MB)
-        if (file.size > 5 * 1024 * 1024) {
-          alert('Image size should not exceed 5MB');
-          return;
-        }
-        
         setSelectedImage(file);
-        
-        // Create a URL for the image and update the user data
         const imageUrl = URL.createObjectURL(file);
+        
+        // Update Redux store with the image URL
         dispatch(updateUserData({ profilePicture: imageUrl }));
+        
+        // Call the onUpload callback
+        onUpload(file);
       };
-      
       img.src = URL.createObjectURL(file);
     }
   };
@@ -76,6 +82,11 @@ const ProfileImageUpload = () => {
         {selectedImage && (
           <p className="mt-1 text-xs text-green-500">
             Selected: {selectedImage.name}
+          </p>
+        )}
+        {isSubmitted && (
+          <p className="mt-1 text-xs text-blue-500">
+            ✓ Image uploaded successfully
           </p>
         )}
       </div>

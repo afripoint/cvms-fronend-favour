@@ -26,6 +26,7 @@ const rootReducer = combineReducers({
   agencies: agencyReducer,
   tracking: trackingReducer,
   settings: settingsReducer,
+  
 
   // New reducers
   // files: fileReducer,

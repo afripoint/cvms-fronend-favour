@@ -1,3 +1,22 @@
+// export interface User {
+//   id?: string
+//   email?: string
+//   first_name?: string
+//   last_name?: string
+//   role?: string
+//   agency_name?: string
+//   declarant_code?: string
+//   cac?: string
+//   address?: string
+//   phone_number?: string
+//   state?: string
+//   local_govt?: string
+//   is_accredify?: boolean
+//   "NIN Verified"?: boolean // Add this property to fix the TypeScript error
+//   NIN?: string;
+//   NINVerified?: boolean;
+// }
+
 export interface User {
   id?: string
   email?: string
@@ -9,12 +28,14 @@ export interface User {
   cac?: string
   address?: string
   phone_number?: string
+  additional_phone?: string
   state?: string
   local_govt?: string
   is_accredify?: boolean
-  "NIN Verified"?: boolean // Add this property to fix the TypeScript error
-  NIN?: string;
-  NINVerified?: boolean;
+  "NIN Verified"?: boolean
+  NIN?: string
+  NINVerified?: boolean
+  [key: string]: any // Allow for additional properties
 }
 
 

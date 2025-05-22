@@ -183,7 +183,7 @@ const TeamMemberModal: React.FC<TeamMemberModalProps> = ({
                 type="submit"
                 className="w-full sm:w-auto px-4 py-2 bg-green-500 text-black rounded-md hover:bg-green-600 transition order-1 sm:order-2"
               >
-                {mode === 'add' ? 'Create Member' : 'Save Changes'}
+                {mode === 'add' ? 'submit' : 'Save Changes'}
               </button>
             )}
           </div>

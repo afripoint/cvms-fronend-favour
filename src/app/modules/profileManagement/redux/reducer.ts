@@ -143,12 +143,14 @@ export default function settingsReducer(
         ninSubmitted: true 
       };
       
-    case actions.SUBMIT_CAC:
-      return { 
-        ...state, 
-        userData: { ...state.userData, cac: action.payload },
-        cacSubmitted: true 
-      };
+    // case actions.SUBMIT_CAC:
+    //   return { 
+    //     ...state, 
+    //     userData: { ...state.userData, cac: action.payload },
+    //     cacSubmitted: true 
+    //   };
+
+      
       
       case actions.ADD_TEAM_MEMBER:
 const newMember = {
@@ -174,6 +176,9 @@ return {
         ) 
       };
       
+      
+
+
     case actions.DELETE_TEAM_MEMBER:
       return { 
         ...state, 
