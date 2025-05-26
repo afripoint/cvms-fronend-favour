@@ -1,4 +1,4 @@
-// export type AccountType = 'Individual User' | 'Agent' | 'Company';
+export type AccountType = 'Individual User' | 'Agent' | 'Company';
 // export interface Transaction {
 //     id: number;
 //     type: string;
