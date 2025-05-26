@@ -1,3 +1,4 @@
+
 import { useCallback, useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Link, useLocation } from "react-router-dom";
@@ -19,17 +20,26 @@ interface SearchHistory {
   qr_code_base64: string;
   slug: string;
   created_at: string;
+  vehicle_record: string
 }
 
+// interface VinInfo {
+//   vin: string | null;
+//   brand: string | null;
+//   vehicle_year: string | null;
+//   vehicle_type: string | null;
+//   payment_status: string | null;
+//   origin_country: string | null;
+// }
 interface VinInfo {
   vin: string | null;
   brand: string | null;
+  make: string | null; // Add this missing property
   vehicle_year: string | null;
   vehicle_type: string | null;
   payment_status: string | null;
   origin_country: string | null;
 }
-
 const Certificate = () => {
   const dispatch = useDispatch<AppDispatch>();
   const location = useLocation();
@@ -81,8 +91,8 @@ const Certificate = () => {
     });
   };
 
-  // Fetching all certificate data
-  const certificateFetching = useCallback(async () => {
+  // Updated function to fetch certificate data with optional VIN filtering
+  const certificateFetching = useCallback(async (specificVins?: string[]) => {
     try {
       setIsLoading(true);
       setError(null);
@@ -91,16 +101,20 @@ const Certificate = () => {
         throw new Error("No access token found");
       }
 
-      const response = await fetch(
-        "http://cvms-api.afripointdev.com/vin/search-history/",
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${accesstoken}`,
-          },
-        }
-      );
+      // Build URL with query parameters if specific VINs are provided
+      let url = "https://cvms-api.afripointdev.com/vin/vin-search/";
+      if (specificVins && specificVins.length > 0) {
+        const vinsParam = specificVins.join(',');
+        url += `?vins=${encodeURIComponent(vinsParam)}`;
+      }
+
+      const response = await fetch(url, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accesstoken}`,
+        },
+      });
 
       if (!response.ok) {
         throw new Error(`Failed to fetch search history: ${response.status}`);
@@ -137,69 +151,183 @@ const Certificate = () => {
     certificateFetching();
   }, [certificateFetching]);
 
-  const handleDownloadCertificate = async (vin: string) => {
-    try {
-      setIsLoading(true);
-      const accesstoken = localStorage.getItem("access_token");
-      if (!accesstoken) {
-        throw new Error("No access token found");
-      }
+  // Updated function to fetch specific VIN data for certificate generation
+  // const fetchVinData = async (vin: string): Promise<SearchHistory | null> => {
+  //   try {
+  //     const accesstoken = localStorage.getItem("access_token");
+  //     if (!accesstoken) {
+  //       throw new Error("No access token found");
+  //     }
 
-      const response = await fetch(
-        "http://cvms-api.afripointdev.com/vin/search-history/",
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${accesstoken}`,
-          },
-        }
-      );
+  //     const url = `https://cvms-api.afripointdev.com/vin/vin-search/?vins=${encodeURIComponent(vin)}`;
+      
+  //     const response = await fetch(url, {
+  //       method: "GET",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //         Authorization: `Bearer ${accesstoken}`,
+  //       },
+  //     });
 
-      if (!response.ok) {
-        throw new Error("Failed to fetch search history");
-      }
+  //     if (!response.ok) {
+  //       throw new Error("Failed to fetch VIN data");
+  //     }
 
-      const resData = await response.json();
+  //     const resData = await response.json();
 
-      const vehicleRecord = resData.Search_histories.find(
-        (record: SearchHistory) => {
-          return record.vin?.vin === vin || record.slug?.includes(vin);
-        }
-      );
+  //     if (resData?.Search_histories && resData.Search_histories.length > 0) {
+  //       // Return the first matching record
+  //       return resData.Search_histories.find(
+  //         (record: SearchHistory) => record.vin?.vin === vin
+  //       ) || resData.Search_histories[0];
+  //     }
+      
+  //     return null;
+  //   } catch (error) {
+  //     console.error("Error fetching VIN data:", error);
+  //     throw error;
+  //   }
+  // };
 
-      if (!vehicleRecord) {
-        throw new Error("Vehicle record not found for VIN: " + vin);
-      }
 
-      const userData = {
-        fullName: vehicleRecord.user.full_name,
-        address: user?.address || "",
-      };
-
-      const certificateData = {
-        vin: vehicleRecord.vin?.vin || vin,
-        makeModel: vehicleRecord.vin?.brand || "",
-        model: vehicleRecord.vin?.make || "Ford Mustang",
-        year: vehicleRecord.vin?.vehicle_year || "",
-        certificateNumber: vehicleRecord.cert_num || "",
-        ownerName: userData.fullName,
-        ownerAddress: userData.address || "No 16B Alimini Street Ipaja",
-        date: new Date().toLocaleDateString("en-GB", {
-          day: "2-digit",
-          month: "short",
-          year: "numeric",
-        }),
-        qrCodeBase64: vehicleRecord.qr_code_base64 || "",
-      };
-
-      generateCertificate(certificateData);
-    } catch (error) {
-      console.error("Error generating certificate:", error);
-      setError("Failed to generate certificate. Please try again later.");
-    } finally {
-      setIsLoading(false);
+  const fetchVinData = async (vin: string): Promise<SearchHistory | undefined> => {
+  try {
+    const accesstoken = localStorage.getItem("access_token");
+    if (!accesstoken) {
+      throw new Error("No access token found");
     }
+
+    const url = `https://cvms-api.afripointdev.com/vin/vin-search/?vins=${encodeURIComponent(vin)}`;
+    
+    const response = await fetch(url, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${accesstoken}`,
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to fetch VIN data");
+    }
+
+    const resData = await response.json();
+
+    if (resData?.Search_histories && resData.Search_histories.length > 0) {
+      // Return the first matching record
+      return resData.Search_histories.find(
+        (record: SearchHistory) => record.vin?.vin === vin
+      ) || resData.Search_histories[0];
+    }
+    
+    return undefined; // Change from null to undefined
+  } catch (error) {
+    console.error("Error fetching VIN data:", error);
+    throw error;
+  }
+};
+
+  // Updated certificate download function
+  // const handleDownloadCertificate = async (vin: string) => {
+  //   try {
+  //     setIsLoading(true);
+      
+  //     // First try to find the record in current data
+  //     let vehicleRecord = allCertData.find(
+  //       (record: SearchHistory) => record.vin?.vin === vin
+  //     );
+
+  //     // If not found in current data, fetch specifically for this VIN
+  //     if (!vehicleRecord) {
+  //       vehicleRecord = await fetchVinData(vin);
+  //     }
+
+  //     if (!vehicleRecord) {
+  //       throw new Error("Vehicle record not found for VIN: " + vin);
+  //     }
+
+  //     const userData = {
+  //       fullName: vehicleRecord.user.full_name,
+  //       address: user?.address || "",
+  //     };
+
+  //     const certificateData = {
+  //       vin: vehicleRecord.vin?.vin || vin,
+  //       makeModel: vehicleRecord.vin?.brand || "",
+  //       model: vehicleRecord.vin?.make || "Ford Mustang",
+  //       year: vehicleRecord.vin?.vehicle_year || "",
+  //       certificateNumber: vehicleRecord.cert_num || "",
+  //       ownerName: userData.fullName,
+  //       ownerAddress: userData.address || "No 16B Alimini Street Ipaja",
+  //       date: new Date().toLocaleDateString("en-GB", {
+  //         day: "2-digit",
+  //         month: "short",
+  //         year: "numeric",
+  //       }),
+  //       qrCodeBase64: vehicleRecord.qr_code_base64 || "",
+  //     };
+
+  //     generateCertificate(certificateData);
+  //   } catch (error) {
+  //     console.error("Error generating certificate:", error);
+  //     setError("Failed to generate certificate. Please try again later.");
+  //   } finally {
+  //     setIsLoading(false);
+  //   }
+  // };
+
+
+  const handleDownloadCertificate = async (vin: string) => {
+  try {
+    setIsLoading(true);
+    
+    // First try to find the record in current data
+    let vehicleRecord: SearchHistory | undefined = allCertData.find(
+      (record: SearchHistory) => record.vin?.vin === vin
+    );
+
+    // If not found in current data, fetch specifically for this VIN
+    if (!vehicleRecord) {
+      vehicleRecord = await fetchVinData(vin);
+    }
+
+    if (!vehicleRecord) {
+      throw new Error("Vehicle record not found for VIN: " + vin);
+    }
+
+    const userData = {
+      fullName: vehicleRecord.user.full_name,
+      address: user?.address || "",
+    };
+
+    const certificateData = {
+      vin: vehicleRecord.vin?.vin || vin,
+      makeModel: vehicleRecord.vin?.brand || "",
+      model: vehicleRecord.vin?.make || "Ford Mustang", // Now 'make' property exists
+      year: vehicleRecord.vin?.vehicle_year || "",
+      certificateNumber: vehicleRecord.cert_num || "",
+      ownerName: userData.fullName,
+      ownerAddress: userData.address || "No 16B Alimini Street Ipaja",
+      date: new Date().toLocaleDateString("en-GB", {
+        day: "2-digit",
+        month: "short",
+        year: "numeric",
+      }),
+      qrCodeBase64: vehicleRecord.qr_code_base64 || "",
+    };
+
+    generateCertificate(certificateData);
+  } catch (error) {
+    console.error("Error generating certificate:", error);
+    setError("Failed to generate certificate. Please try again later.");
+  } finally {
+    setIsLoading(false);
+  }
+};
+
+  // Function to search for specific VINs
+  const searchSpecificVins = async (vins: string[]) => {
+    await certificateFetching(vins);
   };
 
   const dismissError = () => {

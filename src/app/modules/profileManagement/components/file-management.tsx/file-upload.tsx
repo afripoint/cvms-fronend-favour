@@ -1,42 +1,3 @@
-// import { FiUser } from 'react-icons/fi';
-// import { useSelector } from 'react-redux';
-// import { selectUserData } from '../../redux/selectors';
-
-// const ProfileImageUpload = () => {
-//   const userData = useSelector(selectUserData);
-
-//   return (
-//     <div className="flex flex-row justify-start ml-48 space-x-4 items-center mb-8">
-//       <div className="w-20 h-20 bg-gray-200 rounded-full flex items-center justify-center mb-4">
-//         {userData.profilePicture ? (
-//           <img
-//             src={userData.profilePicture}
-//             alt="Profile"
-//             className="w-full h-full rounded-full object-cover"
-//           />
-//         ) : (
-//           <FiUser size={30} className="text-gray-400" />
-//         )}
-//       </div>
-//       <div className="text-left">
-//         <h3 className="font-medium">Upload Image</h3>
-//         <p className="text-sm text-gray-500">Min 400x400px, PNG or JPEG</p>
-//         <button
-//           type="button"
-//           className="mt-2 px-4 py-1 text-sm text-gray-600 border border-gray-300 rounded-md hover:bg-gray-50"
-//         >
-//           Upload
-//         </button>
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default ProfileImageUpload;
-
-
-
-
 // import { useState, ChangeEvent } from 'react';
 // import { FiUser } from 'react-icons/fi';
 // import { useSelector, useDispatch } from 'react-redux';
@@ -84,8 +45,8 @@
 //   };
 
 //   return (
-//     <div className="flex flex-row justify-start ml-64 space-x-4 items-center mb-8">
-//       <div className="w-20 h-20 bg-gray-200 rounded-full flex items-center justify-center mb-4">
+//     <div className="flex flex-col sm:flex-row items-center justify-center sm:justify-start px-4 sm:px-8 md:px-16 lg:px-32 md:ml-14 lg:ml-28 space-y-4 sm:space-y-0 sm:space-x-4 mb-8">
+//       <div className="w-20 h-20 bg-gray-200 rounded-full flex items-center justify-center">
 //         {userData.profilePicture ? (
 //           <img
 //             src={userData.profilePicture}
@@ -96,7 +57,7 @@
 //           <FiUser size={30} className="text-gray-400" />
 //         )}
 //       </div>
-//       <div className="text-left">
+//       <div className="text-center sm:text-left">
 //         <h3 className="font-medium">Upload Image</h3>
 //         <p className="text-sm text-gray-500">Min 400x400px, PNG or JPEG</p>
 //         <input
@@ -126,13 +87,19 @@
 
 
 
+
 import { useState, ChangeEvent } from 'react';
 import { FiUser } from 'react-icons/fi';
 import { useSelector, useDispatch } from 'react-redux';
 import { selectUserData } from '../../redux/selectors';
 import { updateUserData } from '../../redux/actions';
 
-const ProfileImageUpload = () => {
+interface ProfileImageUploadProps {
+  onUpload: (file: File) => void;
+  isSubmitted: boolean;
+}
+
+const ProfileImageUpload = ({ onUpload, isSubmitted }: ProfileImageUploadProps) => {
   const userData = useSelector(selectUserData);
   const dispatch = useDispatch();
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
@@ -147,7 +114,12 @@ const ProfileImageUpload = () => {
         return;
       }
       
-      // Create an image object to check dimensions
+      // Check file size (max 5MB)
+      if (file.size > 5 * 1024 * 1024) {
+        alert('Image size should not exceed 5MB');
+        return;
+      }
+      
       const img = new Image();
       img.onload = () => {
         if (img.width < 400 || img.height < 400) {
@@ -155,19 +127,15 @@ const ProfileImageUpload = () => {
           return;
         }
         
-        // Check file size (max 5MB)
-        if (file.size > 5 * 1024 * 1024) {
-          alert('Image size should not exceed 5MB');
-          return;
-        }
-        
         setSelectedImage(file);
-        
-        // Create a URL for the image and update the user data
         const imageUrl = URL.createObjectURL(file);
+        
+        // Update Redux store with the image URL
         dispatch(updateUserData({ profilePicture: imageUrl }));
+        
+        // Call the onUpload callback
+        onUpload(file);
       };
-      
       img.src = URL.createObjectURL(file);
     }
   };
@@ -204,6 +172,11 @@ const ProfileImageUpload = () => {
         {selectedImage && (
           <p className="mt-1 text-xs text-green-500">
             Selected: {selectedImage.name}
+          </p>
+        )}
+        {isSubmitted && (
+          <p className="mt-1 text-xs text-blue-500">
+            ✓ Image uploaded successfully
           </p>
         )}
       </div>

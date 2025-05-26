@@ -2,13 +2,13 @@
 
 // import type React from "react"
 // import { useState, useEffect } from "react"
-// import { useNavigate, Link } from "react-router-dom"
+// import { useNavigate} from "react-router-dom"
 // import type { ProfileSectionProps } from "../../landing/types"
 // import { useAuth } from "../hooks"
 // import { toast } from "react-toastify"
 // import { useSelector } from "react-redux"
 // import type { RootState } from "../../../core/store"
-
+// import ChangePasswordModal from "../../../pages/profilemanagement/ChangePassword"
 
 // const ProfileSection: React.FC<ProfileSectionProps> = ({ firstName, lastName, email }) => {
 //   const [isOpen, setIsOpen] = useState(false)
@@ -116,26 +116,6 @@
 //             </div>
 //           </div>
 //           <ul className="py-2 text-sm text-gray-700" aria-labelledby="avatarButton">
-//             {/* <li>
-//               <Link
-//                 to="/faqs"
-//                 className="block px-4 py-2 hover:bg-gray-100"
-//                 role="menuitem"
-//                 onClick={() => setIsOpen(false)}
-//               >
-//                 Faqs
-//               </Link>
-//             </li> */}
-//             {/* <li>
-//               <Link
-//                 to="/notifications"
-//                 className="block px-4 py-2 hover:bg-gray-100"
-//                 role="menuitem"
-//                 onClick={() => setIsOpen(false)}
-//               >
-//                 Notifications
-//               </Link>
-//             </li> */}
 //             <li>
 //               <button
 //                 onClick={handleNavigateToSettings}
@@ -146,13 +126,16 @@
 //               </button>
 //             </li>
 //             <li>
-//             <button
-//               onClick={() => setShowChangePasswordModal(true)}
-//               className="block w-full text-left px-4 py-2 hover:bg-gray-100"
-//               role="menuitem"
-//             >
-//               Change Password
-//             </button>
+//               <button
+//                 onClick={() => {
+//                   setShowChangePasswordModal(true)
+//                   setIsOpen(false) // Close dropdown when opening modal
+//                 }}
+//                 className="block w-full text-left px-4 py-2 hover:bg-gray-100"
+//                 role="menuitem"
+//               >
+//                 Change Password
+//               </button>
 //             </li>
 //           </ul>
 //           <div className="py-1">
@@ -167,14 +150,15 @@
 //         </div>
 //       )}
 
-//       {/* {showChangePasswordModal && (
+//       {showChangePasswordModal && (
 //         <ChangePasswordModal
 //           isOpen={showChangePasswordModal}
 //           onClose={() => setShowChangePasswordModal(false)}
 //           email={email || user?.email || ""}
-//           phone={user?.phone_number}
+//           phone={user?.phone_number || "+123456789"} // Provide default phone number if not available
+//           hasPhone={true} // Always show SMS option
 //         />
-//       )} */}
+//       )}
 //     </div>
 //   )
 // }
@@ -184,28 +168,27 @@
 
 
 
-
-
-
 "use client"
 
-import type React from "react"
+import React from "react"
 import { useState, useEffect } from "react"
-import { useNavigate} from "react-router-dom"
+import { useNavigate } from "react-router-dom"
 import type { ProfileSectionProps } from "../../landing/types"
 import { useAuth } from "../hooks"
 import { toast } from "react-toastify"
-import { useSelector } from "react-redux"
-import type { RootState } from "../../../core/store"
+import { useSelector, useDispatch } from "react-redux"
+import type { RootState, AppDispatch } from "../../../core/store"
 import ChangePasswordModal from "../../../pages/profilemanagement/ChangePassword"
+import { fetchUserProfile } from "../redux/slices/authSlice"
 
-const ProfileSection: React.FC<ProfileSectionProps> = ({ firstName, lastName, email }) => {
+const ProfileSection: React.FC<ProfileSectionProps> = ({ firstName, lastName, email, phone_number }) => {
   const [isOpen, setIsOpen] = useState(false)
   const [showChangePasswordModal, setShowChangePasswordModal] = useState(false)
   const navigate = useNavigate()
   const { signOut } = useAuth()
+  const dispatch = useDispatch<AppDispatch>()
 
-  // Get user role from Redux state
+  // Get user role and data from Redux state
   const { role, user } = useSelector((state: RootState) => state.auth)
 
   // Format role for display (capitalize first letter of each word)
@@ -270,10 +253,27 @@ const ProfileSection: React.FC<ProfileSectionProps> = ({ firstName, lastName, em
     navigate("/")
   }
 
-  // Navigate to settings page
+  // Navigate to settings page and fetch fresh user data
   const handleNavigateToSettings = () => {
-    navigate("/settings")
+    // Dispatch the fetchUserProfile action to get fresh data
+    dispatch(fetchUserProfile())
+      .then(() => {
+        console.log("User profile fetched successfully before navigation")
+        navigate("/settings")
+      })
+      .catch((error) => {
+        console.error("Error fetching user profile:", error)
+        toast.error("Failed to fetch user profile. Please try again.")
+        navigate("/settings") // Still navigate even if there's an error
+      })
+
     setIsOpen(false)
+  }
+
+  // Handle opening change password modal
+  const handleChangePassword = () => {
+    setShowChangePasswordModal(true)
+    setIsOpen(false) // Close dropdown when opening modal
   }
 
   return (
@@ -316,10 +316,7 @@ const ProfileSection: React.FC<ProfileSectionProps> = ({ firstName, lastName, em
             </li>
             <li>
               <button
-                onClick={() => {
-                  setShowChangePasswordModal(true)
-                  setIsOpen(false) // Close dropdown when opening modal
-                }}
+                onClick={handleChangePassword}
                 className="block w-full text-left px-4 py-2 hover:bg-gray-100"
                 role="menuitem"
               >
@@ -339,13 +336,14 @@ const ProfileSection: React.FC<ProfileSectionProps> = ({ firstName, lastName, em
         </div>
       )}
 
+      {/* Render change password modal with correct props */}
       {showChangePasswordModal && (
         <ChangePasswordModal
           isOpen={showChangePasswordModal}
           onClose={() => setShowChangePasswordModal(false)}
           email={email || user?.email || ""}
-          phone={user?.phone_number || "+123456789"} // Provide default phone number if not available
-          hasPhone={true} // Always show SMS option
+          phone_number={phone_number || user?.phone_number || ""}
+          hasPhone={!!user?.phone_number}
         />
       )}
     </div>

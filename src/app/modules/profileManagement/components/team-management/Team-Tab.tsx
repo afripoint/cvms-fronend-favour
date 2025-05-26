@@ -37,14 +37,22 @@ const TeamsTab = () => {
   };
 
   const handleAddMember = (memberData: Omit<TeamMember, 'id' | 'initials' | 'status' | 'lastLogin'>) => {
-    const newMember = {
-      ...memberData,
-      status: 'Active',
-      lastLogin: 'Never'
-    };
-    
-    dispatch(addTeamMember(newMember));
+  // Generate initials from name
+  const initials = memberData.name.split(' ')
+    .map(part => part[0])
+    .join('')
+    .toUpperCase();
+
+  const newMember: TeamMember = {
+    ...memberData,
+    id: Date.now(), // temporary ID until you get one from the server
+    initials,
+    status: 'Active',
+    lastLogin: 'Never'
   };
+  
+  dispatch(addTeamMember(newMember));
+};
 
   const handleUpdateMember = (memberData: Omit<TeamMember, 'id' | 'initials' | 'status' | 'lastLogin'>) => {
     if (currentMember) {

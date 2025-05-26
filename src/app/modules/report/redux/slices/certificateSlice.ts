@@ -19,7 +19,7 @@ export const fetchReports = createAsyncThunk(
         throw new Error('No access token found');
       }
       
-      const response = await fetch('https://afridev.com.ng/vin/search-history/', {
+      const response = await fetch('https://cvms-api.afripointdev.com/vin/vin-search/', {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',

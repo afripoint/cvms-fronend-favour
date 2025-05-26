@@ -119,7 +119,21 @@ const initialState: SettingsState = {
     }
   ],
   ninSubmitted: false,
-  cacSubmitted: false
+  cacSubmitted: false,
+  loading: {
+    teamMembers: false,
+    addingMember: false,
+    updatingMember: false,
+    togglingStatus: false,
+    fetchingDetails: false
+  },
+  errors: {
+    teamMembers: null,
+    addMember: null,
+    updateMember: null,
+    toggleStatus: null,
+    fetchDetails: null
+  }
 };
 
 export default function settingsReducer(
@@ -143,12 +157,14 @@ export default function settingsReducer(
         ninSubmitted: true 
       };
       
-    case actions.SUBMIT_CAC:
-      return { 
-        ...state, 
-        userData: { ...state.userData, cac: action.payload },
-        cacSubmitted: true 
-      };
+    // case actions.SUBMIT_CAC:
+    //   return { 
+    //     ...state, 
+    //     userData: { ...state.userData, cac: action.payload },
+    //     cacSubmitted: true 
+    //   };
+
+      
       
       case actions.ADD_TEAM_MEMBER:
 const newMember = {
@@ -174,6 +190,9 @@ return {
         ) 
       };
       
+      
+
+
     case actions.DELETE_TEAM_MEMBER:
       return { 
         ...state, 

@@ -38,7 +38,7 @@ const VerifyCertificatePage = () => {
         }
         
         // Fetch certificate details from backend
-        const response = await fetch('https://afridev.com.ng/vin/search-history/', {
+        const response = await fetch('https://cvms-api.afripointdev.com/vin/vin-search/', {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',

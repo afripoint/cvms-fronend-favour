@@ -104,6 +104,7 @@ import AccountTab from '../../modules/profileManagement/components/account/Accou
 import WalletTab from '../../modules/profileManagement/components/wallet/components/Wallet-Tabs';
 import TeamsTab from '../../modules/profileManagement/components/team-management/Team-Tab';
 
+
 const SettingsPage = () => {
   const dispatch = useDispatch();
   const activeTab = useSelector(selectActiveTab);
