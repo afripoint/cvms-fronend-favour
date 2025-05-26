@@ -294,9 +294,9 @@ export const generateCertificate = async (data: CertificateData) => {
             <p class="info-item">
               <span class="info-label">Make:</span> ${data.makeModel}
             </p>
-            <p class="info-item">
+            <!--<p class="info-item">
               <span class="info-label">Model:</span> ${data.model}
-            </p>
+            </p>-->
             <p class="info-item">
               <span class="info-label">Year:</span> ${data.year}
             </p>

@@ -1,7 +1,6 @@
-
 import { useCallback, useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation} from "react-router-dom";
 import { RootState, AppDispatch } from "../../../core/store";
 import { fetchReports } from "../redux/slices/certificateSlice";
 import { Footer, Header } from "../../landing/components/layout";
@@ -9,42 +8,39 @@ import { generateCertificate } from "../services/certificateService";
 import LoadingErrorComponent from "../components/report/LoadingErrorComponent";
 import ContactSupportModal from "../components/ContactSupportModal";
 
-
 interface SearchHistory {
   user: {
     full_name: string;
+    address?: string; // Added optional address property
   };
   vin: VinInfo | null;
   cert_num: string;
+  reference_num: string; // Added this since it's used in the code
   status: string;
   qr_code_base64: string;
   slug: string;
   created_at: string;
-  vehicle_record: string
 }
 
-// interface VinInfo {
-//   vin: string | null;
-//   brand: string | null;
-//   vehicle_year: string | null;
-//   vehicle_type: string | null;
-//   payment_status: string | null;
-//   origin_country: string | null;
-// }
 interface VinInfo {
   vin: string | null;
   brand: string | null;
-  make: string | null; // Add this missing property
+  make: string | null; // Added this since it's used in the code
   vehicle_year: string | null;
   vehicle_type: string | null;
   payment_status: string | null;
   origin_country: string | null;
 }
+
+// Add interface for the items parameter
+interface VinItem {
+  id: string;
+}
+
 const Certificate = () => {
   const dispatch = useDispatch<AppDispatch>();
   const location = useLocation();
   const { reports } = useSelector((state: RootState) => state.reports);
-  const { user } = useSelector((state: RootState) => state.auth);
 
   // State to track if certificate was generated automatically
   const [certificateGenerated, setCertificateGenerated] = useState(false);
@@ -64,36 +60,117 @@ const Certificate = () => {
   useEffect(() => {
     const fromPayment = location.state?.fromPayment;
     const vinFromPayment = location.state?.vin;
+    const { items } = location.state || { items: [] };
 
     if (fromPayment && vinFromPayment && !certificateGenerated) {
       const targetReport = reports.find((r) => r.vin === vinFromPayment);
       if (targetReport) {
-        handleDownloadCertificate(targetReport.vin);
+        handleDownloadCertificate(items);
         setCertificateGenerated(true);
       }
     }
   }, [reports, location, certificateGenerated]);
 
-  const handleDownloadAll = () => {
-    reports.forEach((report) => {
-      if (report.downloadUrl) {
-        const link = document.createElement("a");
-        link.href = report.downloadUrl;
-        link.setAttribute(
-          "download",
-          `${report.title.replace(/\s+/g, "-")}-${report.vin}.pdf`
-        );
-        link.setAttribute("target", "_blank");
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
+  const handleDownloadAll = async () => {
+    try {
+      setIsLoading(true);
+      
+      // Filter only successful certificates
+      const successfulCerts = allCertData.filter(
+        (cert) => cert.status?.toLowerCase() === "successful" && cert.vin?.vin
+      );
+
+      if (successfulCerts.length === 0) {
+        setError("No successful certificates available for download.");
+        return;
       }
-    });
+
+      const accesstoken = localStorage.getItem("access_token");
+      if (!accesstoken) {
+        throw new Error("No access token found");
+      }
+
+      // Create items array from successful certificates
+      const items: VinItem[] = successfulCerts.map((cert) => ({
+        id: cert.vin!.vin!
+      }));
+
+      const vinQuery = items
+        .map((item: VinItem) => `vins=${encodeURIComponent(item.id)}`)
+        .join("&");
+
+      const response = await fetch(
+        `https://cvms-api.afripointdev.com/vin/vin-search/?${vinQuery}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${accesstoken}`,
+          },
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch certificate data for download");
+      }
+
+      const resData = await response.json();
+
+      // Generate certificate for each successful VIN
+      for (const item of items) {
+        const vin = item.id;
+
+        const vehicleRecord = resData.find(
+          (record: SearchHistory) =>
+            record.vin?.vin === vin || record.slug?.includes(vin)
+        );
+
+        if (!vehicleRecord) {
+          console.warn(`Vehicle record not found for VIN: ${vin}`);
+          continue;
+        }
+
+        const userData = {
+          fullName: vehicleRecord.user?.full_name || "Unknown",
+          address: vehicleRecord.user?.address || "No 16B Alimini Street Ipaja",
+        };
+
+        const certificateData = {
+          vin: vehicleRecord.vin?.vin || vin,
+          makeModel: vehicleRecord.vin?.make || "",
+          model: vehicleRecord.vin?.make || "Ford Mustang",
+          year: vehicleRecord.vin?.vehicle_year || "",
+          certificateNumber: vehicleRecord.reference_num || "",
+          ownerName: userData.fullName,
+          ownerAddress: userData.address,
+          date: new Date().toLocaleDateString("en-GB", {
+            day: "2-digit",
+            month: "short",
+            year: "numeric",
+          }),
+          qrCodeBase64: vehicleRecord.qr_code_base64 || "",
+        };
+
+        // Add a small delay between downloads to prevent overwhelming the system
+        await new Promise(resolve => setTimeout(resolve, 500));
+        generateCertificate(certificateData);
+      }
+
+      // Show success message
+      console.log(`Successfully initiated download for ${items.length} certificates`);
+      
+    } catch (error) {
+      console.error("Error downloading all certificates:", error);
+      setError("Failed to download certificates. Please try again later.");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
-  // Updated function to fetch certificate data with optional VIN filtering
-  const certificateFetching = useCallback(async (specificVins?: string[]) => {
+  const certificateFetching = useCallback(async () => {
     try {
+      const { items } = location.state || { items: [] };
+
       setIsLoading(true);
       setError(null);
       const accesstoken = localStorage.getItem("access_token");
@@ -101,40 +178,30 @@ const Certificate = () => {
         throw new Error("No access token found");
       }
 
-      // Build URL with query parameters if specific VINs are provided
-      let url = "https://cvms-api.afripointdev.com/vin/vin-search/";
-      if (specificVins && specificVins.length > 0) {
-        const vinsParam = specificVins.join(',');
-        url += `?vins=${encodeURIComponent(vinsParam)}`;
-      }
+      // Create query string for VINs from items
+      const vinQuery = items
+        .map((item: VinItem) => `vins=${encodeURIComponent(item.id)}`)
+        .join("&");
 
-      const response = await fetch(url, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${accesstoken}`,
-        },
-      });
+      const response = await fetch(
+        `https://cvms-api.afripointdev.com/vin/vin-search/?${vinQuery}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${accesstoken}`,
+          },
+        }
+      );
 
       if (!response.ok) {
         throw new Error(`Failed to fetch search history: ${response.status}`);
       }
 
       const resData = await response.json();
+      console.log(resData);
+      setAllCertData(resData);
 
-      if (resData?.Search_histories) {
-        // Sort the search histories by creation date in descending order (newest first)
-        const sortedHistories = [...resData.Search_histories].sort((a, b) => {
-          const dateA = new Date(a.created_at).getTime();
-          const dateB = new Date(b.created_at).getTime();
-          return dateB - dateA; // Descending order
-        });
-
-        setAllCertData(sortedHistories);
-      } else {
-        console.warn("No Search_histories found in response");
-        setAllCertData([]);
-      }
     } catch (error) {
       console.error(
         "Error fetching certificate data:",
@@ -145,190 +212,88 @@ const Certificate = () => {
     } finally {
       setIsLoading(false);
     }
-  }, []);
+  }, [location.state]); // Changed dependency from reports to location.state
 
   useEffect(() => {
     certificateFetching();
   }, [certificateFetching]);
 
-  // Updated function to fetch specific VIN data for certificate generation
-  // const fetchVinData = async (vin: string): Promise<SearchHistory | null> => {
-  //   try {
-  //     const accesstoken = localStorage.getItem("access_token");
-  //     if (!accesstoken) {
-  //       throw new Error("No access token found");
-  //     }
+  const handleDownloadCertificate = async (items: VinItem[]) => {
+    try {
+      setIsLoading(true);
+      const accesstoken = localStorage.getItem("access_token");
+      if (!accesstoken) {
+        throw new Error("No access token found");
+      }
 
-  //     const url = `https://cvms-api.afripointdev.com/vin/vin-search/?vins=${encodeURIComponent(vin)}`;
-      
-  //     const response = await fetch(url, {
-  //       method: "GET",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //         Authorization: `Bearer ${accesstoken}`,
-  //       },
-  //     });
+      const vinQuery = items
+        .map((item: VinItem) => `vins=${encodeURIComponent(item.id)}`)
+        .join("&");
 
-  //     if (!response.ok) {
-  //       throw new Error("Failed to fetch VIN data");
-  //     }
+      const response = await fetch(
+        `https://cvms-api.afripointdev.com/vin/vin-search/?${vinQuery}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${accesstoken}`,
+          },
+        }
+      );
 
-  //     const resData = await response.json();
+      if (!response.ok) {
+        throw new Error("Failed to fetch search history");
+      }
 
-  //     if (resData?.Search_histories && resData.Search_histories.length > 0) {
-  //       // Return the first matching record
-  //       return resData.Search_histories.find(
-  //         (record: SearchHistory) => record.vin?.vin === vin
-  //       ) || resData.Search_histories[0];
-  //     }
-      
-  //     return null;
-  //   } catch (error) {
-  //     console.error("Error fetching VIN data:", error);
-  //     throw error;
-  //   }
-  // };
+      const resData = await response.json();
 
+      if (resData.status === "Not found") {
+        console.log("regularize vin");
+      }
 
-  const fetchVinData = async (vin: string): Promise<SearchHistory | undefined> => {
-  try {
-    const accesstoken = localStorage.getItem("access_token");
-    if (!accesstoken) {
-      throw new Error("No access token found");
+      for (const item of items) {
+        const vin = item.id;
+
+        const vehicleRecord = resData.find(
+          (record: SearchHistory) =>
+            record.vin?.vin === vin || record.slug?.includes(vin)
+        );
+
+        if (!vehicleRecord) {
+          console.warn(`Vehicle record not found for VIN: ${vin}`);
+          continue;
+        }
+
+        const userData = {
+          fullName: vehicleRecord.user?.full_name || "Unknown",
+          address: vehicleRecord.user?.address || "No 16B Alimini Street Ipaja",
+        };
+
+        const certificateData = {
+          vin: vehicleRecord.vin?.vin || vin,
+          makeModel: vehicleRecord.vin?.make || "",
+          model: vehicleRecord.vin?.make || "Ford Mustang",
+          year: vehicleRecord.vin?.vehicle_year || "",
+          certificateNumber: vehicleRecord.reference_num || "",
+          ownerName: userData.fullName,
+          ownerAddress: userData.address,
+          date: new Date().toLocaleDateString("en-GB", {
+            day: "2-digit",
+            month: "short",
+            year: "numeric",
+          }),
+          qrCodeBase64: vehicleRecord.qr_code_base64 || "",
+        };
+
+        generateCertificate(certificateData);
+      }
+    } catch (error) {
+      console.error("Error generating certificate:", error);
+      setError("Failed to generate certificate. Please try again later.");
+    } finally {
+      setIsLoading(false);
     }
-
-    const url = `https://cvms-api.afripointdev.com/vin/vin-search/?vins=${encodeURIComponent(vin)}`;
-    
-    const response = await fetch(url, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${accesstoken}`,
-      },
-    });
-
-    if (!response.ok) {
-      throw new Error("Failed to fetch VIN data");
-    }
-
-    const resData = await response.json();
-
-    if (resData?.Search_histories && resData.Search_histories.length > 0) {
-      // Return the first matching record
-      return resData.Search_histories.find(
-        (record: SearchHistory) => record.vin?.vin === vin
-      ) || resData.Search_histories[0];
-    }
-    
-    return undefined; // Change from null to undefined
-  } catch (error) {
-    console.error("Error fetching VIN data:", error);
-    throw error;
-  }
-};
-
-  // Updated certificate download function
-  // const handleDownloadCertificate = async (vin: string) => {
-  //   try {
-  //     setIsLoading(true);
-      
-  //     // First try to find the record in current data
-  //     let vehicleRecord = allCertData.find(
-  //       (record: SearchHistory) => record.vin?.vin === vin
-  //     );
-
-  //     // If not found in current data, fetch specifically for this VIN
-  //     if (!vehicleRecord) {
-  //       vehicleRecord = await fetchVinData(vin);
-  //     }
-
-  //     if (!vehicleRecord) {
-  //       throw new Error("Vehicle record not found for VIN: " + vin);
-  //     }
-
-  //     const userData = {
-  //       fullName: vehicleRecord.user.full_name,
-  //       address: user?.address || "",
-  //     };
-
-  //     const certificateData = {
-  //       vin: vehicleRecord.vin?.vin || vin,
-  //       makeModel: vehicleRecord.vin?.brand || "",
-  //       model: vehicleRecord.vin?.make || "Ford Mustang",
-  //       year: vehicleRecord.vin?.vehicle_year || "",
-  //       certificateNumber: vehicleRecord.cert_num || "",
-  //       ownerName: userData.fullName,
-  //       ownerAddress: userData.address || "No 16B Alimini Street Ipaja",
-  //       date: new Date().toLocaleDateString("en-GB", {
-  //         day: "2-digit",
-  //         month: "short",
-  //         year: "numeric",
-  //       }),
-  //       qrCodeBase64: vehicleRecord.qr_code_base64 || "",
-  //     };
-
-  //     generateCertificate(certificateData);
-  //   } catch (error) {
-  //     console.error("Error generating certificate:", error);
-  //     setError("Failed to generate certificate. Please try again later.");
-  //   } finally {
-  //     setIsLoading(false);
-  //   }
-  // };
-
-
-  const handleDownloadCertificate = async (vin: string) => {
-  try {
-    setIsLoading(true);
-    
-    // First try to find the record in current data
-    let vehicleRecord: SearchHistory | undefined = allCertData.find(
-      (record: SearchHistory) => record.vin?.vin === vin
-    );
-
-    // If not found in current data, fetch specifically for this VIN
-    if (!vehicleRecord) {
-      vehicleRecord = await fetchVinData(vin);
-    }
-
-    if (!vehicleRecord) {
-      throw new Error("Vehicle record not found for VIN: " + vin);
-    }
-
-    const userData = {
-      fullName: vehicleRecord.user.full_name,
-      address: user?.address || "",
-    };
-
-    const certificateData = {
-      vin: vehicleRecord.vin?.vin || vin,
-      makeModel: vehicleRecord.vin?.brand || "",
-      model: vehicleRecord.vin?.make || "Ford Mustang", // Now 'make' property exists
-      year: vehicleRecord.vin?.vehicle_year || "",
-      certificateNumber: vehicleRecord.cert_num || "",
-      ownerName: userData.fullName,
-      ownerAddress: userData.address || "No 16B Alimini Street Ipaja",
-      date: new Date().toLocaleDateString("en-GB", {
-        day: "2-digit",
-        month: "short",
-        year: "numeric",
-      }),
-      qrCodeBase64: vehicleRecord.qr_code_base64 || "",
-    };
-
-    generateCertificate(certificateData);
-  } catch (error) {
-    console.error("Error generating certificate:", error);
-    setError("Failed to generate certificate. Please try again later.");
-  } finally {
-    setIsLoading(false);
-  }
-};
-
-  // Function to search for specific VINs
-  // const searchSpecificVins = async (vins: string[]) => {
-  //   await certificateFetching(vins);
-  // };
+  };
 
   const dismissError = () => {
     setError(null);
@@ -359,6 +324,15 @@ const Certificate = () => {
     setIsContactModalOpen(true);
   };
 
+  // Helper function to get successful certificates count
+  const getSuccessfulCertificatesCount = () => {
+    return allCertData.filter(
+      (cert) => cert.status?.toLowerCase() === "successful" && cert.vin?.vin
+    ).length;
+  };
+
+  const successfulCount = getSuccessfulCertificatesCount();
+
   return (
     <div className="flex flex-col min-h-screen bg-gray-50">
       <Header />
@@ -369,9 +343,9 @@ const Certificate = () => {
       />
 
       {/* Contact Support Modal */}
-      <ContactSupportModal 
-        isOpen={isContactModalOpen} 
-        onClose={() => setIsContactModalOpen(false)} 
+      <ContactSupportModal
+        isOpen={isContactModalOpen}
+        onClose={() => setIsContactModalOpen(false)}
       />
 
       <main className="flex-grow container mx-auto px-4 py-4 mb-16">
@@ -436,37 +410,38 @@ const Certificate = () => {
           {/* Download All Button - Mobile */}
 
           <div className="md:hidden flex justify-end p-3">
-            
             <button
-              className="flex gap-2 bg-white items-center border border-gray-300 rounded-md px-3 py-1 text-sm"
+              className={`flex gap-2 items-center border rounded-md px-3 py-1 text-sm ${
+                successfulCount > 0 && !isLoading
+                  ? "bg-white border-gray-300 text-gray-700 hover:bg-gray-50"
+                  : "bg-gray-100 border-gray-200 text-gray-400 cursor-not-allowed"
+              }`}
               onClick={handleDownloadAll}
+              disabled={successfulCount === 0 || isLoading}
             >
-              {/* <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-4 w-4 mr-1"
-                viewBox="0 0 20 20"
-                fill="currentColor"
-              >
-                <path
-                  fillRule="evenodd"
-                  d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z"
-                  clipRule="evenodd"
-                />
-              </svg> */}
-
               <img src="/icons/DownloadSimple.svg" alt="" width={15} />
-              Download All
+              Download All ({successfulCount})
             </button>
           </div>
 
           {/* Download All Button - Desktop */}
           <div className="hidden md:flex justify-end mb-2 lg:mr-10">
             <button
-              className="flex bg-gray-200 hover:bg-gray-300 text-gray-700 gap-2 py-1 px-2 md:py-2 md:px-4 border border-black rounded text-xs md:text-sm"
+              className={`flex gap-2 py-1 px-2 md:py-2 md:px-4 border rounded text-xs md:text-sm ${
+                successfulCount > 0 && !isLoading
+                  ? "bg-gray-200 hover:bg-gray-300 text-gray-700 border-black"
+                  : "bg-gray-100 border-gray-300 text-gray-400 cursor-not-allowed"
+              }`}
               onClick={handleDownloadAll}
+              disabled={successfulCount === 0 || isLoading}
             >
-              <img src="/icons/DownloadSimple.svg" alt="" width={16} className="hidden sm:block" />
-              Download All
+              <img
+                src="/icons/DownloadSimple.svg"
+                alt=""
+                width={16}
+                className="hidden sm:block"
+              />
+              Download All ({successfulCount})
             </button>
           </div>
 
@@ -485,7 +460,8 @@ const Certificate = () => {
                 <div>
                   <span className="font-semibold">VIN Search</span>
                   <span className="text-sm text-gray-500 ml-1">
-                    ({allCertData.length} result{allCertData.length !== 1 ? "s" : ""})
+                    ({allCertData.length} result
+                    {allCertData.length !== 1 ? "s" : ""})
                   </span>
                 </div>
               </div>
@@ -582,7 +558,10 @@ const Certificate = () => {
                     </div>
                   ) : (
                     allCertData.map((cert, index) => (
-                      <div key={index} className="grid grid-cols-12 py-3 px-4 border-b border-gray-100 hover:bg-gray-50">
+                      <div
+                        key={index}
+                        className="grid grid-cols-12 py-3 px-4 border-b border-gray-100 hover:bg-gray-50"
+                      >
                         <div className="col-span-1 flex items-center">
                           <input
                             type="checkbox"
@@ -596,12 +575,12 @@ const Certificate = () => {
                           {formatDate(cert.created_at)}
                         </div>
                         <div className="col-span-2 flex items-center">
-                          {cert.status === "successful" ? (
+                          {cert.status?.toLowerCase() === "successful" ? (
                             <div className="flex items-center">
                               <span className="inline-block w-2 h-2 bg-green-500 rounded-full mr-2"></span>
                               <span className="text-green-500">Successful</span>
                             </div>
-                          ) : cert.status === "not found" ? (
+                          ) : cert.status === "Not found" ? (
                             <div className="flex items-center">
                               <span className="inline-block w-2 h-2 bg-red-500 rounded-full mr-2"></span>
                               <span className="text-red-500">Not found</span>
@@ -611,32 +590,32 @@ const Certificate = () => {
                           )}
                         </div>
                         <div className="col-span-3 flex items-center">
-                          {cert.status === "not found" ? (
+                          {cert.status!.toLowerCase() !== "successful" ? (
                             <button className="flex items-center text-red-500 hover:text-red-600 text-sm">
-                              <svg
-                                className="h-4 w-4 mr-1"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                                stroke="currentColor"
-                              >
-                                <path
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                  strokeWidth="2"
-                                  d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                                />
-                              </svg>
-                              Regularize payment
+                              <Link to="/">
+                                <img
+                                src="/icons/DownloadSimple.svg"
+                                alt=""
+                                width={15}
+                              />
+                                Regularize payment
+                              </Link>
                             </button>
                           ) : (
                             <button
                               onClick={() =>
                                 cert.vin?.vin &&
-                                handleDownloadCertificate(cert.vin.vin)
+                                handleDownloadCertificate([
+                                  { id: cert.vin.vin },
+                                ])
                               }
                               className="flex items-center gap-2 text-gray-600 hover:text-gray-800"
                             >
-                              <img src="/icons/DownloadSimple.svg" alt="" width={15} />
+                              <img
+                                src="/icons/DownloadSimple.svg"
+                                alt=""
+                                width={15}
+                              />
                               Download Certificate
                             </button>
                           )}
@@ -654,79 +633,78 @@ const Certificate = () => {
                     </div>
                   ) : (
                     allCertData.map((cert, index) => (
-                      <div 
-                        key={index} 
+                      <div
+                        key={index}
                         className="px-4 py-3 border-b border-gray-200"
                       >
                         <div className="mb-1">
                           <div className="text-sm text-gray-500 mb-1">VIN:</div>
-                          <div className="font-medium">{cert.vin?.vin || "-"}</div>
+                          <div className="font-medium">
+                            {cert.vin?.vin || "-"}
+                          </div>
                         </div>
-                        
+
                         <div className="mb-1">
-                          <div className="text-sm text-gray-500 mb-1">Status:</div>
+                          <div className="text-sm text-gray-500 mb-1">
+                            Status:
+                          </div>
                           <div>
-                            {cert.status === "successful" ? (
+                            {cert.status?.toLowerCase() === "successful" ? (
                               <div className="flex items-center">
                                 <span className="inline-block w-2 h-2 bg-green-500 rounded-full mr-1"></span>
-                                <span className="text-green-500 text-sm">Successful</span>
+                                <span className="text-green-500 text-sm">
+                                  Successful
+                                </span>
                               </div>
                             ) : cert.status === "not found" ? (
                               <div className="flex items-center">
                                 <span className="inline-block w-2 h-2 bg-red-500 rounded-full mr-1"></span>
-                                <span className="text-red-500 text-sm">Not found</span>
+                                <span className="text-red-500 text-sm">
+                                  Not found
+                                </span>
                               </div>
                             ) : (
                               <span className="text-gray-500">-</span>
                             )}
                           </div>
                         </div>
-                        
+
                         <div className="mb-2">
-                          <div className="text-sm text-gray-500 mb-1">Date & Time:</div>
-                          <div className="text-sm">{formatDate(cert.created_at)}</div>
+                          <div className="text-sm text-gray-500 mb-1">
+                            Date & Time:
+                          </div>
+                          <div className="text-sm">
+                            {formatDate(cert.created_at)}
+                          </div>
                         </div>
-                        
+
                         <div className="mt-3">
-                          {cert.status === "not found" ? (
+                          {cert.status?.toLowerCase() !== "successful" ? (
                             <button className="w-full flex items-center justify-center bg-white border border-red-500 text-red-500 rounded-md py-2 px-4 text-sm">
-                              <svg
-                                className="h-4 w-4 mr-2"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                                stroke="currentColor"
-                              >
-                                <path
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                  strokeWidth="2"
-                                  d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                                />
-                              </svg>
+                              <Link to="/">
+                              <img
+                                src="/icons/DownloadSimple.svg"
+                                alt=""
+                                width={15}
+                              />
                               Regularize payment
+                              </Link>
                             </button>
                           ) : (
                             <button
                               onClick={() =>
                                 cert.vin?.vin &&
-                                handleDownloadCertificate(cert.vin.vin)
+                                handleDownloadCertificate([
+                                  { id: cert.vin.vin },
+                                ])
                               }
                               className="w-full flex gap-2 items-center justify-center bg-white border border-[#000000] text-gray-700 rounded-md py-2 px-4 text-sm"
                             >
-                              {/* <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                className="h-4 w-4 mr-2"
-                                viewBox="0 0 20 20"
-                                fill="currentColor"
-                              >
-                                <path
-                                  fillRule="evenodd"
-                                  d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z"
-                                  clipRule="evenodd"
-                                />
-                              </svg> */}
-
-                                <img src="/icons/DownloadSimple.svg" alt="" width={15} />
+                              <img
+                                src="/icons/DownloadSimple.svg"
+                                alt=""
+                                width={15}
+                              />
                               Download Certificate
                             </button>
                           )}
@@ -756,7 +734,11 @@ const Certificate = () => {
                 </svg>
                 <p className="flex flex-wrap gap-1 md:gap-2">
                   For any failed result, Please
-                  <a href="#" onClick={openContactModal} className="text-green-600 underline">
+                  <a
+                    href="#"
+                    onClick={openContactModal}
+                    className="text-green-600 underline"
+                  >
                     contact support
                   </a>
                 </p>
