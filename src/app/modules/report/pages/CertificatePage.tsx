@@ -326,9 +326,9 @@ const Certificate = () => {
 };
 
   // Function to search for specific VINs
-  const searchSpecificVins = async (vins: string[]) => {
-    await certificateFetching(vins);
-  };
+  // const searchSpecificVins = async (vins: string[]) => {
+  //   await certificateFetching(vins);
+  // };
 
   const dismissError = () => {
     setError(null);
