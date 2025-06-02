@@ -3,10 +3,13 @@
 import { useState, useEffect } from "react"
 import { ChevronRight, Clock, Play, FileText, X } from "lucide-react"
 import { Link, useNavigate } from "react-router-dom"
-import { cn } from "../modules/vin/utils/utils"
+// Simple cn utility function (in case the imported one is problematic)
+const clsx = (...classes: (string | undefined | null | false)[]) => {
+  return classes.filter(Boolean).join(' ')
+}
 import { guides } from "../modules/landing/lib/data"
 import { MainLayout } from "../modules/landing/components/layout"
-import { Tabs, TabsList, TabsTrigger } from "../modules/shared/components/ui/Tab"
+// Removed problematic Tabs import
 
 // Custom Modal Component
 interface ModalProps {
@@ -148,37 +151,35 @@ export default function UserGuidePage() {
 
         {/* Filter Tabs */}
         <div className="container mx-auto px-4 mb-8 ml-28">
-          <Tabs defaultValue="all" value={activeTab} onValueChange={setActiveTab}>
-            <TabsList className="bg-transparent">
-              <TabsTrigger
-                value="all"
-                className={cn(
-                  "px-6 py-2 rounded-full text-sm font-medium",
-                  activeTab === "all" ? "bg-[#2a9f47] text-white" : "hover:bg-gray-100",
-                )}
-              >
-                All
-              </TabsTrigger>
-              <TabsTrigger
-                value="article"
-                className={cn(
-                  "px-6 py-2 rounded-full text-sm font-medium",
-                  activeTab === "article" ? "bg-[#2a9f47] text-white" : "hover:bg-gray-100",
-                )}
-              >
-                Articles
-              </TabsTrigger>
-              <TabsTrigger
-                value="video"
-                className={cn(
-                  "px-6 py-2 rounded-full text-sm font-medium",
-                  activeTab === "video" ? "bg-[#2a9f47] text-white" : "hover:bg-gray-100",
-                )}
-              >
-                Videos
-              </TabsTrigger>
-            </TabsList>
-          </Tabs>
+          <div className="flex space-x-2">
+            <button
+              onClick={() => setActiveTab("all")}
+              className={clsx(
+                "px-6 py-2 rounded-full text-sm font-medium transition-colors",
+                activeTab === "all" ? "bg-[#2a9f47] text-white" : "hover:bg-gray-100",
+              )}
+            >
+              All
+            </button>
+            <button
+              onClick={() => setActiveTab("article")}
+              className={clsx(
+                "px-6 py-2 rounded-full text-sm font-medium transition-colors",
+                activeTab === "article" ? "bg-[#2a9f47] text-white" : "hover:bg-gray-100",
+              )}
+            >
+              Articles
+            </button>
+            <button
+              onClick={() => setActiveTab("video")}
+              className={clsx(
+                "px-6 py-2 rounded-full text-sm font-medium transition-colors",
+                activeTab === "video" ? "bg-[#2a9f47] text-white" : "hover:bg-gray-100",
+              )}
+            >
+              Videos
+            </button>
+          </div>
         </div>
 
         {/* Video Grid */}
