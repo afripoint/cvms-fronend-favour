@@ -10,7 +10,7 @@ import TrackingDetails from './app/pages/status-tracker/tracking-details';
 import PrivacyPolicy from './app/pages/Privacy';
 import TermsAndConditions from './app/pages/Terms-and-Conditions';
 import Faq from './app/pages/Faq';
-// import UserGuidePage from './app/pages/Guide';
+import UserGuidePage from './app/pages/Guide';
 import Article from './app/modules/landing/components/layout/components/Article';
 import CookiePolicy from './app/pages/Cookie-Policy';
 
@@ -85,7 +85,7 @@ const AppContent: React.FC = () => {
           <Route path="/privacy-policy" element={<PrivacyPolicy />} />
           <Route path="/terms-of-use" element={< TermsAndConditions/>} />
           <Route path="/faq" element={< Faq/>} />
-          {/* <Route path="/user-guide" element={<UserGuidePage/>} /> */}
+          <Route path="/user-guide" element={<UserGuidePage/>} />
           <Route path="/cookie-policy" element={<CookiePolicy/>} />
 
           <Route path="/accredited-agencies" element={<Article/>} /> 
