@@ -76,8 +76,11 @@ const Certificate = () => {
       setIsLoading(true);
       
       // Filter only successful certificates
+      // const successfulCerts = allCertData.filter(
+      //   (cert) => cert.status?.toLowerCase() === "successful" && cert.vin?.vin
+      // );
       const successfulCerts = allCertData.filter(
-        (cert) => cert.status?.toLowerCase() === "successful" && cert.vin?.vin
+        (cert) => cert.status?.toLowerCase() === "successful" && getVinValue(cert) !== '-'
       );
 
       if (successfulCerts.length === 0) {
@@ -91,8 +94,12 @@ const Certificate = () => {
       }
 
       // Create items array from successful certificates
+      // const items: VinItem[] = successfulCerts.map((cert) => ({
+      //   id: cert.vin!.vin!
+      // }));
+
       const items: VinItem[] = successfulCerts.map((cert) => ({
-        id: cert.vin!.vin!
+        id: getVinValue(cert)
       }));
 
       const vinQuery = items
@@ -120,9 +127,14 @@ const Certificate = () => {
       for (const item of items) {
         const vin = item.id;
 
+        // const vehicleRecord = resData.find(
+        //   (record: SearchHistory) =>
+        //     record.vin?.vin === vin || record.slug?.includes(vin)
+        // );
+
         const vehicleRecord = resData.find(
           (record: SearchHistory) =>
-            record.vin?.vin === vin || record.slug?.includes(vin)
+            getVinValue(record) === vin || record.slug?.includes(vin)
         );
 
         if (!vehicleRecord) {
@@ -166,6 +178,17 @@ const Certificate = () => {
       setIsLoading(false);
     }
   };
+
+  const getVinValue = (cert: SearchHistory): string => {
+  if (typeof cert.vin === 'string') {
+    // For "Not found" cases where vin is a direct string
+    return cert.vin;
+  } else if (cert.vin && typeof cert.vin === 'object' && cert.vin.vin) {
+    // For successful cases where vin is an object with vin property
+    return cert.vin.vin;
+  }
+  return '-';
+};
 
   const certificateFetching = useCallback(async () => {
     try {
@@ -568,8 +591,11 @@ const Certificate = () => {
                             className="rounded border-gray-300"
                           />
                         </div>
-                        <div className="col-span-3 flex items-center font-medium">
+                        {/* <div className="col-span-3 flex items-center font-medium">
                           {cert.vin?.vin || "-"}
+                        </div> */}
+                        <div className="col-span-3 flex items-center font-medium">
+                          {getVinValue(cert)}
                         </div>
                         <div className="col-span-3 flex items-center text-gray-700">
                           {formatDate(cert.created_at)}
@@ -591,13 +617,14 @@ const Certificate = () => {
                         </div>
                         <div className="col-span-3 flex items-center">
                           {cert.status!.toLowerCase() !== "successful" ? (
-                            <button className="flex items-center text-red-500 hover:text-red-600 text-sm">
-                              <Link to="/">
-                                <img
+                            <button className="flex items-center space-x-2 text-red-500 hover:text-red-600 text-sm">
+                              <img
                                 src="/icons/DownloadSimple.svg"
                                 alt=""
                                 width={15}
                               />
+                              <Link to="https://bodogwu.customs.gov.ng/">
+                                
                                 Regularize payment
                               </Link>
                             </button>
@@ -639,9 +666,12 @@ const Certificate = () => {
                       >
                         <div className="mb-1">
                           <div className="text-sm text-gray-500 mb-1">VIN:</div>
-                          <div className="font-medium">
+                          {/* <div className="font-medium">
                             {cert.vin?.vin || "-"}
-                          </div>
+                          </div> */}
+                          <div className="font-medium">
+                              {getVinValue(cert)}
+                            </div>
                         </div>
 
                         <div className="mb-1">
@@ -656,7 +686,7 @@ const Certificate = () => {
                                   Successful
                                 </span>
                               </div>
-                            ) : cert.status === "not found" ? (
+                            ) : cert.status === "Not found" ? (
                               <div className="flex items-center">
                                 <span className="inline-block w-2 h-2 bg-red-500 rounded-full mr-1"></span>
                                 <span className="text-red-500 text-sm">
@@ -680,13 +710,14 @@ const Certificate = () => {
 
                         <div className="mt-3">
                           {cert.status?.toLowerCase() !== "successful" ? (
-                            <button className="w-full flex items-center justify-center bg-white border border-red-500 text-red-500 rounded-md py-2 px-4 text-sm">
-                              <Link to="/">
+                            <button className="w-full flex items-center justify-center space-x-2 bg-white border border-red-500 text-red-500 rounded-md py-2 px-4 text-sm">
                               <img
                                 src="/icons/DownloadSimple.svg"
                                 alt=""
                                 width={15}
                               />
+                              <Link to="https://bodogwu.customs.gov.ng/">
+                              
                               Regularize payment
                               </Link>
                             </button>
